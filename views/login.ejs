@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+</head>
+<body>
+    <p>Please enter OTP sent to <%= mail %></p>
+    
+    <% if (typeof error !== 'undefined') { %>
+        <p style="color: red;"><%= error %></p>
+    <% } %>
+    
+    <form action="/otp-auth" method="post">
+        <input type="text" name="otp" placeholder="Enter 6-digit OTP" maxlength="6" required>
+        <button type="submit">VERIFY OTP</button>
+    </form>
+</body>
+</html>

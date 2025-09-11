@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "@sendgrid/mail": "^8.1.5",
+    "body-parser": "^2.2.0",
+    "dotenv": "^17.2.2",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "path": "^0.12.7",
+    "resend": "^6.0.3",
+    "url": "^0.11.4"
+  },
+  "name": "alumni-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module"
+}
