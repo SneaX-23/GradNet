@@ -6,11 +6,11 @@ import sgMail from '@sendgrid/mail';
 import session from "express-session";
 
 import dotenv from "dotenv";
-
+dotenv.config();
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-dotenv.config();
+
 
 
 const app = express();
@@ -21,7 +21,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie:{
-        maxAge: 1000 * 60 * 1
+        maxAge: 1000 * 60 * 4
     }
 }))
 
@@ -102,5 +102,5 @@ if(otp && generatedOTP && parseInt(otp) === generatedOTP){
 
 app.listen(port, ()=> {
     console.log(`Listening to ${port}.`);
-    console.log("https://localhost:3000");
+    console.log("http://localhost:3000");
 });
