@@ -2,12 +2,12 @@ import express from "express";
 import bodyParser  from "body-parser";
 import { fileURLToPath } from "url";
 import { dirname } from "path"; 
-import sgMail from '@sendgrid/mail';
+import sgMail from "./config/email.js";
 import session from "express-session";
-
+import db from "./config/database.js";
 import dotenv from "dotenv";
 dotenv.config();
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -29,11 +29,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 
 
-let users = [
-    {usn: 30,
-    email: "sneax822@gmail.com",},
-]
-
 app.get("/", (req, res)=>{
     res.sendFile(__dirname + "/public/index.html")
 });
@@ -42,24 +37,26 @@ app.get("/home", (req, res)=>{
     res.render("home.ejs");
 });
 
-app.post("/submit-auth-info", (req, res)=>{
+app.post("/submit-auth-info", async (req, res)=>{
     const in_usn = req.body.usn;
 
-    const email = users.find(user => user.usn == in_usn)?.email;
-    const usn = users.find(user => user.usn == in_usn)?.usn;
+    const result = await db.query("SELECT email from users WHERE usn = $1", [in_usn]);
+    const email = result.rows[0]?.email;
     console.log(email);
-    
-    
+    req.session.gmail = email;
+    await db.query("DELETE FROM otp_verifications WHERE expires_at < NOW() OR is_used = true");
     if (email){
         const otp = Math.floor(100000 + Math.random() * 900000);
-        req.session.generatedOTP = otp;
-        req.session.userEmail = email;
-        req.session.userUSN = in_usn;
-
         console.log(otp);
-
-        console.log("Stored in session:", req.session.generatedOTP);
-
+        const expire_at = new Date(Date.now() + 10 * 60 * 1000);
+        try{
+            await db.query(
+                "INSERT INTO otp_verifications (email, otp_code, expires_at, purpose) VALUES($1, $2, $3, 'login')", [email, otp, expire_at]
+            );
+        }catch(err){
+            console.log(err)
+        }
+        
         const msg = {
             to: "sneax822@gmail.com",
             from: process.env.SENDER_EMAIL,
@@ -82,21 +79,23 @@ app.post("/submit-auth-info", (req, res)=>{
         res.redirect("/");
     }
 });
-app.post("/otp-auth", (req, res)=>{
-const otp = req.body.otp;
-const {generatedOTP, userEmail, userUSN} = req.session;
-if(otp && generatedOTP && parseInt(otp) === generatedOTP){
-    delete req.session.generatedOTP;
-    req.session.isAuthenticated = true;
-    req.session.currentUser = {usn: userUSN, email: userEmail};
-
+app.post("/otp-auth",async (req, res)=>{
+const in_otp = req.body.otp;
+const email = req.session.gmail;
+const result = await db.query("SELECT * from otp_verifications WHERE email = $1 AND expires_at > NOW() AND is_used = false", [email]);
+const otp = result.rows[0]?.otp_code;
+if(otp == in_otp){
+    
+    delete req.session.gmail;
+    await db.query("UPDATE otp_verifications SET is_used = true WHERE email = $1", [email]);
     res.redirect("/home");
 }else{
     res.render("login.ejs", { 
-            mail: userEmail, 
-            error: "Invalid OTP. Please try again." 
+            mail: email, 
+            error: "Invalid OTP. Please  try again." 
         });
 }
+
 
 });
 
