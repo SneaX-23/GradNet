@@ -1,47 +1,57 @@
 import express from "express";
-import bodyParser  from "body-parser";
-import { fileURLToPath } from "url";
-import { dirname } from "path"; 
-import { sendMail } from "./controllers/sendEmail.js";
+import bodyParser from "body-parser";
 import session from "express-session";
-import {otpAuth} from "./controllers/otp_auth.js"
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 import dotenv from "dotenv";
+
+
+import authRoutes from "./routes/authRoutes.js";
+
 dotenv.config();
 
-
 const __dirname = dirname(fileURLToPath(import.meta.url));
-
-
-
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
+
+app.set("view engine", "ejs");
+app.set("views", "./views");
+
+
+app.use(express.static("public"));
+
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie:{
-        maxAge: 1000 * 60 * 10
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24, // 24 hours
+        secure: process.env.NODE_ENV === 'production'
     }
-}))
+}));
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use("/", authRoutes);
 
 
-
-app.get("/", (req, res)=>{
-    res.sendFile(__dirname + "/public/index.html")
-});
-app.get("/home", (req, res)=>{
-    console.log("At home page");
-    res.render("home.ejs");
+app.use((err, req, res, next) => {
+    console.error('Unhandled error:', err);
+    res.status(500).render("error.ejs", { 
+        message: "Something went wrong!" 
+    });
 });
 
-app.post("/submit-auth-info", sendMail);
 
-app.post("/otp-auth", otpAuth);
+app.use((req, res) => {
+    res.status(404).render("error.ejs", { 
+        message: "Page not found" 
+    });
+});
 
-app.listen(port, ()=> {
-    console.log(`Listening to ${port}.`);
-    console.log("http://localhost:3000");
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+    console.log(`http://localhost:${port}`);
 });
