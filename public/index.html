@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -23,5 +23,58 @@
     <br>
     <p>or</p>
     <button>Continue as Guest</button>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GradNet - AITM Alumni Network</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/landing.css">
+</head>
+<body>
+    <div class="landing-page">
+        <div class="landing-container">
+            <div class="title-section">
+                <h1>GradNet</h1>
+                <h3>Connecting AITM, Across Generations</h3>
+            </div>
+            
+            <div class="auth-card">
+                <form action="/submit-auth-info" method="post" class="auth-form">
+                    <div class="form-group">
+                        <label for="usn" class="form-label">University Serial Number</label>
+                        <input 
+                            type="text" 
+                            id="usn"
+                            name="usn" 
+                            class="form-input" 
+                            placeholder="Enter your USN" 
+                            required
+                            autocomplete="username"
+                        >
+                    </div>
+                    <button type="submit" class="btn btn-primary">Continue</button>
+                </form>
+            </div>
+            
+            <div class="divider">
+                <span>or</span>
+            </div>
+            
+            <div class="guest-section">
+                <button class="btn btn-secondary" onclick="continueAsGuest()">Continue as Guest</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function continueAsGuest() {
+            alert('Guest functionality coming soon!');
+        }
+    </script>
 </body>
 </html>

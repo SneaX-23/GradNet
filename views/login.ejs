@@ -1,20 +1,66 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OTP Verification</title>
+    <title>OTP Verification - GradNet</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/auth.css">
 </head>
 <body>
-    <p>Please enter OTP sent to <%= mail %></p>
-    
-    <% if (typeof error !== 'undefined') { %>
-        <p style="color: red;"><%= error %></p>
-    <% } %>
-    
-    <form action="/otp-auth" method="post">
-        <input type="text" name="otp" placeholder="Enter 6-digit OTP" maxlength="6" required>
-        <button type="submit">VERIFY OTP</button>
-    </form>
+    <div class="auth-page">
+        <div class="auth-container">
+            <div class="card">
+                <div class="auth-header">
+                    <h1>Verify OTP</h1>
+                    <p>We've sent a verification code to your email</p>
+                </div>
+
+                <div class="otp-info">
+                    <p>OTP sent to: <strong><%= mail %></strong></p>
+                    <% if (typeof message !== 'undefined') { %>
+                        <p style="color: #16a34a; margin-top: 0.5rem;"><%= message %></p>
+                    <% } %>
+                </div>
+                
+                <% if (typeof error !== 'undefined') { %>
+                    <div class="alert alert-error">
+                        <%= error %>
+                    </div>
+                <% } %>
+                
+                <form action="/otp-auth" method="post" class="auth-form">
+                    <div class="form-group">
+                        <label for="otp" class="form-label">Enter OTP</label>
+                        <input 
+                            type="text" 
+                            id="otp"
+                            name="otp" 
+                            class="form-input otp-input" 
+                            placeholder="000000" 
+                            maxlength="6" 
+                            pattern="[0-9]{6}"
+                            required
+                            autocomplete="one-time-code"
+                        >
+                    </div>
+                    <button type="submit" class="btn btn-primary">Verify OTP</button>
+                </form>
+
+                <a href="/" class="back-link">← Back to login</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-focus on OTP input
+        document.getElementById('otp').focus();
+        
+        // Only allow numbers in OTP input
+        document.getElementById('otp').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/[^0-9]/g, '');
+        });
+    </script>
 </body>
 </html>
