@@ -1,241 +1,41 @@
-<!-- views/home.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GradNet - Home</title>
-    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="../public/css/home.css">
 </head>
 <body>
     <div class="main-container">
-        <!-- Left Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-content">
-                <div class="logo">
-                    <h2>GradNet</h2>
-                </div>
-                
-                <nav class="nav-menu">
-                    <a href="/home" class="nav-item active">
-                        <span class="nav-icon">🏠</span>
-                        <span class="nav-text">Home</span>
-                    </a>
-                    
-                    <a href="#" class="nav-item">
-                        <span class="nav-icon">🔍</span>
-                        <span class="nav-text">Explore</span>
-                    </a>
-                    
-                    <a href="#" class="nav-item">
-                        <span class="nav-icon">🔔</span>
-                        <span class="nav-text">Notifications</span>
-                    </a>
-                    
-                    <a href="#" class="nav-item">
-                        <span class="nav-icon">✉️</span>
-                        <span class="nav-text">Messages</span>
-                    </a>
-                    
-                    <a href="#" class="nav-item">
-                        <span class="nav-icon">💼</span>
-                        <span class="nav-text">Jobs</span>
-                    </a>
-                    
-                    <a href="#" class="nav-item">
-                        <span class="nav-icon">📅</span>
-                        <span class="nav-text">Events</span>
-                    </a>
-                    
-                    <a href="#" class="nav-item">
-                        <span class="nav-icon">👥</span>
-                        <span class="nav-text">Alumni</span>
-                    </a>
-                    
-                    <a href="#" class="nav-item">
-                        <span class="nav-icon">👤</span>
-                        <span class="nav-text">Profile</span>
-                    </a>
-                </nav>
-                
-                <div class="user-section">
-                    <div class="user-info">
-                        <div class="user-avatar">
-                            <% if (typeof user !== 'undefined' && user.name) { %>
-                                <%= user.name.charAt(0).toUpperCase() %>
-                            <% } else { %>
-                                U
-                            <% } %>
-                        </div>
-                        <div class="user-details">
-                            <div class="user-name">
-                                <% if (typeof user !== 'undefined' && user.name) { %>
-                                    <%= user.name %>
-                                <% } else { %>
-                                    User
-                                <% } %>
-                            </div>
-                            <form action="/logout" method="post" style="margin: 0;">
-                                <button type="submit" class="logout-btn">Logout</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </aside>
-        
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="content-wrapper">
-                <!-- Header -->
-                <header class="content-header">
+
+        <%- include('partials/_sidebar', { user: user }) %>
+
+        <main class="main-content"> 
+            <div class="content-wrapper"> 
+                <header class="content-header"> 
                     <h1>Home</h1>
                 </header>
                 
-                <!-- Post Creation Area -->
-                <div class="post-create">
-                    <div class="post-create-content">
-                        <div class="post-avatar">
-                            <% if (typeof user !== 'undefined' && user.name) { %>
-                                <%= user.name.charAt(0).toUpperCase() %>
-                            <% } else { %>
-                                U
-                            <% } %>
-                        </div>
-                        <div class="post-input-area">
-                            <textarea placeholder="What's happening in your network?" rows="3"></textarea>
-                            <div class="post-actions">
-                                <div class="post-options">
-                                    <button class="post-option">📷</button>
-                                    <button class="post-option">📊</button>
-                                    <button class="post-option">😊</button>
-                                    <button class="post-option">📍</button>
-                                </div>
-                                <button class="post-btn">Post</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Feed -->
+                <%- include('partials/_postCreate', { user: user }) %>
+
                 <div class="feed">
-                    <!-- Sample Event Post -->
-                    <article class="post">
-                        <div class="post-header">
-                            <div class="post-avatar">F</div>
-                            <div class="post-info">
-                                <div class="post-author">
-                                    <span class="author-name">Dr. Faculty Name</span>
-                                    <span class="author-handle">@faculty</span>
-                                    <span class="post-time">• 2h</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="post-content">
-                            <p>📅 Upcoming Alumni Meet 2024 - Join us for networking, career guidance sessions, and reconnecting with your batchmates!</p>
-                            <div class="post-image">
-                                <div class="placeholder-image">Event Image Placeholder</div>
-                            </div>
-                        </div>
-                        <div class="post-actions">
-                            <button class="action-btn">
-                                <span class="action-icon">💬</span>
-                                <span class="action-count">12</span>
-                            </button>
-                            <button class="action-btn">
-                                <span class="action-icon">🔄</span>
-                                <span class="action-count">5</span>
-                            </button>
-                            <button class="action-btn">
-                                <span class="action-icon">❤️</span>
-                                <span class="action-count">24</span>
-                            </button>
-                            <button class="action-btn">
-                                <span class="action-icon">📤</span>
-                            </button>
-                        </div>
-                    </article>
-                    
-                    <!-- Sample Faculty Post -->
-                    <article class="post">
-                        <div class="post-header">
-                            <div class="post-avatar">D</div>
-                            <div class="post-info">
-                                <div class="post-author">
-                                    <span class="author-name">Dean Academic</span>
-                                    <span class="author-handle">@dean</span>
-                                    <span class="post-time">• 4h</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="post-content">
-                            <p>🎓 Congratulations to our 2024 batch! Your journey begins now. Stay connected with GradNet for opportunities and mentorship.</p>
-                        </div>
-                        <div class="post-actions">
-                            <button class="action-btn">
-                                <span class="action-icon">💬</span>
-                                <span class="action-count">45</span>
-                            </button>
-                            <button class="action-btn">
-                                <span class="action-icon">🔄</span>
-                                <span class="action-count">18</span>
-                            </button>
-                            <button class="action-btn">
-                                <span class="action-icon">❤️</span>
-                                <span class="action-count">87</span>
-                            </button>
-                            <button class="action-btn">
-                                <span class="action-icon">📤</span>
-                            </button>
-                        </div>
-                    </article>
-                    
-                    <!-- Sample Job Post -->
-                    <article class="post">
-                        <div class="post-header">
-                            <div class="post-avatar">A</div>
-                            <div class="post-info">
-                                <div class="post-author">
-                                    <span class="author-name">Alumni Relations</span>
-                                    <span class="author-handle">@alumni_office</span>
-                                    <span class="post-time">• 6h</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="post-content">
-                            <p>💼 New Job Opening: Software Engineer at TechCorp (2022 AITM Alum is hiring!) 
-                            <br>Location: Bangalore
-                            <br>Experience: 0-2 years
-                            <br>Apply through GradNet Jobs section</p>
-                        </div>
-                        <div class="post-actions">
-                            <button class="action-btn">
-                                <span class="action-icon">💬</span>
-                                <span class="action-count">8</span>
-                            </button>
-                            <button class="action-btn">
-                                <span class="action-icon">🔄</span>
-                                <span class="action-count">15</span>
-                            </button>
-                            <button class="action-btn">
-                                <span class="action-icon">❤️</span>
-                                <span class="action-count">32</span>
-                            </button>
-                            <button class="action-btn">
-                                <span class="action-icon">📤</span>
-                            </button>
-                        </div>
-                    </article>
+                    <% if (events && events.length > 0) { %>
+                        <% events.forEach(event => { %>
+                            <%- include('partials/_post', { event: event }) %>
+                        <% }) %>
+                    <% } else { %>
+                        <p>No events to display in your feed.</p>
+                    <% } %>
                 </div>
             </div>
         </main>
         
-        <!-- Right Sidebar -->
-        <aside class="right-sidebar">
-            <div class="search-section">
-                <div class="search-container">
+        <aside class="right-sidebar"> 
+            <div class="search-section"> 
+                <div class="search-container"> 
                     <input type="text" placeholder="Search GradNet" class="search-input">
-                    <span class="search-icon">🔍</span>
+                    <span class="search-icon">🔍</span> 
                 </div>
             </div>
         </aside>

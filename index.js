@@ -4,6 +4,8 @@ import session from "express-session";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import dotenv from "dotenv";
+import homeRoutes from "./routes/homeRoutes.js"
+import { requireAuth } from "./middleware/authMiddleware.js";
 
 
 import authRoutes from "./routes/authRoutes.js";
@@ -35,6 +37,10 @@ app.use(session({
 }));
 
 app.use("/", authRoutes);
+
+app.use(requireAuth);
+
+app.use("/home", homeRoutes);
 
 
 app.use((err, req, res, next) => {

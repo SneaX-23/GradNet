@@ -1,0 +1,23 @@
+<div class="post-create"> 
+    <div class="post-create-content"> 
+        <div class="post-avatar"> 
+            <% if (typeof user !== 'undefined' && user.name) { %> 
+                <%= user.name.charAt(0).toUpperCase() %> 
+            <% } else { %> 
+                U 
+            <% } %> 
+        </div>
+        <div class="post-input-area"> 
+            <textarea placeholder="What's happening in your network?" rows="3"></textarea>
+            <div class="post-actions"> 
+                <div class="post-options"> 
+                    <button class="post-option">📷</button> 
+                    <button class="post-option">📊</button> 
+                    <button class="post-option">😊</button> 
+                    <button class="post-option">📍</button> 
+                </div>
+                <button class="post-btn">Post</button> 
+            </div>
+        </div>
+    </div>
+</div>

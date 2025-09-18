@@ -5,10 +5,10 @@ export class AuthController {
         res.sendFile(path.join(__dirname, "../public/index.html"));
     }
 
-    static renderHome(req, res) {
-        console.log("At home page");
-        res.render("home.ejs");
-    }
+    // static renderHome(req, res) {
+    //     console.log("At home page");
+    //     res.render("home.ejs");
+    // }
 
     static async initiateAuth(req, res) {
         try {

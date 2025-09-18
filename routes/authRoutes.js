@@ -10,7 +10,7 @@ router.post("/submit-auth-info", requireGuest, AuthController.initiateAuth);
 router.post("/otp-auth", requireGuest, AuthController.verifyOTP);
 
 
-router.get("/home", requireAuth, AuthController.renderHome);
+// router.get("/home", requireAuth, );
 router.post("/logout", requireAuth, AuthController.logout);
 
 export default router;

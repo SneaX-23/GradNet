@@ -1,0 +1,66 @@
+<aside class="sidebar">
+    <div class="sidebar-content">
+        <div class="logo">
+            <h2>GradNet</h2>
+        </div>
+        
+        <nav class="nav-menu">
+            <a href="/home" class="nav-item active">
+                <span class="nav-icon">🏠</span>
+<span class="nav-text">Home</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">🔍</span>
+                <span class="nav-text">Explore</span>
+            </a>
+            <a href="#" class="nav-item">
+<span class="nav-icon">🔔</span>
+                 <span class="nav-text">Notifications</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">✉️</span>
+                <span class="nav-text">Messages</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">💼</span>
+                <span class="nav-text">Jobs</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">📅</span>
+                <span class="nav-text">Events</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">👥</span>
+                <span class="nav-text">Alumni</span> 
+            </a>
+            <a href="#" class="nav-item"> 
+                <span class="nav-icon">👤</span> 
+                <span class="nav-text">Profile</span> 
+            </a>
+        </nav>
+        
+        <div class="user-section"> 
+            <div class="user-info"> 
+                <div class="user-avatar"> 
+                    <% if (typeof user !== 'undefined' && user.name) { %> 
+                        <%= user.name.charAt(0).toUpperCase() %> 
+                    <% } else { %> 
+                        U 
+                    <% } %> 
+                </div>
+                <div class="user-details"> 
+                    <div class="user-name"> 
+                        <% if (typeof user !== 'undefined' && user.name) { %> 
+                            <%= user.name %> 
+                        <% } else { %> 
+                            User 
+                        <% } %> 
+                    </div>
+                    <form action="/logout" method="post"> 
+                        <button type="submit" class="logout-btn">Logout</button> 
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</aside>
