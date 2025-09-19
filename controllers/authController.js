@@ -68,7 +68,7 @@ export class AuthController {
                 email: result.user.email,
                 role: result.user.role
             };
-
+            // console.log(role);
             res.redirect("/home");
 
         } catch (error) {

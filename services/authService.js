@@ -16,6 +16,7 @@ export class AuthService {
 
             // Generate and save OTP
             const otpCode = OTP.generateOTP();
+            console.log(otpCode)
             await OTP.create(user.email, otpCode, 'login');
 
             // Send OTP email

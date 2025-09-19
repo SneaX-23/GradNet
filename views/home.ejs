@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GradNet - Home</title>
-    <link rel="stylesheet" href="../public/css/home.css">
+    <link rel="stylesheet" href="/css/home.css">
 </head>
 <body>
     <div class="main-container">
@@ -16,9 +16,9 @@
                 <header class="content-header"> 
                     <h1>Home</h1>
                 </header>
-                
+                <% if ( user && (role === 'admin' || role === 'faculty')) { %>
                 <%- include('partials/_postCreate', { user: user }) %>
-
+                <% } %>
                 <div class="feed">
                     <% if (events && events.length > 0) { %>
                         <% events.forEach(event => { %>
