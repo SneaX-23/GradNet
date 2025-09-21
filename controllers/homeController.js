@@ -43,5 +43,15 @@ export class HomeController {
     }
     }
     
+    static async getProfile(req, res){
+        const id = req.session.userId;
+        try {
+            const user = await User.findByUserId(id);
+            res.render("profile.ejs", {user : user, sessionUser: req.session.user});
+        } catch (error) {
+            throw new Error(`Error getting user profile: ${error.message}`);
+            res.status(500).render("error.ejs", { message: "Could not load profile." });
+        }
+    }
     
 }

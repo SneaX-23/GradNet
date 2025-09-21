@@ -19,6 +19,15 @@ export class User {
         }
     }
 
+    static async findByUserId(userId){
+        try {
+            const result = await db.query("SELECT * FROM users WHERE id = $1", [userId]);
+            return result.rows[0] || null;
+        } catch (error) {
+            throw new Error(`Error finding user by id: ${error.message}`)
+        }
+    }
+
     static async create(userData) {
         const { usn, name, email, password_hash, role = 'current_student' } = userData;
         try {
