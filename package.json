@@ -6,9 +6,11 @@
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
+    "multer": "^2.0.2",
     "path": "^0.12.7",
     "pg": "^8.16.3",
     "resend": "^6.0.3",
+    "sanitize-html": "^2.17.0",
     "url": "^0.11.4"
   },
   "name": "alumni-project",

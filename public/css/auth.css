@@ -67,3 +67,31 @@
 .back-link:hover {
     color: var(--primary-color);
 }
+
+.form-actions {
+    display: flex; /* Enables flexbox layout */
+    justify-content: space-between; /* Pushes items to opposite ends */
+    align-items: center; /* Vertically aligns items in the middle */
+    margin-top: 1.5rem; /* Adds some space above the buttons */
+}
+
+.resend-container {
+    text-align: right; /* Aligns the resend button and message to the right */
+}
+
+/* A new style for link-like buttons */
+.btn-link {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0;
+}
+
+.btn-link:disabled {
+    text-decoration: none;
+    color: var(--dark-gray);
+    cursor: not-allowed;
+}

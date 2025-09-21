@@ -8,6 +8,7 @@ const router = express.Router();
 router.get("/", requireGuest, AuthController.renderLogin);
 router.post("/submit-auth-info", requireGuest, AuthController.initiateAuth);
 router.post("/otp-auth", requireGuest, AuthController.verifyOTP);
+router.post("/resend-otp", requireGuest, AuthController.resendOtp)
 
 
 // router.get("/home", requireAuth, );

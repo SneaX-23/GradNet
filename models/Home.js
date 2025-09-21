@@ -1,3 +1,4 @@
+import session from "express-session";
 import db from "../config/database.js";
 
 export class Home{
@@ -8,6 +9,16 @@ export class Home{
         } catch (error) {
             throw new Error(`Error getting events:${error.message}`)
         }
+    }
+    static async storePosts(userID, title, description, imageUrl, videoUrl){
+        const query = "INSERT INTO events (posted_by, title, description, image_url, video_url) VALUES ($1, $2, $3, $4, $5) RETURNING *";
+        try{
+        const result = await db.query(query, [userID, title, description, imageUrl, videoUrl])
+        return result.rows[0];
+        }catch(error){
+            throw new Error(`Error storin the post: ${error}`);
+        }
+        
     }
 }
 

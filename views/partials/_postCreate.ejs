@@ -1,23 +1,115 @@
+<!-- views/partials/_postCreate.ejs -->
 <div class="post-create"> 
-    <div class="post-create-content"> 
-        <div class="post-avatar"> 
-            <% if (typeof user !== 'undefined' && user.name) { %> 
-                <%= user.name.charAt(0).toUpperCase() %> 
-            <% } else { %> 
-                U 
-            <% } %> 
-        </div>
-        <div class="post-input-area"> 
-            <textarea placeholder="What's happening in your network?" rows="3"></textarea>
-            <div class="post-actions"> 
-                <div class="post-options"> 
-                    <button class="post-option">📷</button> 
-                    <button class="post-option">📊</button> 
-                    <button class="post-option">😊</button> 
-                    <button class="post-option">📍</button> 
+    <form action="/posts/create" method="POST" enctype="multipart/form-data" class="post-form" id="postForm">
+        <div class="post-create-content"> 
+            <div class="post-avatar"> 
+                <% if (typeof user !== 'undefined' && user.name) { %> 
+                    <%= user.name.charAt(0).toUpperCase() %> 
+                <% } else { %> 
+                    U 
+                <% } %> 
+            </div>
+            <div class="post-input-area"> 
+                <div class="input-group">
+                    <label for="postTitle" class="visually-hidden">Post Title</label>
+                    <input 
+                        type="text" 
+                        id="postTitle"
+                        name="title" 
+                        placeholder="What's the title of your post?" 
+                        class="post-title-input"
+                        maxlength="100"
+                        required
+                        aria-describedby="titleCounter"
+                    />
+                    <div class="title-counter" id="titleCounter">0/100</div>
                 </div>
-                <button class="post-btn">Post</button> 
+                
+                <div class="input-group">
+                    <label for="postDescription" class="visually-hidden">Post Description</label>
+                    <textarea 
+                        id="postDescription"
+                        name="description" 
+                        placeholder="What's happening in your network?" 
+                        rows="3"
+                        class="post-description-input"
+                        maxlength="280"
+                        required
+                        aria-describedby="descCounter"
+                    ></textarea>
+                    <div class="desc-counter" id="descCounter">0/280</div>
+                </div>
+                
+                <!-- Image Upload Section -->
+                <div class="image-upload-section" style="display: none;">
+                    <label for="imageInput" class="visually-hidden">Upload Image</label>
+                    <input 
+                        type="file" 
+                        name="image" 
+                        accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" 
+                        class="image-input" 
+                        id="imageInput"
+                        aria-describedby="imageHelp"
+                    />
+                    <div id="imageHelp" class="upload-help">Max size: 5MB. Supported: JPG, PNG, GIF, WebP</div>
+                    <div class="image-preview" id="imagePreview" role="img" aria-label="Image preview"></div>
+                </div>
+
+                <!-- Error Messages -->
+                <div id="errorMessages" class="error-messages" style="display: none;" role="alert" aria-live="assertive"></div>
+
+                <div class="post-actions"> 
+                    <div class="post-options"> 
+                        <button 
+                            type="button" 
+                            class="post-option" 
+                            id="imageBtn" 
+                            title="Add Image"
+                            aria-label="Add Image"
+                        >
+                            📷
+                        </button> 
+                        <button 
+                            type="button" 
+                            class="post-option" 
+                            title="Add Poll (Coming Soon)"
+                            aria-label="Add Poll"
+                            disabled
+                        >
+                            📊
+                        </button> 
+                        <button 
+                            type="button" 
+                            class="post-option" 
+                            title="Add Emoji (Coming Soon)"
+                            aria-label="Add Emoji"
+                            disabled
+                        >
+                            😊
+                        </button> 
+                        <button 
+                            type="button" 
+                            class="post-option" 
+                            title="Add Location (Coming Soon)"
+                            aria-label="Add Location"
+                            disabled
+                        >
+                            📍
+                        </button> 
+                    </div>
+                    <div class="post-submit-section">
+                        <button type="submit" class="post-btn" id="submitBtn" disabled aria-describedby="submitHelp">
+                            <span class="btn-text">Post</span>
+                            <span class="btn-loader" style="display: none;">Posting...</span>
+                        </button>
+                        <div id="submitHelp" class="submit-help">Fill both title and description to post</div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
+<script src="/js/postCreate.js"></script>
+
+
+

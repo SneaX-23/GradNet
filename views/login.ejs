@@ -46,7 +46,13 @@
                             autocomplete="one-time-code"
                         >
                     </div>
-                    <button type="submit" class="btn btn-primary">Verify OTP</button>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Verify OTP</button>
+                        <div class="resend-container">
+                            <button type="button" id="resendBtn" class="btn btn-link">Resend OTP</button>
+                            <p id="resendMessage" style="color: green; font-size: 0.8rem; text-align: right;"></p>
+                        </div>
+                    </div>
                 </form>
 
                 <a href="/" class="back-link">← Back to login</a>
@@ -62,6 +68,52 @@
         document.getElementById('otp').addEventListener('input', function(e) {
             e.target.value = e.target.value.replace(/[^0-9]/g, '');
         });
+        document.addEventListener('DOMContentLoaded', () => {
+    const resendBtn = document.getElementById('resendBtn');
+    const resendMessage = document.getElementById('resendMessage');
+
+    resendBtn.addEventListener('click', () => {
+        // Disable the button to prevent spamming
+        resendBtn.disabled = true;
+        resendMessage.textContent = 'Sending a new OTP...';
+
+        fetch('/resend-otp', {
+            method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                resendMessage.textContent = 'A new OTP has been sent to your email.';
+                
+                // Start a 30-second countdown timer
+                let countdown = 30;
+                resendBtn.textContent = `Resend OTP in ${countdown}s`;
+                
+                const interval = setInterval(() => {
+                    countdown--;
+                    resendBtn.textContent = `Resend OTP in ${countdown}s`;
+                    if (countdown <= 0) {
+                        clearInterval(interval);
+                        resendBtn.textContent = 'Resend OTP';
+                        resendBtn.disabled = false;
+                        resendMessage.textContent = '';
+                    }
+                }, 1000);
+
+            } else {
+                resendMessage.textContent = data.message || 'Failed to send OTP. Please try again.';
+                resendMessage.style.color = 'red';
+                resendBtn.disabled = false;
+            }
+        })
+        .catch(error => {
+            console.error('Error resending OTP:', error);
+            resendMessage.textContent = 'An error occurred. Please try again.';
+            resendMessage.style.color = 'red';
+            resendBtn.disabled = false;
+        });
+    });
+});
     </script>
 </body>
 </html>

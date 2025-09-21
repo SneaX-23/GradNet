@@ -1,4 +1,4 @@
-/* public/css/twitter-style.css */
+/* public/css/home.css - Light Theme Version */
 
 * {
     margin: 0;
@@ -8,8 +8,8 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: #000000;
-    color: #ffffff;
+    background-color: #f5f5f5;
+    color: #333333;
     line-height: 1.6;
 }
 
@@ -18,16 +18,18 @@ body {
     min-height: 100vh;
     max-width: 1200px;
     margin: 0 auto;
+    background-color: #ffffff;
 }
 
 /* Left Sidebar */
 .sidebar {
     width: 250px;
     padding: 20px;
-    border-right: 1px solid #333333;
+    border-right: 1px solid #e0e0e0;
     position: fixed;
     height: 100vh;
     overflow-y: auto;
+    background-color: #ffffff;
 }
 
 .sidebar-content {
@@ -43,7 +45,7 @@ body {
 .logo h2 {
     font-size: 1.8rem;
     font-weight: bold;
-    color: #ffffff;
+    color: #000000;
 }
 
 .nav-menu {
@@ -55,19 +57,21 @@ body {
     align-items: center;
     padding: 12px 16px;
     margin-bottom: 4px;
-    color: #ffffff;
+    color: #333333;
     text-decoration: none;
     border-radius: 25px;
     transition: all 0.2s ease;
 }
 
 .nav-item:hover {
-    background-color: #1a1a1a;
+    background-color: #f5f5f5;
+    color: #000000;
 }
 
 .nav-item.active {
-    background-color: #1a1a1a;
+    background-color: #f5f5f5;
     font-weight: bold;
+    color: #000000;
 }
 
 .nav-icon {
@@ -94,15 +98,15 @@ body {
 }
 
 .user-info:hover {
-    background-color: #1a1a1a;
+    background-color: #f5f5f5;
 }
 
 .user-avatar {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: #ffffff;
-    color: #000000;
+    background-color: #000000;
+    color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -119,20 +123,22 @@ body {
     font-weight: bold;
     font-size: 0.9rem;
     margin-bottom: 4px;
+    color: #000000;
 }
 
 .logout-btn {
     background: none;
     border: none;
-    color: #888888;
+    color: #666666;
     font-size: 0.8rem;
     cursor: pointer;
     padding: 0;
     text-align: left;
+    transition: color 0.2s ease;
 }
 
 .logout-btn:hover {
-    color: #ffffff;
+    color: #000000;
 }
 
 /* Main Content */
@@ -140,8 +146,9 @@ body {
     flex: 1;
     margin-left: 250px;
     margin-right: 300px;
-    border-right: 1px solid #333333;
+    border-right: 1px solid #e0e0e0;
     min-height: 100vh;
+    background-color: #ffffff;
 }
 
 .content-wrapper {
@@ -151,23 +158,25 @@ body {
 
 .content-header {
     padding: 16px 20px;
-    border-bottom: 1px solid #333333;
+    border-bottom: 1px solid #e0e0e0;
     backdrop-filter: blur(12px);
     position: sticky;
     top: 0;
     z-index: 100;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(255, 255, 255, 0.9);
 }
 
 .content-header h1 {
     font-size: 1.4rem;
     font-weight: bold;
+    color: #000000;
 }
 
 /* Post Creation */
 .post-create {
-    border-bottom: 1px solid #333333;
+    border-bottom: 1px solid #e0e0e0;
     padding: 16px 20px;
+    background-color: #ffffff;
 }
 
 .post-create-content {
@@ -179,8 +188,8 @@ body {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: #ffffff;
-    color: #000000;
+    background-color: #000000;
+    color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -197,7 +206,7 @@ body {
     background: transparent;
     border: none;
     outline: none;
-    color: #ffffff;
+    color: #333333;
     font-size: 1.1rem;
     resize: none;
     font-family: inherit;
@@ -229,46 +238,51 @@ body {
     padding: 8px;
     border-radius: 50%;
     transition: background-color 0.2s ease;
+    color: #666666;
 }
 
 .post-option:hover {
-    background-color: #1a1a1a;
+    background-color: #f5f5f5;
+    color: #000000;
 }
 
 .post-btn {
-    background-color: #ffffff;
-    color: #000000;
+    background-color: #000000;
+    color: #ffffff;
     border: none;
     padding: 8px 24px;
     border-radius: 20px;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .post-btn:hover {
-    background-color: #e6e6e6;
+    background-color: #333333;
+    transform: translateY(-1px);
 }
 
 .post-btn:disabled {
-    background-color: #333333;
+    background-color: #e0e0e0;
     color: #666666;
     cursor: not-allowed;
+    transform: none;
 }
 
 /* Feed */
 .feed {
-    border-bottom: 1px solid #333333;
+    border-bottom: 1px solid #e0e0e0;
 }
 
 .post {
-    border-bottom: 1px solid #333333;
+    border-bottom: 1px solid #e0e0e0;
     padding: 16px 20px;
     transition: background-color 0.2s ease;
+    background-color: #ffffff;
 }
 
 .post:hover {
-    background-color: #0a0a0a;
+    background-color: #fafafa;
 }
 
 .post-header {
@@ -289,7 +303,7 @@ body {
 
 .author-name {
     font-weight: bold;
-    color: #ffffff;
+    color: #000000;
 }
 
 .author-handle {
@@ -311,6 +325,7 @@ body {
     font-size: 1rem;
     line-height: 1.6;
     margin-bottom: 12px;
+    color: #333333;
 }
 
 .post-image {
@@ -318,8 +333,8 @@ body {
 }
 
 .placeholder-image {
-    background-color: #1a1a1a;
-    border: 1px solid #333333;
+    background-color: #f5f5f5;
+    border: 1px solid #e0e0e0;
     border-radius: 12px;
     padding: 60px 20px;
     text-align: center;
@@ -347,8 +362,8 @@ body {
 }
 
 .action-btn:hover {
-    background-color: #1a1a1a;
-    color: #ffffff;
+    background-color: #f5f5f5;
+    color: #000000;
 }
 
 .action-icon {
@@ -368,6 +383,7 @@ body {
     height: 100vh;
     overflow-y: auto;
     margin-left: auto;
+    background-color: #ffffff;
 }
 
 .search-section {
@@ -380,18 +396,19 @@ body {
 
 .search-input {
     width: 100%;
-    background-color: #1a1a1a;
-    border: 1px solid #333333;
+    background-color: #f5f5f5;
+    border: 1px solid #e0e0e0;
     border-radius: 25px;
     padding: 12px 45px 12px 16px;
-    color: #ffffff;
+    color: #333333;
     font-size: 1rem;
     outline: none;
     transition: border-color 0.2s ease;
 }
 
 .search-input:focus {
-    border-color: #ffffff;
+    border-color: #000000;
+    background-color: #ffffff;
 }
 
 .search-input::placeholder {

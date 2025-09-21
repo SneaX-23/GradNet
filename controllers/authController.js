@@ -39,6 +39,22 @@ export class AuthController {
         }
     }
 
+    static async resendOtp(req, res) {
+        try {
+        
+            const email = req.session.email;
+            if (!email) {
+                return res.status(400).json({ success: false, message: 'Session expired or email not found.' });
+            }
+            const result = await AuthService.initiateLoginAgain(email);
+            res.json({ success: true, message: 'New OTP sent successfully.' });
+
+        } catch (error) {
+            console.error('Error resending OTP:', error);
+            res.status(500).json({ success: false, message: 'Failed to resend OTP.' });
+        }
+    }
+
     static async verifyOTP(req, res) {
         try {
             const { otp } = req.body;
