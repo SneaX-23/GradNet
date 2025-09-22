@@ -44,14 +44,41 @@ export class HomeController {
     }
     
     static async getProfile(req, res){
-        const id = req.session.userId;
         try {
+            const id = req.session.userId;
             const user = await User.findByUserId(id);
             res.render("profile.ejs", {user : user, sessionUser: req.session.user});
         } catch (error) {
             throw new Error(`Error getting user profile: ${error.message}`);
-            res.status(500).render("error.ejs", { message: "Could not load profile." });
+            res.status(500).render("error.ejs", {message: "Could not load profile." });
         }
     }
-    
+    static async editProfile(req, res){
+        
+        try {
+            const id = req.session.userId;
+            const updateUser = {
+                name: req.body.name,
+                bio: req.body.bio,
+                phone: req.body.phone,
+                linkedin_url: req.body.linkedin_url,
+
+            };
+            if (req.files) {
+            if (req.files.profileImage) {
+                updateUser.profile_picture_url = `/uploads/${req.files.profileImage[0].filename}`;
+            }
+            if (req.files.headerImage) {
+                // updatedData.header_image_url = `/uploads/${req.files.headerImage[0].filename}`;
+            }
+        }
+            await User.updateprofile(id, updateUser);
+            res.redirect("/home/profile");
+            
+        } catch (error) {
+            throw new Error (`Error updating profile: ${error.message}`);
+            res.status(500).render("error.ejs", {message: "Could update profile." });
+
+        }
+    }
 }

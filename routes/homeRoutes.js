@@ -29,5 +29,8 @@ const upload = multer({
 router.get("/", HomeController.renderHome);
 router.post("/posts/create", upload.single('image'), HomeController.createPost);
 router.get("/profile", HomeController.getProfile)
-
+router.post("/profile/update", upload.fields([
+        { name: 'profileImage', maxCount: 1 },
+        { name: 'headerImage', maxCount: 1 }
+    ]) ,HomeController.editProfile);
 export default router;

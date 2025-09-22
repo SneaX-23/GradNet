@@ -154,3 +154,75 @@
     width: 100%;
     margin-top: 1rem;
 }
+
+/* Add these new styles to your profile.css file */
+
+/* --- PROFILE IMAGE EDITOR STYLES --- */
+.profile-image-editor {
+    position: relative;
+    margin-bottom: 4rem; /* Space for the profile pic to overlap */
+}
+
+.header-image-preview {
+    background-color: #cfd9de;
+    height: 150px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-picture-preview {
+    position: absolute;
+    bottom: -50px; /* Overlap effect */
+    left: 1rem;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 4px solid var(--white);
+    background-color: var(--dark-gray);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-picture-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-upload-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.6);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: var(--transition);
+}
+
+.image-upload-label:hover {
+    background: rgba(0, 0, 0, 0.75);
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}

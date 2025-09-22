@@ -22,7 +22,7 @@
                 <div class="profile-page">
                     <div class="profile-header card">
                         <div class="profile-picture">
-                            <img src="https://i.pinimg.com/736x/8f/6e/5c/8f6e5c67b9341459a98f121b6a1924b6.jpg" alt="Profile Picture">
+                            <img src="<%= user.profile_picture_url  %>" alt="Profile Picture">
                         </div>
                         <div class="profile-summary">
                             <h2 class="profile-name"><%= user.name %></h2>
@@ -32,11 +32,10 @@
                     </div>
 
                     <div class="profile-body">
-                        <div class="profile-about card">
+                         <div class="profile-about card">
                             <h3>About</h3>
                             <p><%= user.bio || 'No bio available. Click Edit Profile to add one!' %></p>
                         </div>
-
                         <div class="profile-details card">
                             <h3>Details</h3>
                             <ul>
@@ -62,7 +61,19 @@
                 <h2>Edit profile</h2>
                 <button id="closeModalBtn" class="close-button">&times;</button>
             </div>
-            <form action="/home/profile/update" method="POST">
+            <form action="/home/profile/update" method="POST" enctype="multipart/form-data">
+                
+                <div class="profile-image-editor">
+                    <div class="header-image-preview" id="headerPreview">
+                        <label for="headerImageInput" class="image-upload-label" title="Add header image">📷</label>
+                        <input type="file" id="headerImageInput" name="headerImage" class="visually-hidden" accept="image/*">
+                    </div>
+                    <div class="profile-picture-preview" id="profilePicPreview">
+                         <img src="<%= user.profile_picture_url  %>" alt="Profile Picture">
+                         <label for="profileImageInput" class="image-upload-label" title="Add profile image">📷</label>
+                         <input type="file" id="profileImageInput" name="profileImage" class="visually-hidden" accept="image/*">
+                    </div>
+                </div>
                 <div class="form-group">
                     <label for="name" class="form-label">Name</label>
                     <input type="text" id="name" name="name" class="form-input" value="<%= user.name %>">
@@ -71,10 +82,10 @@
                     <label for="bio" class="form-label">Bio</label>
                     <textarea id="bio" name="bio" class="form-input" rows="3"><%= user.bio %></textarea>
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="department" class="form-label">Department</label>
                     <input type="text" id="department" name="department" class="form-input" value="<%= user.department %>">
-                </div>
+                </div> -->
                 <div class="form-group">
                     <label for="phone" class="form-label">Phone</label>
                     <input type="tel" id="phone" name="phone" class="form-input" value="<%= user.phone %>">

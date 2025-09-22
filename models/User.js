@@ -51,4 +51,25 @@ export class User {
             throw new Error(`Error updating last login: ${error.message}`);
         }
     }
+
+    static async updateprofile(id, userData ){
+        try {
+        const fields = Object.keys(userData);
+        if (fields.length === 0) {
+            return; 
+        }
+        const setClause = fields
+            .map((field, index) => `"${field}" = $${index + 2}`)
+            .join(", ");
+
+        const values = [id, ...Object.values(userData)];
+
+        const query = `UPDATE users SET ${setClause} WHERE id = $1`;
+
+        await db.query(query, values);
+
+        } catch (error) {
+            throw new Error(`Error updating user: ${error.message}`);
+        }
+    }
 }
