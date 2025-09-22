@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Profile - GradNet</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/home.css"> 
     <link rel="stylesheet" href="/css/profile.css"> 
@@ -20,15 +21,28 @@
                 </header>
 
                 <div class="profile-page">
-                    <div class="profile-header card">
-                        <div class="profile-picture">
-                            <img src="<%= user.profile_picture_url  %>" alt="Profile Picture">
+                    <div class="profile-header-container card">
+                        <div class="profile-banner">
+                            <% if (user.banner_image_url) { %>
+                                <img src="<%= user.banner_image_url %>" alt="Banner Image">
+                            <% } else { %>
+                                <div class="default-banner"></div>
+                            <% } %>
                         </div>
-                        <div class="profile-summary">
-                            <h2 class="profile-name"><%= user.name %></h2>
-                            <p class="profile-department"><%= user.department %></p>
+                        <div class="profile-header-content">
+                            <div class="profile-picture">
+                                <% if (user.profile_picture_url) { %>
+                                    <img src="<%= user.profile_picture_url %>" alt="Profile Picture">
+                                <% } else { %>
+                                    <div class="default-avatar"><%= user.name.charAt(0).toUpperCase() %></div>
+                                <% } %>
+                            </div>
+                            <div class="profile-summary">
+                                <h2 class="profile-name"><%= user.name %></h2>
+                                <p class="profile-department"><%= user.department %></p>
+                            </div>
+                            <button id="editProfileBtn" class="btn btn-secondary btn-small">Edit Profile</button>
                         </div>
-                        <button id="editProfileBtn" class="btn btn-secondary btn-small">Edit Profile</button>
                     </div>
 
                     <div class="profile-body">
@@ -61,43 +75,70 @@
                 <h2>Edit profile</h2>
                 <button id="closeModalBtn" class="close-button">&times;</button>
             </div>
-            <form action="/home/profile/update" method="POST" enctype="multipart/form-data">
+            <form action="/home/profile/update" method="POST" enctype="multipart/form-data" class="modal-form">
                 
                 <div class="profile-image-editor">
                     <div class="header-image-preview" id="headerPreview">
+                        <% if (user.banner_image_url) { %>
+                            <img src="<%= user.banner_image_url %>" alt="Banner preview">
+                        <% } %>
                         <label for="headerImageInput" class="image-upload-label" title="Add header image">📷</label>
                         <input type="file" id="headerImageInput" name="headerImage" class="visually-hidden" accept="image/*">
                     </div>
                     <div class="profile-picture-preview" id="profilePicPreview">
-                         <img src="<%= user.profile_picture_url  %>" alt="Profile Picture">
+                         <% if (user.profile_picture_url) { %>
+                                    <img src="<%= user.profile_picture_url %>" alt="Profile Picture">
+                                <% } else { %>
+                                    <div class="default-avatar"><%= user.name.charAt(0).toUpperCase() %></div>
+                                <% } %>
                          <label for="profileImageInput" class="image-upload-label" title="Add profile image">📷</label>
                          <input type="file" id="profileImageInput" name="profileImage" class="visually-hidden" accept="image/*">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="name" class="form-label">Name</label>
-                    <input type="text" id="name" name="name" class="form-input" value="<%= user.name %>">
+                
+                <div class="form-scroll-area">
+                    <div class="form-group">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" id="name" name="name" class="form-input" value="<%= user.name %>">
+                    </div>
+                    <div class="form-group">
+                        <label for="bio" class="form-label">Bio</label>
+                        <textarea id="bio" name="bio" class="form-input" rows="3"><%= user.bio %></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="department" class="form-label">Department</label>
+                        <input type="text" id="department" name="department" class="form-input" value="<%= user.department %>">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Phone</label>
+                        <input type="tel" id="phone" name="phone" class="form-input" value="<%= user.phone %>">
+                    </div>
+                     <div class="form-group">
+                        <label for="linkedin_url" class="form-label">LinkedIn URL</label>
+                        <input type="url" id="linkedin_url" name="linkedin_url" class="form-input" value="<%= user.linkedin_url %>">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="bio" class="form-label">Bio</label>
-                    <textarea id="bio" name="bio" class="form-input" rows="3"><%= user.bio %></textarea>
-                </div>
-                <!-- <div class="form-group">
-                    <label for="department" class="form-label">Department</label>
-                    <input type="text" id="department" name="department" class="form-input" value="<%= user.department %>">
-                </div> -->
-                <div class="form-group">
-                    <label for="phone" class="form-label">Phone</label>
-                    <input type="tel" id="phone" name="phone" class="form-input" value="<%= user.phone %>">
-                </div>
-                 <div class="form-group">
-                    <label for="linkedin_url" class="form-label">LinkedIn URL</label>
-                    <input type="url" id="linkedin_url" name="linkedin_url" class="form-input" value="<%= user.linkedin_url %>">
-                </div>
-                <button type="submit" class="btn btn-primary">Save</button>
+                
+                <button type="submit" class="btn btn-primary modal-save-btn">Save</button>
             </form>
         </div>
     </div>
+    <div id="cropperModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Crop your picture</h2>
+            </div>
+            <div class="cropper-container">
+                <img id="imageToCrop">
+            </div>
+            <div class="modal-actions">
+                <button id="cropImageBtn" class="btn btn-primary">Crop</button>
+                <button id="cancelCropBtn" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
 
     <script src="/js/profile.js"></script>
 </body>

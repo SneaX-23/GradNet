@@ -69,8 +69,8 @@ export class HomeController {
                 updateUser.profile_picture_url = `/uploads/${req.files.profileImage[0].filename}`;
             }
             if (req.files.headerImage) {
-                // updatedData.header_image_url = `/uploads/${req.files.headerImage[0].filename}`;
-            }
+                updateUser.banner_image_url = `/uploads/${req.files.headerImage[0].filename}`;
+                }
         }
             await User.updateprofile(id, updateUser);
             res.redirect("/home/profile");
