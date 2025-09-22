@@ -52,23 +52,35 @@ export class User {
         }
     }
 
-    static async updateprofile(id, userData ){
+    static async updateprofile(id, userData) {
         try {
-        const fields = Object.keys(userData);
-        if (fields.length === 0) {
-            return; 
-        }
-        const setClause = fields
-            .map((field, index) => `"${field}" = $${index + 2}`)
-            .join(", ");
+            const fields = Object.keys(userData);
+            if (fields.length === 0) {
+                console.log('No fields to update');
+                return; 
+            }
 
-        const values = [id, ...Object.values(userData)];
+            const setClause = fields
+                .map((field, index) => `${field} = $${index + 2}`)
+                .join(", ");
 
-        const query = `UPDATE users SET ${setClause} WHERE id = $1`;
+            const values = [id, ...Object.values(userData)];
+            const query = `UPDATE users SET ${setClause}, updated_at = CURRENT_TIMESTAMP WHERE id = $1 RETURNING *`;
 
-        await db.query(query, values);
+            // console.log('SQL Query:', query);
+            // console.log('Values:', values);
+
+            const result = await db.query(query, values);
+            
+            if (result.rows.length === 0) {
+                throw new Error('User not found or no changes made');
+            }
+            
+            // console.log('Updated user:', result.rows[0]);
+            return result.rows[0];
 
         } catch (error) {
+            console.error('Database update error:', error);
             throw new Error(`Error updating user: ${error.message}`);
         }
     }

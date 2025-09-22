@@ -8,11 +8,14 @@
 .profile-header-container {
     padding: 0;
     overflow: hidden;
+    position: relative; /* Added for proper positioning */
 }
 
 .profile-banner {
     height: 200px;
     background-color: #cfd9de;
+    position: relative; /* Added for proper stacking */
+    z-index: 1; /* Lower z-index than profile picture */
 }
 
 .profile-banner img {
@@ -28,6 +31,7 @@
     position: relative;
     padding: 0 2rem 1.5rem;
     margin-top: -60px; /* Pulls content up over banner */
+    z-index: 2; /* Higher z-index to stay above banner */
 }
 
 .profile-picture {
@@ -39,6 +43,8 @@
     overflow: hidden;
     flex-shrink: 0;
     box-shadow: 0 4px 12px var(--shadow);
+    position: relative; /* Added for proper positioning */
+    z-index: 3; /* Highest z-index to stay above everything */
 }
 
 .profile-picture img, .default-avatar {
@@ -56,7 +62,6 @@
     font-size: 3rem;
     font-weight: bold;
 }
-
 
 .profile-summary {
     flex-grow: 1;
@@ -133,7 +138,6 @@
     color: var(--primary-color);
 }
 
-
 /* --- MODAL STYLES --- */
 body.modal-open {
     overflow: hidden; 
@@ -168,6 +172,7 @@ body.modal-open {
     padding: 1.5rem 2rem;
     border-bottom: 1px solid var(--medium-gray);
     flex-shrink: 0;
+    position: relative; /* Added for close button positioning */
 }
 
 .modal-header h2 {
@@ -198,6 +203,7 @@ body.modal-open {
 .profile-image-editor {
     position: relative;
     flex-shrink: 0; 
+    z-index: 1; /* Base z-index for the editor */
 }
 
 .header-image-preview {
@@ -207,6 +213,7 @@ body.modal-open {
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 1; /* Lower z-index for header */
 }
 
 .header-image-preview img {
@@ -223,7 +230,6 @@ body.modal-open {
     z-index: 2;
 }
 
-
 .profile-picture-preview {
     position: absolute;
     bottom: -50px;
@@ -237,12 +243,24 @@ body.modal-open {
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 3; /* Higher z-index to appear above header */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Added shadow for depth */
 }
 
 .profile-picture-preview img, .profile-picture-preview .default-avatar {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.profile-picture-preview .default-avatar {
+    background-color: var(--primary-color);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: bold;
 }
 
 .image-upload-label {
@@ -261,6 +279,7 @@ body.modal-open {
     cursor: pointer;
     font-size: 1.2rem;
     transition: var(--transition);
+    z-index: 4; /* Highest z-index for upload buttons */
 }
 
 .image-upload-label:hover {
@@ -278,7 +297,6 @@ body.modal-open {
     white-space: nowrap;
     border: 0;
 }
-
 
 .form-scroll-area {
     padding: 0 2rem;
@@ -313,4 +331,43 @@ body.modal-open {
     padding-top: 1.5rem;
     margin-top: 1.5rem;
     border-top: 1px solid var(--medium-gray);
+}
+
+/* Responsive fixes */
+@media (max-width: 768px) {
+    .profile-header-content {
+        padding: 0 1rem 1rem;
+        gap: 15px;
+    }
+    
+    .profile-picture {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .default-avatar {
+        font-size: 2.5rem;
+    }
+    
+    .profile-name {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-header-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-top: -40px;
+    }
+    
+    .profile-picture {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .default-avatar {
+        font-size: 2rem;
+    }
 }
