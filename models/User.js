@@ -84,4 +84,14 @@ export class User {
             throw new Error(`Error updating user: ${error.message}`);
         }
     }
+    
+    static async getUserPosts(userID){
+        try {
+            const query = "SELECT title, description, image_url, video_url FROM events WHERE posted_by = $1 ORDER BY created_at DESC LIMIT 10"
+            const result = await db.query(query, [userID]);
+            return result.rows;
+        } catch (error) {
+            throw new Error(`Error getting user posts: ${error.message}`);
+        }
+    }
 }

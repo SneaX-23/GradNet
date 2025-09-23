@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 import homeRoutes from "./routes/homeRoutes.js"
 import { requireAuth } from "./middleware/authMiddleware.js";
 import multer from "multer";
+import profileRoutes from "./routes/profileRoutes.js"
 
 import authRoutes from "./routes/authRoutes.js";
 
@@ -63,6 +64,8 @@ app.use("/", authRoutes);
 app.use(requireAuth);
 
 app.use("/home", homeRoutes);
+
+app.use("/profile", profileRoutes)
 
 
 app.use((err, req, res, next) => {

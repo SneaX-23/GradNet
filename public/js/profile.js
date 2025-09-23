@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         // Submit the form
-        fetch('/home/profile/update', {
+        fetch('/profile/update', {
             method: 'POST',
             body: formData
         })

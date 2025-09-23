@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import { HomeController } from "../controllers/homeController.js";
+import { ProfileController } from "../controllers/profileController.js";
 
 const router = express.Router();
 
@@ -25,8 +25,10 @@ const upload = multer({
         }
     }
 });
-
-router.get("/", HomeController.renderHome);
-router.post("/posts/create", upload.single('image'), HomeController.createPost);
+router.get("/", ProfileController.getProfile)
+router.post("/update", upload.fields([
+        { name: 'profileImage', maxCount: 1 },
+        { name: 'headerImage', maxCount: 1 }
+    ]) ,ProfileController.editProfile);
 
 export default router;
