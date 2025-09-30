@@ -11,7 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
-
+uploads/
 .env
 
 # Editor directories and files
@@ -25,3 +25,11 @@ dist-ssr
 *.sln
 *.sw?
 gradnet project structure.txt
+
+# Ignore all image files by extension
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.svg
