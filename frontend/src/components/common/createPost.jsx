@@ -26,14 +26,22 @@ function CreatePost() {
     }));
   };
 
+
+  console.log('User data in CreatePost:', user);
+
   return (
     <Card sx={{ p: 2, mb: 3, width: '100%', maxWidth: 600, boxShadow: 'none', borderBottom: '1px solid #eee' }}>
       <Box sx={{ display: 'flex', gap: 2 }}>
         <Avatar 
-          src={user?.profile_image_url} 
-          sx={{ bgcolor: 'primary.main' }}
+          src={user?.profile_image_url ? user.profile_image_url : undefined}
+          alt={user?.name || 'User'}
+          sx={{ 
+            bgcolor: 'primary.main',
+            width: 48,
+            height: 48
+          }}
         >
-          {!user?.profile_image_url && (user?.name ? user.name.charAt(0).toUpperCase() : 'U')}
+          {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
         </Avatar>
         <Box sx={{ width: '100%' }}>
           <TextField

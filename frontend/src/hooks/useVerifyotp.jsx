@@ -21,7 +21,7 @@ export const useVerifyOtp = () => {
 
         try {
             const userData = await initiateOtpVerification(otp);
-            login(userData); 
+            login(userData.user); 
             if (status === 'LOGIN') {
                 navigate('/home');
             } else if (status === 'SIGNUP_REQUIRED') {

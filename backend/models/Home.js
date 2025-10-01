@@ -13,7 +13,8 @@ export class Home{
                     e.image_url,  
                     e.created_at, 
                     u.name AS author_name,
-                    u.handle 
+                    u.handle,
+                    u.profile_picture_url 
                 FROM events e 
                 INNER JOIN users u ON e.posted_by = u.id 
                 WHERE e.is_active = true 
@@ -26,4 +27,4 @@ export class Home{
             throw new Error(`Error getting feed from DB: ${error.message}`);
         }
     }
-}
+} 

@@ -69,7 +69,9 @@ function HomePage() {
       <Sidebar />
       
       <Box component="main" sx={{ flexGrow: 1, p: 3, marginTop: '64px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <CreatePost/>
+        
+        {user && (user.role === 'admin' || user.role === 'faculty') && <CreatePost />}
+
         {error && <Typography color="error">{error}</Typography>}
         <InfiniteScroll
           dataLength={posts.length}
@@ -85,12 +87,13 @@ function HomePage() {
           {posts.map((post) => (
             <ShowPostsCard
               key={post.id}
-              title={post.author_name}
-              subheader={post.created_at}
+              author_name={post.author_name}
+              created_at={post.created_at}
               image={post.image_url}
               post_title={post.title}
               description={post.description}
               handle={post.handle}
+              author_profile_picture={post.profile_picture_url}
             />
           ))}
         </InfiniteScroll>

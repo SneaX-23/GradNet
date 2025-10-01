@@ -25,8 +25,10 @@ export default function ShowPostsCard(props) {
     <Card sx={{ display: 'flex', p: 2, mb: 2, width: '100%', maxWidth: 600, boxShadow: 'none', borderBottom: '1px solid #eee' }}>
 
       <Box sx={{ mr: 2, flexShrink: 0 }}>
-        <Avatar sx={{ bgcolor: 'primary.main' }} aria-label="profile-avatar">
-          {props.title ? props.title.charAt(0).toUpperCase() : 'U'}
+        <Avatar
+          src={props.author_profile_picture} 
+          sx={{ bgcolor: 'primary.main' }} aria-label="profile-avatar">
+          {props.author_name ? props.author_name.charAt(0).toUpperCase() : 'U'}
         </Avatar>
       </Box>
       
@@ -36,10 +38,10 @@ export default function ShowPostsCard(props) {
           <Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
               <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                {props.title} {/* Author Name */}
+                {props.author_name} {/* Author Name */}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                @{props.handle} &middot; {new Date(props.subheader).toLocaleDateString()}
+                @{props.handle} &middot; {new Date(props.created_at).toLocaleDateString()}
               </Typography>
             </Box>
           </Box>
