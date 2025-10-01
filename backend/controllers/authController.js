@@ -69,7 +69,7 @@ static async verifyOtp(req, res) {
         if (result.status === 'LOGIN') {
             delete req.session.email;
             delete req.session.otpSent;
-            console.log("USER OBJECT FROM AUTHSERVICE:", result.user);
+            // console.log("USER OBJECT FROM AUTHSERVICE:", result.user);
             req.session.userId = result.user.id;
             req.session.user = {
                 id: result.user.id,
@@ -156,5 +156,17 @@ static async verifyOtp(req, res) {
             console.error("Error creating handle, ", error)
             res.status(500).json({success: false, message: 'Error creating user'})
         }
+    }
+    static async logout(req, res) {
+        req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).json({ success: false, message: 'Could not log out, please try again.' });
+        }
+        res.clearCookie('connect.sid'); 
+        res.json({ success: true, message: 'You have been logged out.' });
+    });
+    }
+    static async checkSession(req, res) {
+        res.json({ success: true, user: req.session.user });
     }
 }

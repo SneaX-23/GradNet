@@ -11,6 +11,7 @@ router.post("/resend-otp", requireGuest, AuthController.resendOtp);
 router.get("/onboard", requireOnboarding, AuthController.getOnboardingDetails);
 router.post("/check-handle", requireOnboarding, AuthController.checkHandle)
 router.post("/create-profile", requireOnboarding, AuthController.createProfile)
-// router.post("/logout", requireAuth, AuthController.logout);
+router.post("/logout", requireAuth, AuthController.logout);
+router.get("/session-status", requireAuth, AuthController.checkSession);
 
 export default router;

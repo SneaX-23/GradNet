@@ -6,6 +6,7 @@ import VerifyOtp from './pages/VerifyOtpPage';
 import { AuthProvider } from './context/AuthContext'; 
 import HomePage from './pages/HomePage';
 import CreateProfilePage from './pages/CreaeteProfilePage';
+import ProfilePage from './pages/ProfilePage';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path='/submit-auth-info' element={<VerifyOtp />} />
           <Route path='/home' element={<HomePage />}/>
           <Route path="/create-profile" element={<CreateProfilePage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
