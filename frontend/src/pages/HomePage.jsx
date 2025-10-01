@@ -6,6 +6,7 @@ import { Box, Typography, CssBaseline, AppBar, Toolbar, Button, CircularProgress
 import initiateShowPosts from "../services/showPostsService";
 import ShowPostsCard from '../components/common/showPostsCard';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import CreatePost from '../components/common/createPost'
 
 function HomePage() {
   const { user } = useAuth();
@@ -66,7 +67,9 @@ function HomePage() {
         </Toolbar>
       </AppBar>
       <Sidebar />
+      
       <Box component="main" sx={{ flexGrow: 1, p: 3, marginTop: '64px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <CreatePost/>
         {error && <Typography color="error">{error}</Typography>}
         <InfiniteScroll
           dataLength={posts.length}

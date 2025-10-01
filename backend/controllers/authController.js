@@ -75,7 +75,8 @@ static async verifyOtp(req, res) {
                 id: result.user.id,
                 name: result.user.name,
                 email: result.user.email,
-                role: result.user.role
+                role: result.user.role,
+                profile_image_url: result.user.profile_image_url
             };
 
             return res.json({ success: true, status: 'LOGIN',user: req.session.user });
@@ -145,9 +146,10 @@ static async verifyOtp(req, res) {
             req.session.userId = newUser.id;
             req.session.user = {
                 id: newUser.id,
-                name: newUser.user.name,
+                name: newUser.name,
                 email: newUser.email,
-                role: newUser.role
+                role: newUser.role || "current_student",
+                profile_image_url: newUser.profile_image_url || null
             };
             delete req.session.email; 
 
