@@ -35,6 +35,13 @@ const upload = multer({
 
 router.get("/", ProfileController.getProfile);
 
-// router.post("/update", upload.single('profileImage'), ProfileController.updateProfile);
+router.post(
+    "/update", 
+    upload.fields([
+        { name: 'profileImage', maxCount: 1 },
+        { name: 'bannerImage', maxCount: 1 }
+    ]), 
+    ProfileController.updateProfile
+);
 
 export default router;

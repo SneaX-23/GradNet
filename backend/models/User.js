@@ -80,4 +80,33 @@ export class User{
             throw new Error(`Error creating user ${error.message}`)
         }
     }
+    static async updateProfile(userId, profileData) {
+        const { name, bio, linkedin_url, github_url, twitter_url, profile_picture_url, profile_banner_url } = profileData;
+    
+        const fields = [];
+        const values = [];
+        let queryIndex = 1;
+    
+        if (name !== undefined) { fields.push(`name = $${queryIndex++}`); values.push(name); }
+        if (bio !== undefined) { fields.push(`bio = $${queryIndex++}`); values.push(bio); }
+        if (linkedin_url !== undefined) { fields.push(`linkedin_url = $${queryIndex++}`); values.push(linkedin_url); }
+        if (github_url !== undefined) { fields.push(`github_url = $${queryIndex++}`); values.push(github_url); }
+        if (twitter_url !== undefined) { fields.push(`twitter_url = $${queryIndex++}`); values.push(twitter_url); }
+        if (profile_picture_url !== undefined) { fields.push(`profile_picture_url = $${queryIndex++}`); values.push(profile_picture_url); }
+        if (profile_banner_url !== undefined) { fields.push(`profile_banner_url = $${queryIndex++}`); values.push(profile_banner_url); }
+    
+        if (fields.length === 0) {
+            return this.findByUserId(userId); 
+        }
+    
+        values.push(userId);
+        const query = `UPDATE users SET ${fields.join(', ')} WHERE id = $${queryIndex} RETURNING *`;
+    
+        try {
+            const result = await db.query(query, values);
+            return result.rows[0];
+        } catch (error) {
+            throw new Error(`Error updating user profile: ${error.message}`);
+        }
+    }
 }

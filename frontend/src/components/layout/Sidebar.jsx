@@ -1,21 +1,41 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Box, Avatar, Typography, Button } from '@mui/material';
+import { 
+  Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, 
+  Toolbar, Box, Avatar, Typography, Menu, MenuItem 
+} from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useAuth } from '../../context/AuthContext';
 
 const drawerWidth = 240;
+const backendUrl = 'http://localhost:3000';
 
 function Sidebar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleLogout = async () => {
+    handleClose();
     await logout();
     navigate('/');
   };
+
+  const avatarUrl = user?.profile_image_url
+    ? (user.profile_image_url.startsWith('http') ? user.profile_image_url : `${backendUrl}${user.profile_image_url}`)
+    : null;
 
   return (
     <Drawer
@@ -27,7 +47,6 @@ function Sidebar() {
       }}
     >
       <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-       
         <Box>
           <Toolbar />
           <List>
@@ -49,24 +68,55 @@ function Sidebar() {
             </ListItem>
           </List>
         </Box>
-        <Box sx={{ marginTop: 'auto', p: 2 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
-            <Avatar src={user?.profile_image_url}>
-               {!user?.profile_image_url && (user?.name ? user.name.charAt(0).toUpperCase() : 'U')}
+        <Box sx={{ marginTop: 'auto', p: 1 }}>
+          <Box
+            onClick={handleClick}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1.5,
+              p: 1.5,
+              borderRadius: '8px',
+              cursor: 'pointer',
+              '&:hover': {
+                backgroundColor: 'action.hover'
+              }
+            }}
+          >
+            <Avatar src={avatarUrl}> 
+               {!avatarUrl && (user?.name ? user.name.charAt(0).toUpperCase() : 'U')}
             </Avatar>
             <Box sx={{ overflow: 'hidden' }}>
               <Typography variant="body1" fontWeight="bold" noWrap>{user?.name}</Typography>
               <Typography variant="body2" color="text.secondary" noWrap>@{user?.handle}</Typography>
             </Box>
           </Box>
-          <Button
-            variant="contained"
-            fullWidth
-            onClick={handleLogout}
-            startIcon={<LogoutIcon />}
+          <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'center',
+            }}
+            transformOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
+            sx={{
+              '& .MuiPaper-root': {
+                width: drawerWidth - 16, 
+                mb: 1,
+              }
+            }}
           >
-            Logout
-          </Button>
+            <MenuItem onClick={handleLogout}>
+              <ListItemIcon>
+                <LogoutIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Logout @{user?.handle}</ListItemText>
+            </MenuItem>
+          </Menu>
         </Box>
       </Box>
     </Drawer>

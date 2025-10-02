@@ -31,11 +31,16 @@ const modalStyle = {
   alignItems: 'center',
 };
 
+const getFullUrl = (path) => {
+  if (!path) return null;
+  return path.startsWith('http') ? path : `${backendUrl}${path}`;
+};
+
 const MediaGrid = ({ files, onImageClick }) => {
     const fileCount = files.length;
 
     const renderFile = (file, sxProps = {}) => {
-        const fileUrl = file.file_url.startsWith('http') ? file.file_url : `${backendUrl}${file.file_url}`;
+        const fileUrl = getFullUrl(file.file_url);
         const mimeType = file.file_mime_type;
 
         if (mimeType?.startsWith('image/')) {
@@ -136,17 +141,18 @@ export default function ShowPostsCard({ post }) {
     setSelectedImage('');
   };
 
+  const avatarUrl = getFullUrl(post.profile_picture_url);
 
   return (
     <>
     <Card sx={{ display: 'flex', p: 2, mb: 2, width: '100%', maxWidth: 600, boxShadow: 'none', borderBottom: '1px solid #eee' }}>
       <Box sx={{ mr: 2, flexShrink: 0 }}>
         <Avatar
-          src={post.profile_picture_url} 
+          src={avatarUrl} 
           sx={{ bgcolor: 'primary.main' }}
           aria-label="profile-avatar"
         >
-          {!post.profile_picture_url && (post.author_name ? post.author_name.charAt(0).toUpperCase() : 'U')}
+          {!avatarUrl && (post.author_name ? post.author_name.charAt(0).toUpperCase() : 'U')}
         </Avatar>
       </Box>
       
