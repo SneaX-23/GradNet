@@ -23,4 +23,29 @@ export class HomeController{
             res.status(500).json({ success: false, message: "Server error while getting feed." });
         }
     }
+    static async createPost(req, res) {
+        try {
+            const { title, description } = req.body;
+            const userId = req.session.userId;
+            const files = req.files;
+
+            if (!title && !description) {
+                return res.status(400).json({ success: false, message: "Post content is required." });
+            }
+
+            const postData = { title, description, posted_by: userId };
+            const fileData = files ? files.map(file => ({
+                url: `/uploads/${file.filename}`,
+                mimeType: file.mimetype
+            })) : [];
+
+            const newPost = await Home.createWithFiles(postData, fileData);
+
+            res.status(201).json({ success: true, message: "Post created successfully", post: newPost });
+
+        } catch (error) {
+            console.error("Error creating post:", error);
+            res.status(500).json({ success: false, message: "Server error while creating post." });
+        }
+    }
 } 

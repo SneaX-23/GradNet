@@ -84,16 +84,10 @@ function HomePage() {
             </p>
           }
         >
-          {posts.map((post) => (
+          {posts.map((post, index) => (
             <ShowPostsCard
-              key={post.id}
-              author_name={post.author_name}
-              created_at={post.created_at}
-              image={post.image_url}
-              post_title={post.title}
-              description={post.description}
-              handle={post.handle}
-              author_profile_picture={post.profile_picture_url}
+             key={`${post.id}-${index}`}
+              post={post} 
             />
           ))}
         </InfiniteScroll>

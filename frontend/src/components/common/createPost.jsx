@@ -1,119 +1,124 @@
-import React, { useState } from 'react';
-import { Box, Avatar, TextField, Button, IconButton, Card } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Box, Avatar, TextField, Button, IconButton, Card, Typography, Grid } from '@mui/material';
 import ImageIcon from '@mui/icons-material/Image';
-import GifBoxIcon from '@mui/icons-material/GifBox';
-import PollIcon from '@mui/icons-material/Poll';
-import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import ArticleIcon from '@mui/icons-material/Article';
 import { useAuth } from '../../context/AuthContext';
 import AddIcon from '@mui/icons-material/Add';
+import { Document, Page } from 'react-pdf';
 
 function CreatePost() {
   const [postContent, setPostContent] = useState({ title: '', description: '' });
-  const { user } = useAuth(); 
+   const [selectedFiles, setSelectedFiles] = useState([]);;
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const { user } = useAuth();
 
-  const handlePost = () => {
-    console.log('Posting content:', postContent);
-    setPostContent({ title: '', description: '' }); 
+  const handleFileChange = (e) => {
+    if (e.target.files) {
+      const newFiles = Array.from(e.target.files);
+      setSelectedFiles(prevFiles => [...prevFiles, ...newFiles].slice(0, 4));
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
+
+  const handlePost = async () => {
+    const formData = new FormData();
+    selectedFiles.forEach(file => {
+      formData.append('postFiles', file); 
+    });
+    formData.append("title", postContent.title);
+    formData.append("description", postContent.description);
+
+    try {
+      const response = await fetch("/api/home/create-post", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Upload failed');
+      console.log('Post successful:', data);
+    } catch (error) {
+      console.error("Upload failed:", error);
+    }
+
+    setPostContent({ title: '', description: '' });
+    setSelectedFiles([]);
+    setPreviewUrl(null);
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setPostContent(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
+    setPostContent(prevState => ({ ...prevState, [name]: value }));
   };
 
+  const renderPreview = (file) => {
+    const previewUrl = URL.createObjectURL(file);
+    if (file.type.startsWith('image/')) return <img src={previewUrl} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />;
+    if (file.type.startsWith('video/')) return <video src={previewUrl} controls style={{ width: '100%', height: '100%' }} />;
 
-  console.log('User data in CreatePost:', user);
+    if (file.type === 'application/pdf') return <Box sx={{p:1}}><ArticleIcon /> PDF</Box>;
+    return <Box sx={{p:1}}><ArticleIcon /> File</Box>;
+  };
 
   return (
     <Card sx={{ p: 2, mb: 3, width: '100%', maxWidth: 600, boxShadow: 'none', borderBottom: '1px solid #eee' }}>
       <Box sx={{ display: 'flex', gap: 2 }}>
-        <Avatar 
-          src={user?.profile_image_url ? user.profile_image_url : undefined}
-          alt={user?.name || 'User'}
-          sx={{ 
-            bgcolor: 'primary.main',
-            width: 48,
-            height: 48
-          }}
-        >
-          {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+        <Avatar src={user?.profile_image_url} sx={{ bgcolor: 'primary.main' }}>
+          {!user?.profile_image_url && (user?.name ? user.name.charAt(0).toUpperCase() : 'U')}
         </Avatar>
         <Box sx={{ width: '100%' }}>
           <TextField
-            multiline
             fullWidth
-            minRows={1}
             variant="standard"
             placeholder="Title"
             name="title"
             value={postContent.title}
             onChange={handleInputChange}
-            InputProps={{
-              disableUnderline: true,
-              sx: {
-                fontSize: '1.2rem',
-                padding: '8px 0',
-              },
-            }}
-            sx={{
-              '.MuiInputBase-root': {
-                padding: 0,
-              },
-              marginBottom: '1rem',
-            }}
+            InputProps={{ disableUnderline: true }}
           />
           <TextField
-            multiline
             fullWidth
+            multiline
             minRows={2}
             variant="standard"
             placeholder="What's happening?"
             name="description"
             value={postContent.description}
             onChange={handleInputChange}
-            InputProps={{
-              disableUnderline: true,
-              sx: {
-                fontSize: '1rem',
-                padding: '8px 0',
-              },
-            }}
-            sx={{
-              '.MuiInputBase-root': {
-                padding: 0,
-              },
-            }}
+            InputProps={{ disableUnderline: true }}
           />
+
+          {selectedFiles.length > 0 && (
+            <Grid container spacing={1} sx={{ mt: 2 }}>
+              {selectedFiles.map((file, index) => (
+                <Grid item xs={6} key={index} sx={{ height: '150px', borderRadius: '16px', overflow: 'hidden', border: '1px solid #ddd' }}>
+                  {renderPreview(file)}
+                </Grid>
+              ))}
+            </Grid>
+          )}
+
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
             <Box>
-              <IconButton size="small" color="primary"><ImageIcon /></IconButton>
-              <IconButton size="small" color="primary"><GifBoxIcon /></IconButton>
-              <IconButton size="small" color="primary"><PollIcon /></IconButton>
-              <IconButton size="small" color="primary"><SentimentSatisfiedAltIcon /></IconButton>
-              <IconButton size="small" color="primary"><CalendarTodayIcon /></IconButton>
-              <IconButton size="small" color="primary"><LocationOnIcon /></IconButton>
+              <IconButton size="small" color="primary" component="label">
+                <ImageIcon />
+                <input type="file" hidden onChange={handleFileChange} />
+              </IconButton>
             </Box>
             <Button
               variant="contained"
               disabled={!postContent.title.trim() || !postContent.description.trim()}
               onClick={handlePost}
-              sx={{
-                borderRadius: '50%',
-                minWidth: '56px',
-                height: '56px',
-                padding: 0,
-                backgroundColor: 'black',
-                '&:hover': {
-                  backgroundColor: '#333',
-                }
-              }}
+              sx={{ borderRadius: '8px', textTransform: 'none', fontWeight: 'bold', minWidth: '40px', height: '40px', padding: 0 }}
             >
-              <AddIcon sx={{ fontSize: '2rem' }} />
+              <AddIcon />
             </Button>
           </Box>
         </Box>

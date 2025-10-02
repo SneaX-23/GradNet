@@ -14,22 +14,27 @@ const storage = multer.diskStorage({
     }
 });
 
+const allowedMimeTypes = [
+    'image/jpeg',
+    'image/png',
+    'image/gif',
+    'image/webp',
+];
+
 const upload = multer({ 
     storage: storage,
-    limits: { fileSize: 50 * 1024 * 1024 },
+    limits: { fileSize: 10 * 1024 * 1024 }, 
     fileFilter: function (req, file, cb) {
-        if ((file.mimetype.startsWith('image/')) || file.mimetype.startsWith('video/')) {
+        if (allowedMimeTypes.includes(file.mimetype)) {
             cb(null, true);
         } else {
-            cb(new Error('Only image and video files are allowed'));
+            cb(new Error('Invalid file type. Only images are allowed.'));
         }
     }
 });
-router.get("/", ProfileController.getProfile)
 
-// router.post("/update", upload.fields([
-//         { name: 'profileImage', maxCount: 1 },
-//         { name: 'headerImage', maxCount: 1 }
-//     ]) ,ProfileController.editProfile);
+router.get("/", ProfileController.getProfile);
+
+// router.post("/update", upload.single('profileImage'), ProfileController.updateProfile);
 
 export default router;

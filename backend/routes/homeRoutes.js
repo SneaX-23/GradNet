@@ -13,19 +13,37 @@ const storage = multer.diskStorage({
     }
 });
 
+const allowedMimeTypes = [
+    // Documents
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.ms-powerpoint',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    // Images
+    'image/jpeg',
+    'image/png',
+    'image/gif',
+    'image/webp',
+    // Videos
+    'video/mp4',
+    'video/quicktime'
+];
+
 const upload = multer({ 
     storage: storage,
     limits: { fileSize: 50 * 1024 * 1024 },
     fileFilter: function (req, file, cb) {
-        if ((file.mimetype.startsWith('image/')) || file.mimetype.startsWith('video/')) {
+        if (allowedMimeTypes.includes(file.mimetype)) {
             cb(null, true);
         } else {
-            cb(new Error('Only image and video files are allowed'));
+            cb(new Error('Invalid file type. Only documents, images, and videos are allowed.'));
         }
     }
 });
 
 router.get('/get-feed', HomeController.getFeed);
 
-export default router;
+router.post('/create-post', upload.array('postFiles', 4), HomeController.createPost);
 
+export default router;
