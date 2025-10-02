@@ -2,8 +2,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Box, Card, CardActions, Collapse, Avatar, IconButton, Typography, Button, Link, CardMedia, Grid } from '@mui/material'; 
-import { Document, Page } from 'react-pdf';
+import { Box, Card, CardActions, Collapse, Avatar, IconButton, Typography, Button, Link, CardMedia, Modal } from '@mui/material'; 
 import ArticleIcon from '@mui/icons-material/Article';
 
 const backendUrl = 'http://localhost:3000';
@@ -19,31 +18,127 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
+const modalStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  bgcolor: 'transparent',
+  boxShadow: 24,
+  p: 0,
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+};
+
+const MediaGrid = ({ files, onImageClick }) => {
+    const fileCount = files.length;
+
+    const renderFile = (file, sxProps = {}) => {
+        const fileUrl = file.file_url.startsWith('http') ? file.file_url : `${backendUrl}${file.file_url}`;
+        const mimeType = file.file_mime_type;
+
+        if (mimeType?.startsWith('image/')) {
+            return (
+                <Box
+                    onClick={() => onImageClick(fileUrl)}
+                    sx={{
+                        cursor: 'pointer',
+                        width: '100%',
+                        height: '100%',
+                        backgroundImage: `url(${fileUrl})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        transition: 'filter 0.2s ease-in-out',
+                        '&:hover': {
+                          filter: 'brightness(0.85)',
+                        },
+                        ...sxProps,
+                    }}
+                />
+            );
+        }
+        if (mimeType?.startsWith('video/')) {
+            return <CardMedia component="video" controls src={fileUrl} sx={{ width: '100%', height: '100%', objectFit: 'cover' }} />;
+        }
+        return (
+             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', backgroundColor: '#f0f0f0' }}>
+                <Button component={Link} href={fileUrl} target="_blank" startIcon={<ArticleIcon />}>
+                    View File
+                </Button>
+            </Box>
+        );
+    };
+
+    const gridContainerSx = {
+        mt: 1.5,
+        height: '350px',
+        borderRadius: '16px',
+        overflow: 'hidden',
+        border: '1px solid #ddd',
+        display: 'grid',
+        gap: '2px',
+        backgroundColor: '#ddd'
+    };
+
+    if (fileCount === 1) {
+        return <Box sx={gridContainerSx}>{renderFile(files[0])}</Box>;
+    }
+    if (fileCount === 2) {
+        return (
+            <Box sx={{ ...gridContainerSx, gridTemplateColumns: '1fr 1fr' }}>
+                {renderFile(files[0])}
+                {renderFile(files[1])}
+            </Box>
+        );
+    }
+    if (fileCount === 3) {
+        return (
+            <Box sx={{ ...gridContainerSx, gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr' }}>
+                {renderFile(files[0], { gridRow: 'span 2' })}
+                {renderFile(files[1])}
+                {renderFile(files[2])}
+            </Box>
+        );
+    }
+    if (fileCount === 4) {
+        return (
+            <Box sx={{ ...gridContainerSx, gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr' }}>
+                {files.map((file, index) => <React.Fragment key={index}>{renderFile(file)}</React.Fragment>)}
+            </Box>
+        );
+    }
+
+    return (
+        <Box sx={{...gridContainerSx, gridTemplateColumns: '1fr 1fr'}}>
+            {files.map((file, index) => <React.Fragment key={index}>{renderFile(file)}</React.Fragment>)}
+        </Box>
+    );
+};
+
+
 export default function ShowPostsCard({ post }) { 
   const [expanded, setExpanded] = React.useState(false);
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const [selectedImage, setSelectedImage] = React.useState('');
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
-  const renderFile = (file) => {
-    const fileUrl = file.file_url.startsWith('http') ? file.file_url : `${backendUrl}${file.file_url}`;
-    const mimeType = file.file_mime_type;
-
-    if (mimeType?.startsWith('image/')) {
-        return <CardMedia component="img" image={fileUrl} sx={{ width: '100%', height: '100%', objectFit: 'cover' }} />;
-    }
-    if (mimeType?.startsWith('video/')) {
-        return <CardMedia component="video" controls src={fileUrl} sx={{ width: '100%', height: '100%' }} />;
-    }
-    return (
-        <Button component={Link} href={fileUrl} target="_blank" startIcon={<ArticleIcon />}>
-            View File
-        </Button>
-    );
+  const handleOpenImage = (imageUrl) => {
+    setSelectedImage(imageUrl);
+    setModalOpen(true);
   };
 
+  const handleCloseImage = () => {
+    setModalOpen(false);
+    setSelectedImage('');
+  };
+
+
   return (
+    <>
     <Card sx={{ display: 'flex', p: 2, mb: 2, width: '100%', maxWidth: 600, boxShadow: 'none', borderBottom: '1px solid #eee' }}>
       <Box sx={{ mr: 2, flexShrink: 0 }}>
         <Avatar
@@ -84,13 +179,7 @@ export default function ShowPostsCard({ post }) {
         </Collapse>
 
         {post.files && post.files.length > 0 && (
-            <Grid container spacing={0.5} sx={{ mt: 1, borderRadius: '16px', overflow: 'hidden', border: '1px solid #ddd' }}>
-                {post.files.map((file, index) => (
-                    <Grid item xs={post.files.length > 1 ? 6 : 12} key={index} sx={{ height: post.files.length > 2 ? '150px' : '300px' }}>
-                        {renderFile(file)}
-                    </Grid>
-                ))}
-            </Grid>
+           <MediaGrid files={post.files} onImageClick={handleOpenImage} />
         )}
 
         <CardActions disableSpacing sx={{ pl: 0, justifyContent: 'flex-end' }}>
@@ -104,5 +193,17 @@ export default function ShowPostsCard({ post }) {
         </CardActions>
       </Box>
     </Card>
+
+    <Modal
+        open={modalOpen}
+        onClose={handleCloseImage}
+        aria-labelledby="image-modal-title"
+        aria-describedby="image-modal-description"
+      >
+        <Box sx={modalStyle} onClick={handleCloseImage}>
+          <img src={selectedImage} alt="Enlarged post content" style={{ maxHeight: '90vh', maxWidth: '90vw', objectFit: 'contain' }} />
+        </Box>
+    </Modal>
+    </>
   );
 }
