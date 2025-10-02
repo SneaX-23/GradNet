@@ -109,4 +109,36 @@ export class User{
             throw new Error(`Error updating user profile: ${error.message}`);
         }
     }
+
+    static async GetUserPosts(page = 1, userId){
+        try{
+            const limit = 10;
+            const offset = (page - 1) * limit;
+            const query = `
+                SELECT 
+                    e.id,
+                    e.title,
+                    e.description,
+                    e.created_at,
+                    (
+                        SELECT json_agg(json_build_object('file_url', ef.file_url, 'file_mime_type', ef.file_mime_type))
+                        FROM event_files ef
+                        WHERE ef.event_id = e.id
+                    ) AS files
+                FROM events e
+                WHERE e.is_active = true AND e.posted_by = $1
+                ORDER BY e.created_at DESC
+                LIMIT $2 OFFSET $3
+            `;
+            const result = await db.query(query, [userId, limit, offset]);
+            result.rows.forEach(row => {
+                if (row.files && row.files.length === 1 && row.files[0] === null) {
+                    row.files = [];
+                }
+            });
+            return result;
+        }catch(error){
+            throw new Error(`Error getting users posts from DB: ${error.message}`);
+        }
+    }
 }

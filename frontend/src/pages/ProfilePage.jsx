@@ -9,6 +9,9 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import XIcon from '@mui/icons-material/X';
 import EditProfileModal from '../components/profile/EditProfileModal';
+import { showUserPosts } from "../services/showPostsService";
+import ShowPostsCard from '../components/common/showPostsCard';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const backendUrl = 'http://localhost:3000';
 
@@ -78,6 +81,7 @@ const modalStyle = {
   alignItems: 'center',
 };
 
+
 function ProfilePage() {
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -87,6 +91,10 @@ function ProfilePage() {
 
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
+
+  const [posts, setPosts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
   const loadProfile = async () => {
     try {
@@ -107,6 +115,42 @@ function ProfilePage() {
   useEffect(() => {
     loadProfile();
   }, []);
+
+  useEffect(() => {
+    if (profileData && (profileData.role === 'admin' || profileData.role === 'faculty')) {
+      const fetchUsersInitialPosts = async () => {
+        try {
+          const response = await showUserPosts(1);
+          if (response.success) {
+            setPosts(response.feed);
+            setHasMore(response.hasMore);
+          } else {
+            setError(response.message || 'Failed to fetch posts.');
+          }
+        } catch (err) {
+          setError(err.message);
+        }
+      };
+      fetchUsersInitialPosts();
+    }
+  }, [profileData]);
+
+    const fetchMoreData = async () => {
+      const nextPage = page + 1;
+      try {
+        const response = await showUserPosts(nextPage);
+          if (response.success) {
+            setPosts(prevPosts => [...prevPosts, ...response.feed]);
+            setHasMore(response.hasMore);
+            setPage(nextPage);
+          } else {
+            setHasMore(false);
+          }
+      } catch (error) {
+        setError(err.message);
+        setHasMore(false);
+      }
+    }
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -234,7 +278,32 @@ function ProfilePage() {
                     <AboutContent profileData={profileData} />
                   </TabPanel>
                   <TabPanel value={tabValue} index={1}>
-                    <Typography>Posts by {profileData.name} will be shown here.</Typography>
+                    <InfiniteScroll
+                      dataLength={posts.length}
+                      next={fetchMoreData}
+                      hasMore={hasMore}
+                      loader={<CircularProgress sx={{ my: 2 }} />}
+                      endMessage={
+                        <p style={{ textAlign: 'center', marginTop: '20px' }}>
+                          <b>You have seen it all!</b>
+                        </p>
+                      }
+                    >
+                      {posts.map((post, index) => {
+                        const postWithAuthor = {
+                          ...post,
+                          author_name: profileData.name,
+                          handle: profileData.handle,
+                          profile_picture_url: profileData.profile_picture_url
+                        };
+                        return (
+                          <ShowPostsCard
+                           key={`${post.id}-${index}`}
+                            post={postWithAuthor} 
+                          />
+                        )
+                      })}
+                    </InfiniteScroll>
                   </TabPanel>
                 </>
               ) : (

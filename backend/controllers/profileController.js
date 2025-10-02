@@ -55,4 +55,29 @@ export class ProfileController{
             res.status(500).json({ success: false, message: 'Failed to update profile.' });
         }
     }
+    
+    static async getUserPosts(req, res){
+        try {
+            const userId = req.session.userId;
+            if(!userId){
+                return res.status(500).json({ success: false, message: "Error getting the feed" });
+            }
+            const page = parseInt(req.query.page, 10) || 1;
+            const result = await User.GetUserPosts(page, userId);
+            if (!result) {
+                return res.status(500).json({ success: false, message: "Error getting the feed" });
+            }
+
+            const hasMore = result.rows.length === 10;
+
+            res.json({
+                feed: result.rows,
+                success: true,
+                hasMore: hasMore
+            });
+        } catch (error) {
+            console.error("Error getting user posts:", error);
+            res.status(500).json({success: false, message: "Server error while getting user posts"});
+        }
+    }
 }
