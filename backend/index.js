@@ -10,6 +10,7 @@ import { requireAuth } from "./middleware/authMiddleware.js";
 import authRoutes from "./routes/authRoutes.js";
 import  profileRoutes from "./routes/profileRoutes.js"
 import homeRoutes from "./routes/homeRoutes.js"
+import jobRoutes from "./routes/jobRoutes.js"
 
 dotenv.config();
 
@@ -41,6 +42,7 @@ app.use("/", authRoutes);
 app.use(requireAuth);
 app.use("/home", homeRoutes);
 app.use("/profile", profileRoutes);
+app.use("/jobs", jobRoutes);
 
 app.use((err, req, res, next) => {
     console.error('Unhandled error:', err);

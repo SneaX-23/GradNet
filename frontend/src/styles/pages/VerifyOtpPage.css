@@ -1,0 +1,99 @@
+.otp-page-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100vw;
+  background-color: var(--color-background); /* Use variable */
+  text-align: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 1rem;
+}
+
+.otp-card {
+  background-color: var(--color-card-background); /* Use variable */
+  padding: 2.5rem 3rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 400px;
+}
+
+.otp-card h2 {
+  color: var(--color-text-primary); /* Use variable */
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.otp-card .subtitle {
+  margin-bottom: 1.5rem;
+  color: var(--color-text-secondary); /* Use variable */
+}
+
+.email-confirmation-box {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.otp-form input[type="tel"] {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--color-input-border); /* Use variable */
+  background-color: var(--color-card-background); /* Use variable */
+  color: var(--color-text-primary); /* Use variable */
+  border-radius: 8px;
+  font-size: 1.5rem;
+  text-align: center;
+  letter-spacing: 0.5em;
+  box-sizing: border-box;
+}
+
+.otp-form .form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text-primary); /* Use variable */
+  text-align: left;
+}
+
+.otp-form button {
+  width: 100%;
+  padding: 0.9rem;
+  margin-top: 1.5rem;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--color-button-background); /* Use variable */
+  color: var(--color-button-text); /* Use variable */
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.otp-form .resend-button {
+  background-color: #f0f0f0; /* Keeping this neutral for now */
+  color: #333;
+  margin-top: 0.75rem;
+}
+
+.otp-form button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.back-to-login {
+  margin-top: 1.5rem;
+  background: none;
+  border: none;
+  color: var(--color-text-secondary); /* Use variable */
+  cursor: pointer;
+  font-size: 0.9rem;
+}

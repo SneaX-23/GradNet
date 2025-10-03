@@ -1,18 +1,41 @@
 :root {
+  /* Default Light Mode Colors */
+  --color-background: #f7f7f7;
+  --color-card-background: #ffffff;
+  --color-text-primary: #111111;
+  --color-text-secondary: #666666;
+  --color-border: #ddd;
+  --color-button-background: #000000;
+  --color-button-text: #ffffff;
+  --color-button-hover: #333333;
+  --color-input-border: #000000;
+
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: var(--color-text-primary);
+  background-color: var(--color-background);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #121212;
+    --color-card-background: #1e1e1e;
+    --color-text-primary: #ffffff;
+    --color-text-secondary: #aaaaaa;
+    --color-border: #444;
+    --color-button-background: #ffffff;
+    --color-button-text: #000000;
+    --color-button-hover: #dddddd;
+    --color-input-border: #ffffff;
+  }
+}
 a {
   font-weight: 500;
   color: #646cff;

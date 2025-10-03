@@ -23,12 +23,16 @@ function OtpVerificationForm({
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <h2>Verify OTP</h2>
+      <p className="subtitle">We've sent a verification code to your email.</p>
+      
+      <div className="email-confirmation-box">
+        OTP has been sent to <strong>{email}</strong>
+      </div>
+
+      <form className="otp-form" onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="otp">Verify Otp</label>
-          <p>We've sent a verification code to your email</p>
-          <p>OTP has been sent to <strong>{email}</strong></p>
-          <p>Enter OTP</p>
+          <label htmlFor="otp" className="form-label">Enter OTP</label>
           <input
             id="otp"
             type="tel"
@@ -48,20 +52,20 @@ function OtpVerificationForm({
         </div>
 
         {error && <p className="error-message">{error}</p>}
-        
         {resendStatus && <p className="resend-status-message">{resendStatus}</p>}
 
         <button type="submit">Verify OTP</button>
 
         <button
           type="button"
+          className="resend-button"
           onClick={handleResendOtp}
           disabled={isResending}
         >
           {isResending ? 'Sending...' : 'Resend OTP'}
         </button>
       </form>
-      <button type="button" onClick={handleClick}>← Back to login</button>
+      <button type="button" className="back-to-login" onClick={handleClick}>← Back to login</button>
     </>
   );
 }

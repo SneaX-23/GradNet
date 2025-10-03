@@ -7,6 +7,7 @@ import {
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
+import WorkIcon from '@mui/icons-material/Work';
 import { useAuth } from '../../context/AuthContext';
 
 const drawerWidth = 240;
@@ -56,6 +57,14 @@ function Sidebar() {
                   <HomeIcon />
                 </ListItemIcon>
                 <ListItemText primary="Home" />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton component={NavLink} to="/jobs">
+                <ListItemIcon>
+                  <WorkIcon />
+                </ListItemIcon>
+                <ListItemText primary="Jobs" />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>

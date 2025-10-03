@@ -8,7 +8,7 @@ function LoginForm({ usn, setUsn, onSubmit, isLoading, error }){
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="login-form" onSubmit={handleSubmit}>
       <div className="form-group">
         <label htmlFor="usn">University Serial Number</label>
         <input 
