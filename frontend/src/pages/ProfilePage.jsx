@@ -81,7 +81,6 @@ const modalStyle = {
   alignItems: 'center',
 };
 
-
 function ProfilePage() {
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -135,37 +134,43 @@ function ProfilePage() {
     }
   }, [profileData]);
 
-    const fetchMoreData = async () => {
-      const nextPage = page + 1;
-      try {
-        const response = await showUserPosts(nextPage);
-          if (response.success) {
-            setPosts(prevPosts => [...prevPosts, ...response.feed]);
-            setHasMore(response.hasMore);
-            setPage(nextPage);
-          } else {
-            setHasMore(false);
-          }
-      } catch (error) {
-        setError(error.message);
+  const fetchMoreData = async () => {
+    const nextPage = page + 1;
+    try {
+      const response = await showUserPosts(nextPage);
+      if (response.success) {
+        setPosts(prevPosts => [...prevPosts, ...response.feed]);
+        setHasMore(response.hasMore);
+        setPage(nextPage);
+      } else {
         setHasMore(false);
       }
+    } catch (error) {
+      setError(error.message);
+      setHasMore(false);
     }
+  }
 
   const handleDeletePost = async (postId) => {
     try {
-        const response = await fetch(`/api/home/delete-post/${postId}`, {
-            method: 'DELETE',
-        });
+      const response = await fetch(`/api/home/delete-post/${postId}`, {
+        method: 'DELETE',
+      });
 
-        if (!response.ok) {
-            throw new Error('Failed to delete the post.');
-        }
+      if (!response.ok) {
+        throw new Error('Failed to delete the post.');
+      }
 
-        setPosts(posts.filter(post => post.id !== postId));
+      setPosts(posts.filter(post => post.id !== postId));
     } catch (error) {
-        setError(error.message);
+      setError(error.message);
     }
+  };
+
+  const handleUpdatePost = (updatedPost) => {
+    setPosts(posts.map(post => 
+      post.id === updatedPost.id ? { ...post, ...updatedPost } : post
+    ));
   };
 
   const handleTabChange = (event, newValue) => {
@@ -314,9 +319,10 @@ function ProfilePage() {
                         };
                         return (
                           <ShowPostsCard
-                           key={`${post.id}-${index}`}
+                            key={`${post.id}-${index}`}
                             post={postWithAuthor}
                             onDelete={handleDeletePost}
+                            onUpdate={handleUpdatePost}
                           />
                         )
                       })}

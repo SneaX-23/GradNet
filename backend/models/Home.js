@@ -48,6 +48,22 @@ export class Home {
         }
     }
 
+    static async updateById(id, updateData) {
+        try {
+            const { title, description } = updateData;
+            const query = `
+                UPDATE events 
+                SET title = $1, description = $2, updated_at = CURRENT_TIMESTAMP 
+                WHERE id = $3 
+                RETURNING *
+            `;
+            const result = await db.query(query, [title, description, id]);
+            return result.rows[0];
+        } catch (error) {
+            throw new Error(`Error updating post by ID: ${error.message}`);
+        }
+    }
+
     static async deleteById(id) {
         try {
             const query = 'UPDATE events SET is_active = false WHERE id = $1 RETURNING id';
@@ -62,7 +78,6 @@ export class Home {
         const client = await db.connect();
         try {
             await client.query('BEGIN');
-
 
             const eventQuery = `
                 INSERT INTO events (title, description, posted_by, is_active)

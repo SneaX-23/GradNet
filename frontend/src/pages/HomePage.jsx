@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/layout/Sidebar';
-import { Box, Typography, CssBaseline, AppBar, Toolbar, Button, CircularProgress } from '@mui/material';
+import { Box, Typography, CssBaseline, AppBar, Toolbar, CircularProgress } from '@mui/material';
 import initiateShowPosts from "../services/showPostsService";
 import ShowPostsCard from '../components/common/showPostsCard';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -67,6 +67,12 @@ function HomePage() {
     }
   };
 
+  const handleUpdatePost = (updatedPost) => {
+    setPosts(posts.map(post => 
+      post.id === updatedPost.id ? { ...post, ...updatedPost } : post
+    ));
+  };
+
   if (!user) {
     navigate('/');
     return null;
@@ -105,6 +111,7 @@ function HomePage() {
              key={`${post.id}-${index}`}
               post={post}
               onDelete={handleDeletePost}
+              onUpdate={handleUpdatePost}
             />
           ))}
         </InfiniteScroll>

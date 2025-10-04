@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/layout/Sidebar';
 import {
-  Box, Typography, Avatar, Button, CircularProgress, Alert,
+  Box, Typography, Avatar, CircularProgress, Alert,
   AppBar, Toolbar, Tabs, Tab, Link, CssBaseline, Modal
 } from '@mui/material';
 import { fetchUserProfileByHandle } from '../services/profileService';
@@ -81,7 +81,6 @@ const modalStyle = {
   alignItems: 'center',
 };
 
-
 function UserProfilePage() {
     const [profileData, setProfileData] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -140,37 +139,43 @@ function UserProfilePage() {
       }
     }, [profileData]);
   
-      const fetchMoreData = async () => {
-        const nextPage = page + 1;
-        try {
-          const response = await showUserPosts(nextPage, profileData.id);
-            if (response.success) {
-              setPosts(prevPosts => [...prevPosts, ...response.feed]);
-              setHasMore(response.hasMore);
-              setPage(nextPage);
-            } else {
-              setHasMore(false);
-            }
-        } catch (error) {
-          setError(error.message);
+    const fetchMoreData = async () => {
+      const nextPage = page + 1;
+      try {
+        const response = await showUserPosts(nextPage, profileData.id);
+        if (response.success) {
+          setPosts(prevPosts => [...prevPosts, ...response.feed]);
+          setHasMore(response.hasMore);
+          setPage(nextPage);
+        } else {
           setHasMore(false);
         }
+      } catch (error) {
+        setError(error.message);
+        setHasMore(false);
       }
+    }
 
     const handleDeletePost = async (postId) => {
       try {
-          const response = await fetch(`/api/home/delete-post/${postId}`, {
-              method: 'DELETE',
-          });
-  
-          if (!response.ok) {
-              throw new Error('Failed to delete the post.');
-          }
-  
-          setPosts(posts.filter(post => post.id !== postId));
+        const response = await fetch(`/api/home/delete-post/${postId}`, {
+          method: 'DELETE',
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to delete the post.');
+        }
+
+        setPosts(posts.filter(post => post.id !== postId));
       } catch (error) {
-          setError(error.message);
+        setError(error.message);
       }
+    };
+
+    const handleUpdatePost = (updatedPost) => {
+      setPosts(posts.map(post => 
+        post.id === updatedPost.id ? { ...post, ...updatedPost } : post
+      ));
     };
   
     const handleTabChange = (event, newValue) => {
@@ -304,9 +309,10 @@ function UserProfilePage() {
                           };
                           return (
                             <ShowPostsCard
-                             key={`${post.id}-${index}`}
+                              key={`${post.id}-${index}`}
                               post={postWithAuthor}
                               onDelete={handleDeletePost}
+                              onUpdate={handleUpdatePost}
                             />
                           )
                         })}

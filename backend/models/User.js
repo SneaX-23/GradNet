@@ -128,13 +128,14 @@ export class User{
                     e.title,
                     e.description,
                     e.created_at,
+                    e.posted_by,
                     (
                         SELECT json_agg(json_build_object('file_url', ef.file_url, 'file_mime_type', ef.file_mime_type))
                         FROM event_files ef
                         WHERE ef.event_id = e.id
                     ) AS files
                 FROM events e
-                WHERE e.is_active = true AND e.posted_by = $1
+             WHERE e.is_active = true AND e.posted_by = $1
                 ORDER BY e.created_at DESC
                 LIMIT $2 OFFSET $3
             `;

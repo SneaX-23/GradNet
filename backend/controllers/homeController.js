@@ -49,6 +49,39 @@ export class HomeController{
         }
     }
 
+    static async updatePost(req, res) {
+        try {
+            const { postId } = req.params;
+            const { title, description } = req.body;
+            const { userId, user } = req.session;
+
+            if (!user) {
+                return res.status(401).json({ success: false, message: 'Authentication required.' });
+            }
+
+            const post = await Home.findById(postId);
+
+            if (!post) {
+                return res.status(404).json({ success: false, message: 'Post not found.' });
+            }
+
+            if (post.posted_by !== userId && user.role !== 'admin') {
+                return res.status(403).json({ success: false, message: 'You are not authorized to update this post.' });
+            }
+
+            if (!title && !description) {
+                return res.status(400).json({ success: false, message: "Post content is required." });
+            }
+
+            const updatedPost = await Home.updateById(postId, { title, description });
+
+            res.json({ success: true, message: 'Post updated successfully.', post: updatedPost });
+        } catch (error) {
+            console.error("Error updating post:", error);
+            res.status(500).json({ success: false, message: "Server error while updating post." });
+        }
+    }
+
     static async deletePost(req, res) {
         try {
             const { postId } = req.params;

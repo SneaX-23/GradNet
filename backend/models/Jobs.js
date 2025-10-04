@@ -19,6 +19,7 @@ export class Jobs {
                     j.external_link,
                     j.updated_at,
                     j.work_location,
+                    j.posted_by,
                     u.name AS author_name,
                     u.handle,
                     u.profile_picture_url
@@ -32,6 +33,16 @@ export class Jobs {
             return result;
         } catch (error) {
             throw new Error(`Error getting jobs from DB: ${error.message}`);
+        }
+    }
+
+    static async findById(id) {
+        try {
+            const query = 'SELECT * FROM job_posts WHERE id = $1';
+            const result = await db.query(query, [id]);
+            return result.rows[0];
+        } catch (error) {
+            throw new Error(`Error finding job by ID: ${error.message}`);
         }
     }
 
@@ -66,6 +77,59 @@ export class Jobs {
             return result.rows[0];
         } catch (error) {
             throw new Error(`Error creating job in DB: ${error.message}`);
+        }
+    }
+
+    static async updateJob(id, jobData) {
+        const {
+            title,
+            company,
+            location,
+            job_type,
+            salary_range,
+            description,
+            requirements,
+            application_deadline,
+            external_link,
+            work_location
+        } = jobData;
+
+        try {
+            const query = `
+                UPDATE job_posts 
+                SET 
+                    title = $1,
+                    company = $2,
+                    location = $3,
+                    job_type = $4,
+                    salary_range = $5,
+                    description = $6,
+                    requirements = $7,
+                    application_deadline = $8,
+                    external_link = $9,
+                    work_location = $10,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = $11
+                RETURNING *;
+            `;
+            const values = [
+                title, company, location, job_type, salary_range,
+                description, requirements, application_deadline, external_link, work_location, id
+            ];
+            const result = await db.query(query, values);
+            return result.rows[0];
+        } catch (error) {
+            throw new Error(`Error updating job in DB: ${error.message}`);
+        }
+    }
+
+    static async deleteById(id) {
+        try {
+            const query = 'UPDATE job_posts SET is_active = false WHERE id = $1 RETURNING id';
+            const result = await db.query(query, [id]);
+            return result.rows[0];
+        } catch (error) {
+            throw new Error(`Error deleting job by ID: ${error.message}`);
         }
     }
 }

@@ -53,6 +53,28 @@ function JobsPage() {
     }
   };
 
+  const handleDeleteJob = async (jobId) => {
+    try {
+        const response = await fetch(`/api/jobs/delete-job/${jobId}`, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to delete the job.');
+        }
+
+        setJobs(jobs.filter(job => job.id !== jobId));
+    } catch (error) {
+        setError(error.message);
+    }
+  };
+
+  const handleUpdateJob = (updatedJob) => {
+    setJobs(jobs.map(job => 
+      job.id === updatedJob.id ? { ...job, ...updatedJob } : job
+    ));
+  };
+
   if (!user) {
     navigate('/');
     return null;
@@ -89,7 +111,9 @@ function JobsPage() {
           {jobs.map((job, index) => (
             <JobCard
              key={`${job.id}-${index}`}
-              job={job} 
+              job={job}
+              onDelete={handleDeleteJob}
+              onUpdate={handleUpdateJob}
             />
           ))}
         </InfiniteScroll>
@@ -99,4 +123,3 @@ function JobsPage() {
 }
 
 export default JobsPage;
-

@@ -1,153 +1,47 @@
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import React, { useState } from 'react';
+import {
+  Box,
+  Card,
+  Typography,
+  Avatar,
+  IconButton,
+  Menu,
+  MenuItem,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Link
+} from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Box, Card, CardActions, Collapse, Avatar, IconButton, Typography, Button, Link, CardMedia, Modal, Menu, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { NavLink } from 'react-router-dom';
-import ArticleIcon from '@mui/icons-material/Article';
+import { Document, Page, pdfjs } from 'react-pdf';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
+import 'react-pdf/dist/Page/TextLayer.css';
+import EditPostModal from './EditPostModal';
 import { useAuth } from '../../context/AuthContext';
 
-
 const backendUrl = 'http://localhost:3000';
-
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
-
-const modalStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  bgcolor: 'transparent',
-  boxShadow: 24,
-  p: 0,
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-};
 
 const getFullUrl = (path) => {
   if (!path) return null;
   return path.startsWith('http') ? path : `${backendUrl}${path}`;
 };
 
-const MediaGrid = ({ files, onImageClick }) => {
-    const fileCount = files.length;
-
-    const renderFile = (file, sxProps = {}) => {
-        const fileUrl = getFullUrl(file.file_url);
-        const mimeType = file.file_mime_type;
-
-        if (mimeType?.startsWith('image/')) {
-            return (
-                <Box
-                    onClick={() => onImageClick(fileUrl)}
-                    sx={{
-                        cursor: 'pointer',
-                        width: '100%',
-                        height: '100%',
-                        backgroundImage: `url(${fileUrl})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        transition: 'filter 0.2s ease-in-out',
-                        '&:hover': {
-                          filter: 'brightness(0.85)',
-                        },
-                        ...sxProps,
-                    }}
-                />
-            );
-        }
-        if (mimeType?.startsWith('video/')) {
-            return <CardMedia component="video" controls src={fileUrl} sx={{ width: '100%', height: '100%', objectFit: 'cover' }} />;
-        }
-        return (
-             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', backgroundColor: '#f0f0f0' }}>
-                <Button component={Link} href={fileUrl} target="_blank" startIcon={<ArticleIcon />}>
-                    View File
-                </Button>
-            </Box>
-        );
-    };
-
-    const gridContainerSx = {
-        mt: 1.5,
-        height: '350px',
-        borderRadius: '16px',
-        overflow: 'hidden',
-        border: '1px solid #ddd',
-        display: 'grid',
-        gap: '2px',
-        backgroundColor: '#ddd'
-    };
-
-    if (fileCount === 1) {
-        return <Box sx={gridContainerSx}>{renderFile(files[0])}</Box>;
-    }
-    if (fileCount === 2) {
-        return (
-            <Box sx={{ ...gridContainerSx, gridTemplateColumns: '1fr 1fr' }}>
-                {renderFile(files[0])}
-                {renderFile(files[1])}
-            </Box>
-        );
-    }
-    if (fileCount === 3) {
-        return (
-            <Box sx={{ ...gridContainerSx, gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr' }}>
-                {renderFile(files[0], { gridRow: 'span 2' })}
-                {renderFile(files[1])}
-                {renderFile(files[2])}
-            </Box>
-        );
-    }
-    if (fileCount === 4) {
-        return (
-            <Box sx={{ ...gridContainerSx, gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr' }}>
-                {files.map((file, index) => <React.Fragment key={index}>{renderFile(file)}</React.Fragment>)}
-            </Box>
-        );
-    }
-
-    return (
-        <Box sx={{...gridContainerSx, gridTemplateColumns: '1fr 1fr'}}>
-            {files.map((file, index) => <React.Fragment key={index}>{renderFile(file)}</React.Fragment>)}
-        </Box>
-    );
-};
-
-
-export default function ShowPostsCard({ post, onDelete }) {
+export default function ShowPostsCard({ post, onDelete, onUpdate }) {
   const { user } = useAuth();
-  const [expanded, setExpanded] = React.useState(false);
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const [selectedImage, setSelectedImage] = React.useState('');
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [pdfDialogOpen, setPdfDialogOpen] = useState(false);
+  const [selectedPdf, setSelectedPdf] = useState(null);
+  const [numPages, setNumPages] = useState(null);
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
+  const isOwner = user?.id === post.posted_by;
+  const isAdmin = user?.role === 'admin';
+  const canModify = isOwner || isAdmin;
 
-  const handleOpenImage = (imageUrl) => {
-    setSelectedImage(imageUrl);
-    setModalOpen(true);
-  };
-
-  const handleCloseImage = () => {
-    setModalOpen(false);
-    setSelectedImage('');
-  };
-
-  const handleMenuClick = (event) => {
+  const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -155,100 +49,206 @@ export default function ShowPostsCard({ post, onDelete }) {
     setAnchorEl(null);
   };
 
-  const handleDelete = () => {
-    onDelete(post.id);
+  const handleEdit = () => {
     handleMenuClose();
+    setEditModalOpen(true);
   };
 
+  const handleDeleteClick = () => {
+    handleMenuClose();
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    onDelete(post.id);
+    setDeleteDialogOpen(false);
+  };
+
+  const handleSaveEdit = (updatedPost) => {
+    if (onUpdate) {
+      onUpdate(updatedPost);
+    }
+  };
+
+  const handlePdfClick = (pdfUrl) => {
+    setSelectedPdf(pdfUrl);
+    setPdfDialogOpen(true);
+  };
+
+  const onDocumentLoadSuccess = ({ numPages }) => {
+    setNumPages(numPages);
+  };
+
+  const authorInitial = post.author_name ? post.author_name.charAt(0).toUpperCase() : '?';
   const avatarUrl = getFullUrl(post.profile_picture_url);
 
-  const canDelete = user && (user.id == post.posted_by || user.role === 'admin');
+  const renderMedia = () => {
+    if (!post.files || post.files.length === 0) return null;
+
+    return (
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>
+        {post.files.map((file, index) => {
+          const fileUrl = getFullUrl(file.file_url);
+          if (file.file_mime_type.startsWith('image/')) {
+            return (
+              <Box
+                key={index}
+                component="img"
+                src={fileUrl}
+                alt={`Post media ${index + 1}`}
+                sx={{
+                  width: post.files.length === 1 ? '100%' : 'calc(50% - 4px)',
+                  maxHeight: '400px',
+                  objectFit: 'cover',
+                  borderRadius: '8px',
+                  cursor: 'pointer'
+                }}
+              />
+            );
+          } else if (file.file_mime_type.startsWith('video/')) {
+            return (
+              <Box
+                key={index}
+                component="video"
+                controls
+                src={fileUrl}
+                sx={{
+                  width: post.files.length === 1 ? '100%' : 'calc(50% - 4px)',
+                  maxHeight: '400px',
+                  borderRadius: '8px'
+                }}
+              />
+            );
+          } else if (file.file_mime_type === 'application/pdf') {
+            return (
+              <Box
+                key={index}
+                onClick={() => handlePdfClick(fileUrl)}
+                sx={{
+                  width: post.files.length === 1 ? '100%' : 'calc(50% - 4px)',
+                  height: '200px',
+                  border: '2px solid #eee',
+                  borderRadius: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  '&:hover': { bgcolor: '#f5f5f5' }
+                }}
+              >
+                <Typography>PDF Document - Click to view</Typography>
+              </Box>
+            );
+          }
+          return null;
+        })}
+      </Box>
+    );
+  };
 
   return (
     <>
-    <Card sx={{ display: 'flex', p: 2, mb: 2, width: '100%', maxWidth: 600, boxShadow: 'none', borderBottom: '1px solid #eee' }}>
-      <Box sx={{ mr: 2, flexShrink: 0 }}>
-        <NavLink to={`/profile/${post.handle}`}>
-            <Avatar
-              src={avatarUrl}
-              sx={{ bgcolor: 'primary.main' }}
-              aria-label="profile-avatar"
-            >
-              {!avatarUrl && (post.author_name ? post.author_name.charAt(0).toUpperCase() : 'U')}
+      <Card
+        sx={{
+          p: 2,
+          mb: 2,
+          width: '100%',
+          maxWidth: 700,
+          boxShadow: 'none',
+          border: '1px solid #eee',
+          borderRadius: '8px'
+        }}
+      >
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Avatar src={avatarUrl || ''} sx={{ width: 40, height: 40 }}>
+              {!avatarUrl && authorInitial}
             </Avatar>
-        </NavLink>
-      </Box>
-
-      <Box sx={{ width: '100%' }}>
-
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-          <Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
-            <NavLink to={`/profile/${post.handle}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                    {post.author_name}
-                </Typography>
-            </NavLink>
-              <Typography variant="body2" color="text.secondary">
-                @{post.handle} &middot; {new Date(post.created_at).toLocaleDateString()}
+            <Box>
+              <Typography variant="body1" fontWeight="bold">
+                {post.author_name || 'Unknown'}
               </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                {post.handle && (
+                  <Link
+                    href={`/profile/${post.handle}`}
+                    underline="none"
+                    sx={{ color: 'text.secondary', '&:hover': { textDecoration: 'underline' } }}
+                  >
+                    <Typography variant="body2">@{post.handle}</Typography>
+                  </Link>
+                )}
+                <Typography variant="body2" color="text.secondary">
+                  · {new Date(post.created_at).toLocaleDateString()}
+                </Typography>
+              </Box>
             </Box>
           </Box>
-          <IconButton size="small" sx={{ mt: -1, ml: 1 }} onClick={handleMenuClick}>
-            <MoreVertIcon />
-          </IconButton>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleMenuClose}
-          >
-            {canDelete && (
-              <MenuItem onClick={handleDelete}>
-                <ListItemIcon>
-                  <DeleteIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>Delete</ListItemText>
-              </MenuItem>
-            )}
-          </Menu>
+          {canModify && (
+            <IconButton size="small" onClick={handleMenuOpen}>
+              <MoreVertIcon />
+            </IconButton>
+          )}
         </Box>
 
-        <Typography variant="h6" sx={{ mt: 1, fontWeight: 'normal', fontSize: '1.1rem' }}>
-          {post.title}
-        </Typography>
-
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <Typography paragraph sx={{ mt: 1 }}>
+        {post.title && (
+          <Typography variant="h6" sx={{ mb: 1, fontWeight: 'bold' }}>
+            {post.title}
+          </Typography>
+        )}
+        {post.description && (
+          <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
             {post.description}
           </Typography>
-        </Collapse>
-
-        {post.files && post.files.length > 0 && (
-           <MediaGrid files={post.files} onImageClick={handleOpenImage} />
         )}
 
-        <CardActions disableSpacing sx={{ pl: 0, justifyContent: 'flex-end' }}>
-          <Button
-            size="small"
-            onClick={handleExpandClick}
-            endIcon={<ExpandMoreIcon sx={{ transform: !expanded ? 'rotate(0deg)' : 'rotate(180deg)', transition: '0.3s' }} />}
-          >
-            {expanded ? 'Show less' : 'Show more'}
-          </Button>
-        </CardActions>
-      </Box>
-    </Card>
+        {renderMedia()}
+      </Card>
 
-    <Modal
-        open={modalOpen}
-        onClose={handleCloseImage}
-        aria-labelledby="image-modal-title"
-        aria-describedby="image-modal-description"
-      >
-        <Box sx={modalStyle} onClick={handleCloseImage}>
-          <img src={selectedImage} alt="Enlarged post content" style={{ maxHeight: '90vh', maxWidth: '90vw', objectFit: 'contain' }} />
-        </Box>
-    </Modal>
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
+        <MenuItem onClick={handleEdit}>Edit</MenuItem>
+        <MenuItem onClick={handleDeleteClick} sx={{ color: 'error.main' }}>
+          Delete
+        </MenuItem>
+      </Menu>
+
+      {editModalOpen && (
+        <EditPostModal
+          open={editModalOpen}
+          onClose={() => setEditModalOpen(false)}
+          post={post}
+          onSave={handleSaveEdit}
+        />
+      )}
+
+      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
+        <DialogTitle>Delete Post</DialogTitle>
+        <DialogContent>
+          <Typography>Are you sure you want to delete this post? This action cannot be undone.</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+          <Button onClick={handleDeleteConfirm} color="error" variant="contained">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={pdfDialogOpen} onClose={() => setPdfDialogOpen(false)} maxWidth="md" fullWidth>
+        <DialogTitle>PDF Document</DialogTitle>
+        <DialogContent>
+          {selectedPdf && (
+            <Document file={selectedPdf} onLoadSuccess={onDocumentLoadSuccess}>
+              {Array.from(new Array(numPages), (el, index) => (
+                <Page key={`page_${index + 1}`} pageNumber={index + 1} width={600} />
+              ))}
+            </Document>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setPdfDialogOpen(false)}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
