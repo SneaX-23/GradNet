@@ -51,6 +51,22 @@ function HomePage() {
     }
   };
 
+  const handleDeletePost = async (postId) => {
+    try {
+        const response = await fetch(`/api/home/delete-post/${postId}`, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to delete the post.');
+        }
+
+        setPosts(posts.filter(post => post.id !== postId));
+    } catch (error) {
+        setError(error.message);
+    }
+  };
+
   if (!user) {
     navigate('/');
     return null;
@@ -87,7 +103,8 @@ function HomePage() {
           {posts.map((post, index) => (
             <ShowPostsCard
              key={`${post.id}-${index}`}
-              post={post} 
+              post={post}
+              onDelete={handleDeletePost}
             />
           ))}
         </InfiniteScroll>

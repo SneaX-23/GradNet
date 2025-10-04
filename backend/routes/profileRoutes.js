@@ -44,4 +44,6 @@ router.post(
     ProfileController.updateProfile
 );
 router.get("/getUserPosts", ProfileController.getUserPosts)
+
+router.get("/:handle", ProfileController.getProfileByHandle);
 export default router;

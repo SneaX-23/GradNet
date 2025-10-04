@@ -147,10 +147,26 @@ function ProfilePage() {
             setHasMore(false);
           }
       } catch (error) {
-        setError(err.message);
+        setError(error.message);
         setHasMore(false);
       }
     }
+
+  const handleDeletePost = async (postId) => {
+    try {
+        const response = await fetch(`/api/home/delete-post/${postId}`, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to delete the post.');
+        }
+
+        setPosts(posts.filter(post => post.id !== postId));
+    } catch (error) {
+        setError(error.message);
+    }
+  };
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -299,7 +315,8 @@ function ProfilePage() {
                         return (
                           <ShowPostsCard
                            key={`${post.id}-${index}`}
-                            post={postWithAuthor} 
+                            post={postWithAuthor}
+                            onDelete={handleDeletePost}
                           />
                         )
                       })}

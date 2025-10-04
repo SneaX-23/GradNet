@@ -2,8 +2,12 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Box, Card, CardActions, Collapse, Avatar, IconButton, Typography, Button, Link, CardMedia, Modal } from '@mui/material'; 
+import { Box, Card, CardActions, Collapse, Avatar, IconButton, Typography, Button, Link, CardMedia, Modal, Menu, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { NavLink } from 'react-router-dom';
 import ArticleIcon from '@mui/icons-material/Article';
+import { useAuth } from '../../context/AuthContext';
+
 
 const backendUrl = 'http://localhost:3000';
 
@@ -122,10 +126,12 @@ const MediaGrid = ({ files, onImageClick }) => {
 };
 
 
-export default function ShowPostsCard({ post }) { 
+export default function ShowPostsCard({ post, onDelete }) {
+  const { user } = useAuth();
   const [expanded, setExpanded] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(false);
   const [selectedImage, setSelectedImage] = React.useState('');
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -141,37 +147,70 @@ export default function ShowPostsCard({ post }) {
     setSelectedImage('');
   };
 
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleDelete = () => {
+    onDelete(post.id);
+    handleMenuClose();
+  };
+
   const avatarUrl = getFullUrl(post.profile_picture_url);
+
+  const canDelete = user && (user.id == post.posted_by || user.role === 'admin');
 
   return (
     <>
     <Card sx={{ display: 'flex', p: 2, mb: 2, width: '100%', maxWidth: 600, boxShadow: 'none', borderBottom: '1px solid #eee' }}>
       <Box sx={{ mr: 2, flexShrink: 0 }}>
-        <Avatar
-          src={avatarUrl} 
-          sx={{ bgcolor: 'primary.main' }}
-          aria-label="profile-avatar"
-        >
-          {!avatarUrl && (post.author_name ? post.author_name.charAt(0).toUpperCase() : 'U')}
-        </Avatar>
+        <NavLink to={`/profile/${post.handle}`}>
+            <Avatar
+              src={avatarUrl}
+              sx={{ bgcolor: 'primary.main' }}
+              aria-label="profile-avatar"
+            >
+              {!avatarUrl && (post.author_name ? post.author_name.charAt(0).toUpperCase() : 'U')}
+            </Avatar>
+        </NavLink>
       </Box>
-      
+
       <Box sx={{ width: '100%' }}>
-      
+
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
-              <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                {post.author_name}
-              </Typography>
+            <NavLink to={`/profile/${post.handle}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                    {post.author_name}
+                </Typography>
+            </NavLink>
               <Typography variant="body2" color="text.secondary">
                 @{post.handle} &middot; {new Date(post.created_at).toLocaleDateString()}
               </Typography>
             </Box>
           </Box>
-          <IconButton size="small" sx={{ mt: -1, ml: 1 }}>
+          <IconButton size="small" sx={{ mt: -1, ml: 1 }} onClick={handleMenuClick}>
             <MoreVertIcon />
           </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+          >
+            {canDelete && (
+              <MenuItem onClick={handleDelete}>
+                <ListItemIcon>
+                  <DeleteIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Delete</ListItemText>
+              </MenuItem>
+            )}
+          </Menu>
         </Box>
 
         <Typography variant="h6" sx={{ mt: 1, fontWeight: 'normal', fontSize: '1.1rem' }}>

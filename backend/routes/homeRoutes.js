@@ -43,7 +43,7 @@ const upload = multer({
 });
 
 router.get('/get-feed', HomeController.getFeed);
-
 router.post('/create-post', upload.array('postFiles', 4), HomeController.createPost);
+router.delete('/delete-post/:postId', HomeController.deletePost);
 
 export default router;

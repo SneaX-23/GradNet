@@ -10,7 +10,8 @@ export class Home {
                     e.id, 
                     e.title, 
                     e.description, 
-                    e.created_at, 
+                    e.created_at,
+                    e.posted_by, 
                     u.name AS author_name,
                     u.handle,
                     u.profile_picture_url,
@@ -34,6 +35,26 @@ export class Home {
             return result;
         } catch (error) {
             throw new Error(`Error getting feed from DB: ${error.message}`);
+        }
+    }
+    
+    static async findById(id) {
+        try {
+            const query = 'SELECT * FROM events WHERE id = $1';
+            const result = await db.query(query, [id]);
+            return result.rows[0];
+        } catch (error) {
+            throw new Error(`Error finding post by ID: ${error.message}`);
+        }
+    }
+
+    static async deleteById(id) {
+        try {
+            const query = 'UPDATE events SET is_active = false WHERE id = $1 RETURNING id';
+            const result = await db.query(query, [id]);
+            return result.rows[0];
+        } catch (error) {
+            throw new Error(`Error deleting post by ID: ${error.message}`);
         }
     }
 

@@ -3,11 +3,12 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './pages/LoginPage';
 import VerifyOtp from './pages/VerifyOtpPage';
-import { AuthProvider } from './context/AuthContext'; 
+import { AuthProvider } from './context/AuthContext';
 import HomePage from './pages/HomePage';
 import CreateProfilePage from './pages/CreaeteProfilePage';
 import ProfilePage from './pages/ProfilePage';
 import JobsPage from './pages/JobsPage';
+import UserProfilePage from './pages/UserProfilePage';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path='/home' element={<HomePage />}/>
           <Route path="/create-profile" element={<CreateProfilePage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/profile/:handle" element={<UserProfilePage />} />
           <Route path='/jobs' element={<JobsPage />}/>
         </Routes>
       </BrowserRouter>

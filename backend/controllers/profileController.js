@@ -21,6 +21,26 @@ export class ProfileController{
             res.status(500).json({ success: false, message: 'Failed to to get profile.' });
         }
     }
+
+    static async getProfileByHandle(req, res) {
+        try {
+            const handle = req.params.handle;
+            const user = await User.findByHandle(handle);
+    
+            if (!user) {
+                return res.status(404).json({ success: false, message: 'User not found' });
+            }
+            
+            const { password, email, ...publicProfile } = user;
+    
+            res.json({ user: publicProfile, success: true, message: "User profile retrieved successfully." });
+    
+        } catch (error) {
+            console.error("Error getting user profile by handle:", error);
+            res.status(500).json({ success: false, message: 'Failed to to get profile.' });
+        }
+    }
+
     static async updateProfile(req, res) {
         try {
             const userId = req.session.userId;
@@ -58,9 +78,10 @@ export class ProfileController{
     
     static async getUserPosts(req, res){
         try {
-            const userId = req.session.userId;
+            const userId = req.query.userId || req.session.userId;
+            
             if(!userId){
-                return res.status(500).json({ success: false, message: "Error getting the feed" });
+                return res.status(401).json({ success: false, message: "User not specified or not authenticated." });
             }
             const page = parseInt(req.query.page, 10) || 1;
             const result = await User.GetUserPosts(page, userId);

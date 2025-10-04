@@ -48,4 +48,32 @@ export class HomeController{
             res.status(500).json({ success: false, message: "Server error while creating post." });
         }
     }
-} 
+
+    static async deletePost(req, res) {
+        try {
+            const { postId } = req.params;
+            const { userId, user } = req.session;
+
+            if (!user) {
+                return res.status(401).json({ success: false, message: 'Authentication required.' });
+            }
+
+            const post = await Home.findById(postId);
+
+            if (!post) {
+                return res.status(404).json({ success: false, message: 'Post not found.' });
+            }
+
+            if (post.posted_by !== userId && user.role !== 'admin') {
+                return res.status(403).json({ success: false, message: 'You are not authorized to delete this post.' });
+            }
+
+            await Home.deleteById(postId);
+
+            res.json({ success: true, message: 'Post deleted successfully.' });
+        } catch (error) {
+            console.error("Error deleting post:", error);
+            res.status(500).json({ success: false, message: "Server error while deleting post." });
+        }
+    }
+}

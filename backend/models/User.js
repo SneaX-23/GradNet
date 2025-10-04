@@ -42,6 +42,14 @@ export class User{
             throw new Error(`Error finding user by id: ${error.message}`)
         }
     }
+    static async findByHandle(handle) {
+        try {
+            const result = await db.query("SELECT * FROM users WHERE handle = $1", [handle]);
+            return result.rows[0] || null;
+        } catch (error) {
+            throw new Error(`Error finding user by handle: ${error.message}`);
+        }
+    }
 
     static async updateLastLogin(userId) {
         try {
