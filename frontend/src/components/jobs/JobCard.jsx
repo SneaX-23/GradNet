@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import EditJobModal from '../common/EditJobModal';
+import EditJobModal from './EditJobModal';
 import { useAuth } from '../../context/AuthContext';
 
 const backendUrl = 'http://localhost:3000';
@@ -174,15 +174,15 @@ export default function JobCard({ job, onDelete, onUpdate }) {
                 </>
               )}
 
-              {job.external_link && (
-                <Button
-                  variant="contained"
-                  href={job.external_link}
-                  target="_blank"
-                  sx={{ mt: 1 }}
-                >
-                  Apply Now
-                </Button>
+              {job.external_link && job.external_link.trim() !== '' && (
+                <>
+                  <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                    Apply here:
+                  </Typography>
+                  <Typography paragraph sx={{ mb: 1.5 }}>
+                    <a href={job.external_link}>{job.external_link}</a>
+                  </Typography>
+                </>
               )}
             </Collapse>
 
