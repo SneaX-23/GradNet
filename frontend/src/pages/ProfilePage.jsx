@@ -12,6 +12,7 @@ import EditProfileModal from '../components/profile/EditProfileModal';
 import { showUserPosts } from "../services/showPostsService";
 import ShowPostsCard from '../components/common/showPostsCard';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import RightSidebar from '../components/layout/RightSidebar';
 
 const backendUrl = 'http://localhost:3000';
 
@@ -211,11 +212,13 @@ function ProfilePage() {
         </Toolbar>
       </AppBar>
       <Sidebar />
-      <Box 
+      <RightSidebar />
+        <Box 
         component="main" 
         sx={{ 
           flexGrow: 1, 
           marginTop: '64px',
+          marginRight: '320px',
           display: 'flex',
           justifyContent: 'center',
           p: 3

@@ -12,6 +12,7 @@ import { showUserPosts } from "../services/showPostsService";
 import ShowPostsCard from '../components/common/showPostsCard';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useParams } from 'react-router-dom';
+import RightSidebar from '../components/layout/RightSidebar';
 
 const backendUrl = 'http://localhost:3000';
 
@@ -212,15 +213,17 @@ function UserProfilePage() {
           </Toolbar>
         </AppBar>
         <Sidebar />
+        <RightSidebar />
         <Box
-          component="main"
-          sx={{
-            flexGrow: 1,
-            marginTop: '64px',
-            display: 'flex',
-            justifyContent: 'center',
-            p: 3
-          }}
+        component="main"
+            sx={{
+                flexGrow: 1,
+                marginTop: '64px',
+                marginRight: '320px',
+                display: 'flex',
+                justifyContent: 'center',
+                p: 3
+            }}
         >
           {loading && <Box sx={{p:3}}><CircularProgress /></Box>}
           {error && <Box sx={{p:3}}><Alert severity="error">{error}</Alert></Box>}

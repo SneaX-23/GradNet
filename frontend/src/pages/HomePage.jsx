@@ -7,7 +7,8 @@ import initiateShowPosts from "../services/showPostsService";
 import ShowPostsCard from '../components/common/showPostsCard';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CreatePost from '../components/common/createPost'
-
+import RightSidebar from '../components/layout/RightSidebar';
+ 
 function HomePage() {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -89,8 +90,9 @@ function HomePage() {
         </Toolbar>
       </AppBar>
       <Sidebar />
-      
-      <Box component="main" sx={{ flexGrow: 1, p: 3, marginTop: '64px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <RightSidebar />
+
+      <Box component="main" sx={{ flexGrow: 1, p: 3, marginTop: '64px', marginRight: '320px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         
         {user && (user.role === 'admin' || user.role === 'faculty') && <CreatePost />}
 

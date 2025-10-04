@@ -7,6 +7,7 @@ import { getJobs } from "../services/JobService.jsx";
 import JobCard from '../components/jobs/JobCard.jsx';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CreateJob from '../components/jobs/CreateJob.jsx';
+import RightSidebar from '../components/layout/RightSidebar';
 
 function JobsPage() {
   const { user } = useAuth();
@@ -91,8 +92,10 @@ function JobsPage() {
         </Toolbar>
       </AppBar>
       <Sidebar />
+      <RightSidebar />
       
-      <Box component="main" sx={{ flexGrow: 1, p: 3, marginTop: '64px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Box component="main" sx={{ flexGrow: 1, p: 3, marginTop: '64px', marginRight: '320px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+
         
         {user && (user.role === 'admin' || user.role === 'faculty') && <CreateJob onJobPosted={fetchInitialJobs} />}
 
