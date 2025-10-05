@@ -152,7 +152,7 @@ static async verifyOtp(req, res) {
                 email: newUser.email,
                 role: newUser.role || "current_student",
                 profile_image_url: newUser.profile_picture_url || null,
-                handle: newUser.user.handle,
+                handle: newUser.handle,
             };
             delete req.session.email; 
 

@@ -2,21 +2,42 @@ import db from "../config/database.js";
 
 export class Message {
     static async findOrCreateConversation(userId1, userId2) {
-        const participants = [userId1, userId2].sort((a, b) => a - b);
+        const client = await db.connect();
+        try {
+            const findQuery = `
+                SELECT cp1.conversation_id
+                FROM conversation_participants AS cp1
+                JOIN conversation_participants AS cp2 ON cp1.conversation_id = cp2.conversation_id
+                JOIN conversations c ON cp1.conversation_id = c.id
+                WHERE cp1.user_id = $1 AND cp2.user_id = $2 AND c.is_group = false;
+            `;
+            const existingConvo = await client.query(findQuery, [userId1, userId2]);
 
-        let conversation = await db.query(
-            "SELECT id FROM conversations WHERE participant_ids = $1",
-            [participants]
-        );
+            if (existingConvo.rows.length > 0) {
+                return existingConvo.rows[0].conversation_id;
+            }
+            await client.query('BEGIN');
 
-        if (conversation.rows.length > 0) {
-            return conversation.rows[0].id;
-        } else {
-            const newConversation = await db.query(
-                "INSERT INTO conversations (participant_ids) VALUES ($1) RETURNING id",
-                [participants]
-            );
-            return newConversation.rows[0].id;
+            const newConversationQuery = `
+                INSERT INTO conversations (created_by, is_group) VALUES ($1, false) RETURNING id;
+            `;
+            const newConversationResult = await client.query(newConversationQuery, [userId1]);
+            const conversationId = newConversationResult.rows[0].id;
+
+            const addParticipantsQuery = `
+                INSERT INTO conversation_participants (conversation_id, user_id) VALUES ($1, $2), ($1, $3);
+            `;
+            await client.query(addParticipantsQuery, [conversationId, userId1, userId2]);
+
+            await client.query('COMMIT');
+
+            return conversationId;
+        } catch (error) {
+            await client.query('ROLLBACK');
+            console.error("Error in findOrCreateConversation:", error);
+            throw error;
+        } finally {
+            client.release();
         }
     }
     static async create({ content, from, to }) {
@@ -28,7 +49,6 @@ export class Message {
                  VALUES ($1, $2, $3) RETURNING *`,
                 [conversationId, from, content]
             );
-            
             await db.query(
                 "UPDATE conversations SET updated_at = NOW() WHERE id = $1",
                 [conversationId]

@@ -14,6 +14,7 @@ import homeRoutes from "./routes/homeRoutes.js"
 import jobRoutes from "./routes/jobRoutes.js"
 import { Message } from "./models/Message.js";
 import messageRoutes from "./routes/messageRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
 
@@ -83,7 +84,7 @@ io.on('connection', (socket) => {
             const message = await Message.create({
                 content,
                 from: senderId,
-                to: parseInt(to, 10), 
+                to: to, 
             });
 
             console.log(`Saved and sending message from ${senderId} to ${to}`);
@@ -93,7 +94,9 @@ io.on('connection', (socket) => {
                 from: senderId,
                 createdAt: message.created_at,
             });
-
+            
+            io.to(to.toString()).emit('conversation_updated');
+            io.to(senderId.toString()).emit('conversation_updated');
         } catch (error) {
             console.error("Failed to save or send message:", error);
         }
@@ -107,6 +110,7 @@ app.use("/home", homeRoutes);
 app.use("/profile", profileRoutes);
 app.use("/jobs", jobRoutes);
 app.use("/messages", messageRoutes);
+app.use("/users", userRoutes);
 
 app.use((err, req, res, next) => {
     console.error('Unhandled error:', err);

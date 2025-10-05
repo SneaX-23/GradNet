@@ -150,4 +150,25 @@ export class User{
             throw new Error(`Error getting users posts from DB: ${error.message}`);
         }
     }
+     /**
+     * @param {string} query - 
+     * @param {string} currentUserId 
+     * @returns {Promise<Array>} 
+     */
+    static async search(query, currentUserId) {
+        try {
+            const searchQuery = `
+                SELECT id, name, handle, profile_picture_url 
+                FROM users 
+                WHERE (name ILIKE $1 OR handle ILIKE $1) AND id != $2
+                LIMIT 10;
+            `;
+            const values = [`%${query}%`, currentUserId];
+            const { rows } = await db.query(searchQuery, values);
+            return rows;
+        } catch (error) {
+            console.error("Error searching for users:", error);
+            throw new Error(`Error searching for users: ${error.message}`);
+        }
+    }
 }
