@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { socket } from '../socket';
 
 const AuthContext = createContext(null);
 
@@ -24,6 +25,21 @@ export const AuthProvider = ({ children }) => {
 
         checkUserSession();
     }, []);
+
+    useEffect(() => {
+        if (user) {
+            socket.connect();
+            console.log("Socket connected!");
+
+        } else {
+            socket.disconnect();
+            console.log("Socket disconnected.");
+        }
+
+        return () => {
+            socket.off('connect_error');
+        };
+    }, [user]);
 
     const login = (userData) => {
         setUser(userData);

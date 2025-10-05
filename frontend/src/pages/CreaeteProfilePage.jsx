@@ -80,7 +80,7 @@ function CreateProfilePage() {
             handle: handle,
         });
         try {
-            const response = fetch('/api/create-profile', {
+            const response = await fetch('/api/create-profile', {
                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

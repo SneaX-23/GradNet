@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import { socket } from '../socket'
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/layout/Sidebar';
-import { Box, Typography, CssBaseline, AppBar, Toolbar, CircularProgress } from '@mui/material';
+import { Box, Typography, CssBaseline, AppBar, Toolbar, CircularProgress, Button } from '@mui/material';
 import initiateShowPosts from "../services/showPostsService";
 import ShowPostsCard from '../components/common/showPostsCard';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CreatePost from '../components/common/createPost'
-import RightSidebar from '../components/layout/RightSidebar';
+import RightSidebar from '../components/layout/RightSidebar'
  
 function HomePage() {
   const { user } = useAuth();
@@ -17,6 +18,32 @@ function HomePage() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    function onPrivateMessage({ content, from }) {
+      console.log(`Received message from ${from}: ${content}`);
+      alert(`New message from user ${from}: ${content}`); 
+    }
+
+    socket.on('private_message', onPrivateMessage);
+
+    return () => {
+      socket.off('private_message', onPrivateMessage);
+    };
+  }, []); 
+
+  const sendTestMessage = () => {
+    const recipientId = prompt("Enter the User ID of the recipient:");
+    const messageContent = prompt("Enter your message:");
+
+    if (recipientId && messageContent) {
+      socket.emit('private_message', {
+        content: messageContent,
+        to: recipientId,
+      });
+      console.log(`Sent message to ${recipientId}: ${messageContent}`);
+    }
+  };
   
   useEffect(() => {
     const fetchInitialPosts = async () => {
@@ -87,6 +114,9 @@ function HomePage() {
           <Typography variant="h6" noWrap component="div">
             GradNet
           </Typography>
+          <Button color="inherit" onClick={sendTestMessage} sx={{ ml: 'auto' }}>
+            Send Test DM
+          </Button>
         </Toolbar>
       </AppBar>
       <Sidebar />

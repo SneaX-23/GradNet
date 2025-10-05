@@ -19,7 +19,8 @@
     "react-easy-crop": "^5.5.3",
     "react-infinite-scroll-component": "^6.1.0",
     "react-pdf": "^10.1.0",
-    "react-router-dom": "^6.23.1"
+    "react-router-dom": "^6.23.1",
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
