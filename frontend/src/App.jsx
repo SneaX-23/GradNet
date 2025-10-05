@@ -9,6 +9,7 @@ import CreateProfilePage from './pages/CreaeteProfilePage';
 import ProfilePage from './pages/ProfilePage';
 import JobsPage from './pages/JobsPage';
 import UserProfilePage from './pages/UserProfilePage';
+import MessagesPage from './pages/MessagesPage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/profile/:handle" element={<UserProfilePage />} />
           <Route path='/jobs' element={<JobsPage />}/>
+          <Route path="/messages" element={<MessagesPage />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

@@ -9,6 +9,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
 import WorkIcon from '@mui/icons-material/Work';
 import { useAuth } from '../../context/AuthContext';
+import MailIcon from '@mui/icons-material/Mail';
 
 const drawerWidth = 240;
 const backendUrl = 'http://localhost:3000';
@@ -66,6 +67,12 @@ function Sidebar() {
                 </ListItemIcon>
                 <ListItemText primary="Jobs" />
               </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton component={NavLink} to="/messages">
+                <ListItemIcon><MailIcon /></ListItemIcon>
+              <ListItemText primary="Messages" />
+            </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
               <ListItemButton component={NavLink} to="/profile">
