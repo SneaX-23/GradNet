@@ -4,12 +4,13 @@ import {
   Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, 
   Toolbar, Box, Avatar, Typography, Menu, MenuItem 
 } from '@mui/material';
-import HomeIcon from '@mui/icons-material/Home';
-import PersonIcon from '@mui/icons-material/Person';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import LogoutIcon from '@mui/icons-material/Logout';
-import WorkIcon from '@mui/icons-material/Work';
 import { useAuth } from '../../context/AuthContext';
-import MailIcon from '@mui/icons-material/Mail';
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
+import MailOutlineTwoToneIcon from '@mui/icons-material/MailOutlineTwoTone';
+import ForumTwoToneIcon from '@mui/icons-material/ForumTwoTone';
+import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
 
 const drawerWidth = 240;
 const backendUrl = 'http://localhost:3000';
@@ -55,7 +56,7 @@ function Sidebar() {
             <ListItem disablePadding>
               <ListItemButton component={NavLink} to="/home" end>
                 <ListItemIcon>
-                  <HomeIcon />
+                  <HomeOutlinedIcon sx={{ color: 'black' }}/>
                 </ListItemIcon>
                 <ListItemText primary="Home" />
               </ListItemButton>
@@ -63,21 +64,31 @@ function Sidebar() {
             <ListItem disablePadding>
               <ListItemButton component={NavLink} to="/jobs">
                 <ListItemIcon>
-                  <WorkIcon />
+                  <WorkOutlineOutlinedIcon sx={{ color: 'black' }} />
                 </ListItemIcon>
                 <ListItemText primary="Jobs" />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
               <ListItemButton component={NavLink} to="/messages">
-                <ListItemIcon><MailIcon /></ListItemIcon>
+                <ListItemIcon>
+                  <MailOutlineTwoToneIcon sx={{ color: 'black' }} />
+                </ListItemIcon>
               <ListItemText primary="Messages" />
             </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
+              <ListItemButton component={NavLink} to="/forums" end>
+                <ListItemIcon>
+                  <ForumTwoToneIcon sx={{ color: 'black' }} />
+                </ListItemIcon>
+                <ListItemText primary="Forums" />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
               <ListItemButton component={NavLink} to="/profile">
                 <ListItemIcon>
-                  <PersonIcon />
+                  <PersonOutlineOutlinedIcon sx={{ color: 'black' }} />
                 </ListItemIcon>
                 <ListItemText primary="Profile" />
               </ListItemButton>

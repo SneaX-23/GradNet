@@ -9,12 +9,13 @@ import { Server } from "socket.io";
 
 import { requireAuth } from "./middleware/authMiddleware.js";
 import authRoutes from "./routes/authRoutes.js";
-import  profileRoutes from "./routes/profileRoutes.js"
-import homeRoutes from "./routes/homeRoutes.js"
-import jobRoutes from "./routes/jobRoutes.js"
+import  profileRoutes from "./routes/profileRoutes.js";
+import homeRoutes from "./routes/homeRoutes.js";
+import jobRoutes from "./routes/jobRoutes.js";
 import { Message } from "./models/Message.js";
 import messageRoutes from "./routes/messageRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import forumRoutes from "./routes/forumRoutes.js";
 
 dotenv.config();
 
@@ -111,6 +112,7 @@ app.use("/profile", profileRoutes);
 app.use("/jobs", jobRoutes);
 app.use("/messages", messageRoutes);
 app.use("/users", userRoutes);
+app.use("/forum", forumRoutes);
 
 app.use((err, req, res, next) => {
     console.error('Unhandled error:', err);

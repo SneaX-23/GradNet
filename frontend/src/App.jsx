@@ -10,6 +10,7 @@ import ProfilePage from './pages/ProfilePage';
 import JobsPage from './pages/JobsPage';
 import UserProfilePage from './pages/UserProfilePage';
 import MessagesPage from './pages/MessagesPage';
+import ForumPage from './pages/ForumPage';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/profile/:handle" element={<UserProfilePage />} />
           <Route path='/jobs' element={<JobsPage />}/>
           <Route path="/messages" element={<MessagesPage />} />
+          <Route path="/forums" element={<ForumPage />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
