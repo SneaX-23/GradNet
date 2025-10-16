@@ -36,7 +36,7 @@ const io = new Server(httpServer, {
         credentials: true
     }
 });
-
+app.set('io', io);
 app.use(cors());
 
 app.use(express.static('dist'));

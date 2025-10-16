@@ -1,16 +1,21 @@
 import { useState, useEffect } from "react";
-import { Box, Typography, CssBaseline, AppBar, Toolbar, CircularProgress } from '@mui/material';
+import { useAuth } from '../context/AuthContext.jsx';
+import { Box, Typography, CssBaseline, AppBar, Toolbar, CircularProgress, Button } from '@mui/material';
 import Sidebar from '../components/layout/Sidebar.jsx';
 import RightSidebar from '../components/layout/RightSidebar';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { getForums } from "../services/ForumService.jsx";
 import ForumCard from "../components/forum/ForumCard.jsx";
+import CreateForumModal from "../components/forum/CreateForumModal.jsx";
+import { socket } from '../socket.js';
 
 function ForumPage() {
+    const { user } = useAuth();
     const [forums, setForums] = useState([]);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [error, setError] = useState('');
+    const [isCreateModalOpen, setCreateModalOpen] = useState(false);
 
     const fetchInitialForums = async () => {
         try {
@@ -27,6 +32,15 @@ function ForumPage() {
 
     useEffect(() => {
         fetchInitialForums();
+
+          const handleNewForum = (newForum) => {
+            setForums(prevForums => [newForum, ...prevForums]);
+        };
+        socket.on('new_forum_category', handleNewForum);
+
+        return () => {
+            socket.off('new_forum_category', handleNewForum);
+        };
     }, []);
 
     const fetchMoreForums = async () => {
@@ -60,6 +74,19 @@ function ForumPage() {
             <RightSidebar />
             
             <Box component="main" sx={{ flexGrow: 1, p: 3, marginTop: '64px', marginRight: '200px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                
+                 {user && (user.role === 'admin' || user.role === 'faculty') && (
+                    <Button variant="contained" onClick={() => setCreateModalOpen(true)} sx={{ mb: 2 }}>
+                        Create Forum Category
+                    </Button>
+                )}
+
+                <CreateForumModal
+                    open={isCreateModalOpen}
+                    onClose={() => setCreateModalOpen(false)}
+                    onForumCreated={fetchInitialForums}
+                />
+
                 <InfiniteScroll
                     dataLength={forums.length}
                     next={fetchMoreForums}

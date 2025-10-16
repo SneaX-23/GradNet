@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Box,
   Card,
@@ -69,6 +70,8 @@ export default function ForumCard({forum}) {
     return (
         <>
             <Card
+                component={Link} 
+                to={`/forums/${forum.id}`}
                 sx={{
                     display: 'flex',
                     p: 2,
@@ -77,7 +80,12 @@ export default function ForumCard({forum}) {
                     maxWidth: 700,
                     boxShadow: 'none',
                     border: '1px solid #eee',
-                    borderRadius: '8px'
+                    borderRadius: '8px',
+                    textDecoration: 'none',
+                    color: 'inherit',
+                    '&:hover': {
+                        backgroundColor: '#f9f9f9' 
+                    }
                 }}
             >
                 <Box sx={{ width: '100%' }}>

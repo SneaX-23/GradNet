@@ -30,4 +30,18 @@ export default class Forum{
             throw new Error(`Error getting forums: ${error.message}`)
         }
     }
+
+    static async create(name, description, color, createdBy) {
+        try {
+            const query = `
+                INSERT INTO forum_categories (name, description, color, created_by)
+                VALUES ($1, $2, $3, $4)
+                RETURNING *;
+            `;
+            const result = await db.query(query, [name, description, color, createdBy]);
+            return result.rows[0];
+        } catch (error) {
+            throw new Error(`Error creating forum category: ${error.message}`);
+        }
+    }
 }

@@ -12,6 +12,9 @@ import UserProfilePage from './pages/UserProfilePage';
 import MessagesPage from './pages/MessagesPage';
 import ForumPage from './pages/ForumPage';
 
+import TopicPage from './pages/TopicPage';
+import PostPage from './pages/PostPage';
+
 function App() {
   return (
     <AuthProvider>
@@ -26,6 +29,9 @@ function App() {
           <Route path='/jobs' element={<JobsPage />}/>
           <Route path="/messages" element={<MessagesPage />} />
           <Route path="/forums" element={<ForumPage />} />
+          <Route path="/forums" element={<ForumPage />} />
+          <Route path="/forums/:forumId" element={<TopicPage />} />
+          <Route path="/topic/:topicId" element={<PostPage />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
