@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../styles/pages/CreateProfilePage.css'; 
 
 function CreateProfilePage() {
     const [prefilledData, setPrefilledData] = useState(null);
-
     const [handle, setHandle] = useState('');
-
     const [loading, setLoading] = useState(true);
-
     const [error, setError] = useState('');
-    
     const [isHandleAvailable, setIsHandleAvailable] = useState(false);
     const [isCheckingHandle, setIsCheckingHandle] = useState(false);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+
     useEffect(() => {
         const fetchOnboardingDetails = async () => {
             try {
@@ -35,7 +33,6 @@ function CreateProfilePage() {
     }, []); 
 
     useEffect(() => {
-        
         if (handle.trim() === '') {
             setIsHandleAvailable(false);
             return;
@@ -58,7 +55,6 @@ function CreateProfilePage() {
                         setIsHandleAvailable(false);
                     }
                 } catch (err) {
-                    
                     setIsHandleAvailable(false);
                 } finally {
                     setIsCheckingHandle(false);
@@ -75,10 +71,6 @@ function CreateProfilePage() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log({
-            ...prefilledData,
-            handle: handle,
-        });
         try {
             const response = await fetch('/api/create-profile', {
                method: 'POST',
@@ -90,49 +82,77 @@ function CreateProfilePage() {
                     handle: handle }), 
             });
             const result = await response.json();
+            if (!response.ok) throw new Error(result.message);
             return navigate('/home');
         } catch (err) {
             setError(err.message); 
         }
-        
     };
 
-    if (loading) return <p>Loading your details...</p>;
-    if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
+    let handleStatusText = '';
+    let handleStatusClass = 'handle-status';
+    if (isCheckingHandle) {
+        handleStatusText = 'Checking availability...';
+    } else if (handle.trim() !== '') {
+        if (isHandleAvailable) {
+            handleStatusText = 'Handle is available!';
+            handleStatusClass += ' available';
+        } else {
+            handleStatusText = 'Handle is already taken.';
+            handleStatusClass += ' unavailable';
+        }
+    }
+
+    // Show a full-page loader
+    if (loading) return (
+        <div className="create-profile-container">
+            <p>Loading your details...</p>
+        </div>
+    );
+    
+    // Show a full-page error
+    if (error && !prefilledData) return (
+        <div className="create-profile-container">
+             <div className="create-profile-card">
+                <h1>Error</h1>
+                <p className="error-message">{error}</p>
+             </div>
+        </div>
+    );
 
     return (
-        <div>
-            <h1>Complete Your GradNet Profile</h1>
-            <p>Welcome, {prefilledData?.name}! Choose a unique handle to get started.</p>
+        <div className="create-profile-container">
+            <div className="create-profile-card">
+                <h1>Complete Your Profile</h1>
+                <p>Welcome, {prefilledData?.name}! Choose a unique handle to get started.</p>
 
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Name</label>
-                    <input type="text" value={prefilledData?.name || ''} disabled />
-                </div>
-                <div>
-                    <label>Email</label>
-                    <input type="email" value={prefilledData?.email || ''} disabled />
-                </div>
-                <div>
-                    <label htmlFor="handle">Handle</label>
-                    <input
-                        id="handle"
-                        type="text"
-                        value={handle}
-                        onChange={(e) => setHandle(e.target.value)}
-                        placeholder="Choose a unique handle"
-                        style={{
-                            border: `2px solid ${handle.trim() === '' ? 'gray' : isHandleAvailable ? 'green' : 'red'}`
-                        }}
-                        required
-                    />
-                    {isCheckingHandle && <p>Checking availability...</p>}
-                </div>
-                <button type="submit" disabled={!isHandleAvailable || isCheckingHandle}>
-                    Create Profile
-                </button>
-            </form>
+                <form className="create-profile-form" onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label>Name</label>
+                        <input type="text" value={prefilledData?.name || ''} disabled />
+                    </div>
+                    <div className="form-group">
+                        <label>Email</label>
+                        <input type="email" value={prefilledData?.email || ''} disabled />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="handle">Handle</label>
+                        <input
+                            id="handle"
+                            type="text"
+                            value={handle}
+                            onChange={(e) => setHandle(e.target.value)}
+                            placeholder="Choose a unique handle"
+                            required
+                        />
+                        <p className={handleStatusClass}>{handleStatusText}</p>
+                    </div>
+                    {error && <p className="error-message">{error}</p>}
+                    <button type="submit" disabled={!isHandleAvailable || isCheckingHandle}>
+                        Create Profile
+                    </button>
+                </form>
+            </div>
         </div>
     );
 }

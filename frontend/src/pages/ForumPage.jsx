@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from '../context/AuthContext.jsx';
-import { Box, Typography, CssBaseline, AppBar, Toolbar, CircularProgress, Button } from '@mui/material';
+import { Box, Typography, CssBaseline, AppBar, Toolbar, CircularProgress, Fab } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import Sidebar from '../components/layout/Sidebar.jsx';
 import RightSidebar from '../components/layout/RightSidebar';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -8,6 +9,8 @@ import { getForums } from "../services/ForumService.jsx";
 import ForumCard from "../components/forum/ForumCard.jsx";
 import CreateForumModal from "../components/forum/CreateForumModal.jsx";
 import { socket } from '../socket.js';
+
+const retroFont = "'Courier New', Courier, monospace";
 
 function ForumPage() {
     const { user } = useAuth();
@@ -61,11 +64,19 @@ function ForumPage() {
     };
 
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex', bgcolor: '#000000' }}>
             <CssBaseline />
-            <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+            <AppBar 
+              position="fixed" 
+              sx={{ 
+                zIndex: (theme) => theme.zIndex.drawer + 1,
+                backgroundColor: '#000000',
+                borderBottom: '2px solid #ffffff',
+                boxShadow: 'none',
+              }}
+            >
                 <Toolbar>
-                    <Typography variant="h6" noWrap component="div">
+                    <Typography variant="h6" noWrap component="div" sx={{ fontFamily: retroFont, fontWeight: 'bold', color: '#ffffff' }}>
                         GradNet - Forums
                     </Typography>
                 </Toolbar>
@@ -73,12 +84,42 @@ function ForumPage() {
             <Sidebar />
             <RightSidebar />
             
-            <Box component="main" sx={{ flexGrow: 1, p: 3, marginTop: '64px', marginRight: '200px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Box 
+              component="main" 
+              sx={{ 
+                flexGrow: 1, 
+                p: 3, 
+                marginTop: '64px', 
+                marginRight: '320px', 
+                display: 'flex', 
+                flexDirection: 'column', 
+                alignItems: 'center',
+                bgcolor: '#000000',
+                minHeight: 'calc(100vh - 64px)'
+              }}
+            >
                 
                  {user && (user.role === 'admin' || user.role === 'faculty') && (
-                    <Button variant="contained" onClick={() => setCreateModalOpen(true)} sx={{ mb: 2 }}>
-                        Create Forum Category
-                    </Button>
+                    <Fab
+                      aria-label="create forum"
+                      onClick={() => setCreateModalOpen(true)}
+                      sx={{
+                        position: 'fixed',
+                        bottom: 24,
+                        right: 344, 
+                        zIndex: 1000,
+                        borderRadius: 0,
+                        bgcolor: '#ffffff',
+                        color: '#000000',
+                        border: '2px solid #ffffff',
+                        '&:hover': {
+                          bgcolor: '#000000',
+                          color: '#ffffff',
+                        }
+                      }}
+                    >
+                      <AddIcon />
+                    </Fab>
                 )}
 
                 <CreateForumModal
@@ -91,12 +132,13 @@ function ForumPage() {
                     dataLength={forums.length}
                     next={fetchMoreForums}
                     hasMore={hasMore}
-                    loader={<CircularProgress sx={{ my: 2 }} />}
+                    loader={<CircularProgress sx={{ my: 2, color: '#ffffff' }} />}
                     endMessage={
-                        <p style={{ textAlign: 'center', marginTop: '20px' }}>
-                            <b>...</b>
+                        <p style={{ textAlign: 'center', marginTop: '20px', fontFamily: retroFont, color: '#ffffff' }}>
+                            <b>END OF LIST</b>
                         </p>
                     }
+                    style={{width: '100%', maxWidth: '800px'}}
                 >
                     {forums.map((forum, index) => (
                         <ForumCard

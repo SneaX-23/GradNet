@@ -9,11 +9,12 @@ import {
   ListItemText,
   CircularProgress,
   Divider,
-  ListItemButton // Import ListItemButton
+  ListItemButton 
 } from '@mui/material';
 import { socket } from '../../socket';
 
 const backendUrl = 'http://localhost:3000';
+const retroFont = "'Courier New', Courier, monospace";
 
 const getFullUrl = (path) => {
   if (!path) return null;
@@ -27,7 +28,6 @@ export default function ConversationList({ onSelectConversation }) {
 
   const fetchConversations = useCallback(async () => {
     try {
-      // Keep setLoading(true) only for the initial load
       if (conversations.length === 0) {
         setLoading(true);
       }
@@ -60,13 +60,13 @@ export default function ConversationList({ onSelectConversation }) {
   }, [fetchConversations]);
 
   return (
-    <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
+    <Box sx={{ flexGrow: 1, overflowY: 'auto', bgcolor: '#000000', color: '#ffffff' }}>
       {loading ? (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-          <CircularProgress size={24} />
+          <CircularProgress size={24} sx={{ color: '#ffffff' }} />
         </Box>
       ) : conversations.length === 0 ? (
-        <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', mt: 3 }}>
+        <Typography variant="body2" sx={{ textAlign: 'center', mt: 3, fontFamily: retroFont, color: '#aaaaaa' }}>
           No conversations yet.
         </Typography>
       ) : (
@@ -74,11 +74,28 @@ export default function ConversationList({ onSelectConversation }) {
           {conversations.map((conv) => (
             <React.Fragment key={conv.id}>
               <ListItem disablePadding>
-                <ListItemButton onClick={() => onSelectConversation(conv)}>
+                <ListItemButton 
+                  onClick={() => onSelectConversation(conv)}
+                  sx={{
+                    fontFamily: retroFont,
+                    color: '#ffffff',
+                    '&:hover': {
+                      backgroundColor: '#333333'
+                    },
+                    '&.Mui-selected': {
+                      backgroundColor: '#ffffff',
+                      color: '#000000',
+                      '&:hover': {
+                        backgroundColor: '#ffffff',
+                      }
+                    }
+                  }}
+                >
                   <ListItemAvatar>
                     <Avatar 
                       src={getFullUrl(conv.other_participant?.profile_picture_url)} 
                       alt={conv.other_participant?.name}
+                      sx={{ border: '1px solid #ffffff' }}
                     >
                       {conv.other_participant?.name?.[0] || '?'}
                     </Avatar>
@@ -86,12 +103,12 @@ export default function ConversationList({ onSelectConversation }) {
                   <ListItemText
                     primary={conv.other_participant?.name || 'Unknown'}
                     secondary={conv.last_message?.content || 'No messages yet'}
-                    primaryTypographyProps={{ noWrap: true }}
-                    secondaryTypographyProps={{ noWrap: true, variant: 'body2', color: 'text.secondary' }}
+                    primaryTypographyProps={{ noWrap: true, fontFamily: retroFont, fontWeight: 'bold' }}
+                    secondaryTypographyProps={{ noWrap: true, variant: 'body2', fontFamily: retroFont, color: 'inherit', opacity: 0.7 }}
                   />
                 </ListItemButton>
               </ListItem>
-              <Divider component="li" />
+              <Divider component="li" sx={{ borderColor: '#555555' }} />
             </React.Fragment>
           ))}
         </List>

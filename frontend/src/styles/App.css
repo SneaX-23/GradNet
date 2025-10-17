@@ -1,7 +1,11 @@
+/* Updated App.css to remove width constraints and padding,
+  allowing your app to fill the whole screen.
+*/
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  max-width: none;
+  margin: 0;
+  padding: 0; /* Changed from 2rem to 0 */
+  width: 100%;
 }
 
 .logo {

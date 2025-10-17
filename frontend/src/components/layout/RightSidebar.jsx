@@ -11,6 +11,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import InboxIcon from '@mui/icons-material/Inbox';
 
 const rightSidebarWidth = 320;
+const retroFont = "'Courier New', Courier, monospace";
 
 function RightSidebar() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -30,12 +31,14 @@ function RightSidebar() {
         top: 64,
         height: 'calc(100vh - 64px)',
         overflowY: 'auto',
-        borderLeft: '1px solid #eee',
-        bgcolor: 'background.paper',
+        borderLeft: '2px solid #ffffff', // White border
+        bgcolor: '#000000', // Black background
+        color: '#ffffff', // White text
         p: 2,
         display: 'flex',
         flexDirection: 'column',
-        gap: 2
+        gap: 2,
+        fontFamily: retroFont,
       }}
     >
       {/* Search Box */}
@@ -49,23 +52,31 @@ function RightSidebar() {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <SearchIcon />
+                <SearchIcon sx={{ color: '#ffffff' }} />
               </InputAdornment>
             ),
           }}
           sx={{
             '& .MuiOutlinedInput-root': {
-              borderRadius: '20px',
-              bgcolor: '#f0f2f5',
+              fontFamily: retroFont,
+              color: '#ffffff',
+              backgroundColor: '#000000',
+              borderRadius: 0, // No rounded corners
               '& fieldset': {
-                border: 'none',
+                borderColor: '#ffffff', // White border
+                borderWidth: '2px',
               },
               '&:hover fieldset': {
-                border: 'none',
+                borderColor: '#ffffff',
               },
               '&.Mui-focused fieldset': {
-                border: '1px solid #1976d2',
+                borderColor: '#ffffff',
+                outline: '2px dashed #ffffff',
+                outlineOffset: '2px',
               },
+            },
+            '& .MuiInputBase-input': {
+              color: '#ffffff', // White text for input
             },
           }}
         />
@@ -76,18 +87,21 @@ function RightSidebar() {
         elevation={0}
         sx={{
           p: 2,
-          border: '1px solid #eee',
-          borderRadius: '12px',
+          border: '2px solid #ffffff', // White border
+          borderRadius: 0, // No rounded corners
+          bgcolor: '#000000', // Black background
+          color: '#ffffff',
+          fontFamily: retroFont,
           minHeight: '200px'
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-          <InboxIcon color="action" />
-          <Typography variant="h6" fontWeight="bold">
+          <InboxIcon sx={{ color: '#ffffff' }} />
+          <Typography variant="h6" fontWeight="bold" sx={{ fontFamily: retroFont, color: '#ffffff' }}>
             Inbox
           </Typography>
         </Box>
-        <Divider sx={{ mb: 2 }} />
+        <Divider sx={{ borderColor: '#ffffff', mb: 2 }} />
         
         {/* Empty State */}
         <Box
@@ -97,11 +111,11 @@ function RightSidebar() {
             alignItems: 'center',
             justifyContent: 'center',
             py: 4,
-            color: 'text.secondary'
+            color: '#ffffff'
           }}
         >
-          <InboxIcon sx={{ fontSize: 48, mb: 1, opacity: 0.3 }} />
-          <Typography variant="body2" color="text.secondary">
+          <InboxIcon sx={{ fontSize: 48, mb: 1, opacity: 0.7 }} />
+          <Typography variant="body2" sx={{ fontFamily: retroFont, color: '#ffffff' }}>
             No messages yet
           </Typography>
         </Box>

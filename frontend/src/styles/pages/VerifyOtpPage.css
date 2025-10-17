@@ -1,3 +1,7 @@
+/*
+  Retro Terminal (Black & White) Theme for OTP Page
+*/
+
 .otp-page-container {
   display: flex;
   flex-direction: column;
@@ -5,25 +9,27 @@
   align-items: center;
   min-height: 100vh;
   width: 100vw;
-  background-color: var(--color-background); /* Use variable */
+  background-color: #000000; /* Black background */
   text-align: center;
   position: absolute;
   top: 0;
   left: 0;
   padding: 1rem;
+  font-family: 'Courier New', Courier, monospace; /* Retro font */
 }
 
 .otp-card {
-  background-color: var(--color-card-background); /* Use variable */
+  background-color: #000000; /* Black card */
   padding: 2.5rem 3rem;
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  border-radius: 0; /* No rounded corners */
+  border: 2px solid #ffffff; /* Solid white border */
   width: 100%;
   max-width: 400px;
+  box-shadow: none;
 }
 
 .otp-card h2 {
-  color: var(--color-text-primary); /* Use variable */
+  color: #ffffff; /* White text */
   margin-top: 0;
   margin-bottom: 0.5rem;
   font-weight: 700;
@@ -31,29 +37,17 @@
 
 .otp-card .subtitle {
   margin-bottom: 1.5rem;
-  color: var(--color-text-secondary); /* Use variable */
+  color: #ffffff; /* White text */
 }
 
 .email-confirmation-box {
-  background-color: #e8f5e9;
-  color: #2e7d32;
+  background-color: #000000;
+  color: #ffffff;
   padding: 1rem;
-  border-radius: 8px;
+  border-radius: 0;
+  border: 1px dashed #ffffff; /* Dashed border for info */
   margin-bottom: 1.5rem;
   font-size: 0.9rem;
-}
-
-.otp-form input[type="tel"] {
-  width: 100%;
-  padding: 0.8rem 1rem;
-  border: 1px solid var(--color-input-border); /* Use variable */
-  background-color: var(--color-card-background); /* Use variable */
-  color: var(--color-text-primary); /* Use variable */
-  border-radius: 8px;
-  font-size: 1.5rem;
-  text-align: center;
-  letter-spacing: 0.5em;
-  box-sizing: border-box;
 }
 
 .otp-form .form-label {
@@ -61,31 +55,58 @@
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
   font-weight: 500;
-  color: var(--color-text-primary); /* Use variable */
+  color: #ffffff; /* White text */
   text-align: left;
+}
+
+.otp-form input[type="tel"] {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 2px solid #ffffff; /* Solid white border */
+  background-color: #000000; /* Black background */
+  color: #ffffff; /* White text */
+  border-radius: 0; /* No rounded corners */
+  font-size: 1.5rem;
+  text-align: center;
+  letter-spacing: 0.5em;
+  box-sizing: border-box;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.otp-form input[type="tel"]:focus {
+  outline: 2px dashed #ffffff;
+  outline-offset: 2px;
 }
 
 .otp-form button {
   width: 100%;
   padding: 0.9rem;
   margin-top: 1.5rem;
-  border: none;
-  border-radius: 8px;
-  background-color: var(--color-button-background); /* Use variable */
-  color: var(--color-button-text); /* Use variable */
+  border: 2px solid #ffffff;
+  border-radius: 0;
+  background-color: #ffffff;
+  color: #000000;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 .otp-form .resend-button {
-  background-color: #f0f0f0; /* Keeping this neutral for now */
-  color: #333;
+  background-color: #000000; /* Black */
+  color: #ffffff; /* White */
   margin-top: 0.75rem;
 }
 
+.otp-form .resend-button:hover {
+  background-color: #ffffff;
+  color: #000000;
+}
+
 .otp-form button:disabled {
-  background-color: #ccc;
+  background-color: #333333;
+  color: #888888;
+  border-color: #888888;
   cursor: not-allowed;
 }
 
@@ -93,7 +114,26 @@
   margin-top: 1.5rem;
   background: none;
   border: none;
-  color: var(--color-text-secondary); /* Use variable */
+  color: #ffffff; /* White text */
   cursor: pointer;
+  font-size: 0.9rem;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.back-to-login:hover {
+  text-decoration: underline;
+}
+
+.error-message {
+  color: #000000;
+  background-color: #ffffff;
+  border: 2px dashed #000000;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.resend-status-message {
+  color: #ffffff;
+  margin-top: 0.5rem;
   font-size: 0.9rem;
 }

@@ -1,25 +1,66 @@
 import React, { useState } from 'react';
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  Button,
-  Box,
-  Typography,
-  IconButton,
-  Slide,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl
+  Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button,
+  Box, Typography, IconButton, Slide, Select, MenuItem, InputLabel, FormControl
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
+const retroFont = "'Courier New', Courier, monospace";
+
+
+const retroTextFieldStyles = {
+  '& label': {
+    color: '#ffffff',
+    fontFamily: retroFont,
+    position: 'relative',
+    transform: 'none',
+    marginBottom: '4px',
+  },
+  '& label.Mui-focused': {
+    color: '#ffffff',
+  },
+  '& .MuiInputLabel-shrink': {
+    transform: 'none',
+    position: 'relative',
+  },
+  '& .MuiInputBase-root': {
+    color: '#ffffff',
+    fontFamily: retroFont,
+    border: '2px solid #ffffff',
+    borderRadius: 0,
+    backgroundColor: '#000000',
+    marginTop: 0,
+  },
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      border: 'none', 
+    },
+    '&:hover fieldset': {
+      border: 'none',
+    },
+    '&.Mui-focused fieldset': {
+      border: 'none',
+    },
+  },
+  '& .MuiInputBase-input': {
+    color: '#ffffff',
+  },
+  '& .MuiSvgIcon-root': {
+    color: '#ffffff',
+  }
+};
+
+const retroFormControlStyles = {
+  ...retroTextFieldStyles,
+  '& .MuiInputLabel-root': {
+    color: '#ffffff',
+    fontFamily: retroFont,
+  }
+};
 
 function EditJobModal({ open, onClose, job, onSave }) {
   const [formData, setFormData] = useState({
@@ -82,48 +123,34 @@ function EditJobModal({ open, onClose, job, onSave }) {
       maxWidth="md"
       fullWidth
       TransitionComponent={Transition}
+      PaperProps={{
+        sx: {
+          bgcolor: '#000000',
+          color: '#ffffff',
+          border: '2px solid #ffffff',
+          borderRadius: 0,
+          fontFamily: retroFont,
+        }
+      }}
     >
-      <DialogTitle>
+      <DialogTitle sx={{ fontFamily: retroFont, fontWeight: 'bold' }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           Edit Job Post
-          <IconButton onClick={onClose} size="small">
+          <IconButton onClick={onClose} size="small" sx={{ color: '#ffffff' }}>
             <CloseIcon />
           </IconButton>
         </Box>
       </DialogTitle>
-      <DialogContent dividers>
+      <DialogContent dividers sx={{ borderColor: '#ffffff' }}>
         <Box component="form" onSubmit={handleSubmit}>
           <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
-            <TextField 
-              name="title" 
-              label="Job Title" 
-              value={formData.title} 
-              onChange={handleChange} 
-              required 
-            />
-            <TextField 
-              name="company" 
-              label="Company" 
-              value={formData.company} 
-              onChange={handleChange} 
-              required 
-            />
-            <TextField 
-              name="location" 
-              label="Location" 
-              value={formData.location} 
-              onChange={handleChange} 
-              required 
-            />
+            <TextField name="title" label="Job Title" value={formData.title} onChange={handleChange} required sx={retroTextFieldStyles} InputLabelProps={{ shrink: true }} />
+            <TextField name="company" label="Company" value={formData.company} onChange={handleChange} required sx={retroTextFieldStyles} InputLabelProps={{ shrink: true }} />
+            <TextField name="location" label="Location" value={formData.location} onChange={handleChange} required sx={retroTextFieldStyles} InputLabelProps={{ shrink: true }} />
 
-            <FormControl>
-              <InputLabel>Job Type</InputLabel>
-              <Select 
-                name="job_type" 
-                value={formData.job_type} 
-                label="Job Type" 
-                onChange={handleChange}
-              >
+            <FormControl sx={retroFormControlStyles} fullWidth>
+              <InputLabel shrink>Job Type</InputLabel>
+              <Select name="job_type" value={formData.job_type} label="Job Type" onChange={handleChange}>
                 <MenuItem value="Full-time">Full-time</MenuItem>
                 <MenuItem value="Part-time">Part-time</MenuItem>
                 <MenuItem value="Contract">Contract</MenuItem>
@@ -131,14 +158,9 @@ function EditJobModal({ open, onClose, job, onSave }) {
               </Select>
             </FormControl>
 
-            <FormControl>
-              <InputLabel>Work Location</InputLabel>
-              <Select 
-                name="work_location" 
-                value={formData.work_location} 
-                label="Work Location" 
-                onChange={handleChange}
-              >
+            <FormControl sx={retroFormControlStyles} fullWidth>
+              <InputLabel shrink>Work Location</InputLabel>
+              <Select name="work_location" value={formData.work_location} label="Work Location" onChange={handleChange}>
                 <MenuItem value="On-site">On-site</MenuItem>
                 <MenuItem value="Remote">Remote</MenuItem>
                 <MenuItem value="Hybrid">Hybrid</MenuItem>
@@ -150,6 +172,8 @@ function EditJobModal({ open, onClose, job, onSave }) {
               label="Salary Range"
               value={formData.salary_range}
               onChange={handleChange}
+              sx={retroTextFieldStyles}
+              InputLabelProps={{ shrink: true }}
             />
 
             <TextField
@@ -160,7 +184,8 @@ function EditJobModal({ open, onClose, job, onSave }) {
               required
               multiline
               rows={4}
-              sx={{ gridColumn: 'span 2' }}
+              sx={{ ...retroTextFieldStyles, gridColumn: 'span 2' }}
+              InputLabelProps={{ shrink: true }}
             />
             <TextField
               name="requirements"
@@ -169,7 +194,8 @@ function EditJobModal({ open, onClose, job, onSave }) {
               onChange={handleChange}
               multiline
               rows={3}
-              sx={{ gridColumn: 'span 2' }}
+              sx={{ ...retroTextFieldStyles, gridColumn: 'span 2' }}
+              InputLabelProps={{ shrink: true }}
             />
 
             <TextField
@@ -179,29 +205,45 @@ function EditJobModal({ open, onClose, job, onSave }) {
               value={formData.application_deadline}
               onChange={handleChange}
               InputLabelProps={{ shrink: true }}
+              sx={retroTextFieldStyles}
             />
             <TextField
               name="external_link"
               label="External Application Link"
               value={formData.external_link}
               onChange={handleChange}
+              sx={retroTextFieldStyles}
+              InputLabelProps={{ shrink: true }}
             />
           </Box>
           {error && (
-            <Typography color="error" sx={{ mt: 2 }}>
+            <Typography color="error" sx={{ mt: 2, fontFamily: retroFont }}>
               {error}
             </Typography>
           )}
         </Box>
       </DialogContent>
       <DialogActions sx={{ pr: 3, pb: 2 }}>
-        <Button onClick={onClose} disabled={isSubmitting}>
+        <Button 
+          onClick={onClose} 
+          disabled={isSubmitting} 
+          sx={{ fontFamily: retroFont, color: '#ffffff', borderColor: '#ffffff', borderRadius: 0, '&:hover': { bgcolor: '#333' }}}
+        >
           Cancel
         </Button>
         <Button 
           variant="contained" 
           onClick={handleSubmit}
           disabled={isSubmitting}
+          sx={{ 
+            fontFamily: retroFont, 
+            bgcolor: '#ffffff', 
+            color: '#000000', 
+            borderRadius: 0, 
+            border: '2px solid #ffffff',
+            '&:hover': { bgcolor: '#000000', color: '#ffffff' },
+            '&.Mui-disabled': { bgcolor: '#333', borderColor: '#888', color: '#888' }
+          }}
         >
           {isSubmitting ? 'Saving...' : 'Save Changes'}
         </Button>

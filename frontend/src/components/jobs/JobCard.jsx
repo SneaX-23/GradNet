@@ -21,6 +21,7 @@ import EditJobModal from './EditJobModal';
 import { useAuth } from '../../context/AuthContext';
 
 const backendUrl = 'http://localhost:3000';
+const retroFont = "'Courier New', Courier, monospace";
 
 const getFullUrl = (path) => {
   if (!path) return null;
@@ -38,17 +39,9 @@ export default function JobCard({ job, onDelete, onUpdate }) {
   const isAdmin = user?.role === 'admin';
   const canModify = isOwner || isAdmin;
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
-
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
+  const handleExpandClick = () => setExpanded(!expanded);
+  const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
+  const handleMenuClose = () => setAnchorEl(null);
 
   const handleEdit = () => {
     handleMenuClose();
@@ -66,9 +59,7 @@ export default function JobCard({ job, onDelete, onUpdate }) {
   };
 
   const handleSaveEdit = (updatedJob) => {
-    if (onUpdate) {
-      onUpdate(updatedJob);
-    }
+    if (onUpdate) onUpdate(updatedJob);
   };
 
   const authorInitial = job.author_name ? job.author_name.charAt(0).toUpperCase() : '?';
@@ -84,21 +75,24 @@ export default function JobCard({ job, onDelete, onUpdate }) {
           width: '100%',
           maxWidth: 700,
           boxShadow: 'none',
-          border: '1px solid #eee',
-          borderRadius: '8px'
+          border: '2px solid #ffffff',
+          borderRadius: 0,
+          bgcolor: '#000000',
+          color: '#ffffff',
+          fontFamily: retroFont,
         }}
       >
         <Box sx={{ width: '100%' }}>
           <Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <Box>
-                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                <Typography variant="h6" sx={{ fontWeight: 'bold', fontFamily: retroFont }}>
                   {job.title}
                 </Typography>
-                <Typography variant="body1" color="text.primary" sx={{ mt: 0.5 }}>
+                <Typography variant="body1" sx={{ mt: 0.5, fontFamily: retroFont }}>
                   {job.company}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                <Typography variant="body2" sx={{ mt: 0.5, fontFamily: retroFont, color: '#aaaaaa' }}>
                   {job.location} ({job.work_location})
                 </Typography>
               </Box>
@@ -108,67 +102,49 @@ export default function JobCard({ job, onDelete, onUpdate }) {
                   <Avatar
                     src={avatarUrl || ''}
                     alt={job.author_name || 'Author'}
-                    sx={{ width: 32, height: 32, mr: 1 }}
+                    sx={{ width: 32, height: 32, mr: 1, border: '1px solid #ffffff' }}
                   >
                     {!avatarUrl && authorInitial}
                   </Avatar>
                   <Box sx={{ textAlign: 'right' }}>
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    <Typography variant="body2" sx={{ fontWeight: 500, fontFamily: retroFont }}>
                       {job.author_name || 'Unknown'}
                     </Typography>
                     {job.handle && (
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" sx={{ fontFamily: retroFont, color: '#aaaaaa' }}>
                         @{job.handle}
                       </Typography>
                     )}
                   </Box>
                   {canModify && (
-                    <IconButton size="small" onClick={handleMenuOpen} sx={{ ml: 1 }}>
+                    <IconButton size="small" onClick={handleMenuOpen} sx={{ ml: 1, color: '#ffffff' }}>
                       <MoreVertIcon />
                     </IconButton>
                   )}
                 </Box>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" sx={{ fontFamily: retroFont, color: '#aaaaaa' }}>
                   {new Date(job.updated_at).toLocaleDateString()}
                 </Typography>
               </Box>
             </Box>
 
             <Collapse in={expanded} timeout="auto" unmountOnExit sx={{ mt: 2 }}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                Job Type:
-              </Typography>
-              <Typography paragraph sx={{ mb: 1.5 }}>
-                {job.job_type}
-              </Typography>
+              <Typography variant="body2" sx={{ fontWeight: 'bold', fontFamily: retroFont }}>Job Type:</Typography>
+              <Typography paragraph sx={{ mb: 1.5, fontFamily: retroFont }}>{job.job_type}</Typography>
 
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                Salary Range:
-              </Typography>
-              <Typography paragraph sx={{ mb: 1.5 }}>
-                {job.salary_range || 'Not specified'}
-              </Typography>
+              <Typography variant="body2" sx={{ fontWeight: 'bold', fontFamily: retroFont }}>Salary Range:</Typography>
+              <Typography paragraph sx={{ mb: 1.5, fontFamily: retroFont }}>{job.salary_range || 'Not specified'}</Typography>
 
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                Description:
-              </Typography>
-              <Typography paragraph sx={{ mb: 1.5 }}>
-                {job.description}
-              </Typography>
+              <Typography variant="body2" sx={{ fontWeight: 'bold', fontFamily: retroFont }}>Description:</Typography>
+              <Typography paragraph sx={{ mb: 1.5, fontFamily: retroFont }}>{job.description}</Typography>
 
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                Requirements:
-              </Typography>
-              <Typography paragraph sx={{ mb: 1.5 }}>
-                {job.requirements || 'Not specified'}
-              </Typography>
+              <Typography variant="body2" sx={{ fontWeight: 'bold', fontFamily: retroFont }}>Requirements:</Typography>
+              <Typography paragraph sx={{ mb: 1.5, fontFamily: retroFont }}>{job.requirements || 'Not specified'}</Typography>
 
               {job.application_deadline && (
                 <>
-                  <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                    Deadline:
-                  </Typography>
-                  <Typography paragraph sx={{ mb: 1.5 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 'bold', fontFamily: retroFont }}>Deadline:</Typography>
+                  <Typography paragraph sx={{ mb: 1.5, fontFamily: retroFont }}>
                     {new Date(job.application_deadline).toLocaleDateString()}
                   </Typography>
                 </>
@@ -176,11 +152,9 @@ export default function JobCard({ job, onDelete, onUpdate }) {
 
               {job.external_link && job.external_link.trim() !== '' && (
                 <>
-                  <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                    Apply here:
-                  </Typography>
-                  <Typography paragraph sx={{ mb: 1.5 }}>
-                    <a href={job.external_link}>{job.external_link}</a>
+                  <Typography variant="body2" sx={{ fontWeight: 'bold', fontFamily: retroFont }}>Apply here:</Typography>
+                  <Typography paragraph sx={{ mb: 1.5, fontFamily: retroFont }}>
+                    <a href={job.external_link} style={{ color: '#ffffff' }}>{job.external_link}</a>
                   </Typography>
                 </>
               )}
@@ -190,14 +164,17 @@ export default function JobCard({ job, onDelete, onUpdate }) {
               <Button
                 size="small"
                 onClick={handleExpandClick}
-                endIcon={
-                  <ExpandMoreIcon
-                    sx={{
-                      transform: !expanded ? 'rotate(0deg)' : 'rotate(180deg)',
-                      transition: '0.3s'
-                    }}
-                  />
-                }
+                endIcon={<ExpandMoreIcon />}
+                sx={{
+                  fontFamily: retroFont,
+                  color: '#ffffff',
+                  border: '1px solid #ffffff',
+                  borderRadius: 0,
+                  '& .MuiButton-endIcon': {
+                    transform: !expanded ? 'rotate(0deg)' : 'rotate(180deg)',
+                    transition: '0.3s'
+                  }
+                }}
               >
                 {expanded ? 'Show less' : 'Show more'}
               </Button>
@@ -206,9 +183,22 @@ export default function JobCard({ job, onDelete, onUpdate }) {
         </Box>
       </Card>
 
-      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-        <MenuItem onClick={handleEdit}>Edit</MenuItem>
-        <MenuItem onClick={handleDeleteClick} sx={{ color: 'error.main' }}>
+      <Menu 
+        anchorEl={anchorEl} 
+        open={Boolean(anchorEl)} 
+        onClose={handleMenuClose}
+        sx={{
+          '& .MuiPaper-root': {
+            backgroundColor: '#000000',
+            color: '#ffffff',
+            border: '2px solid #ffffff',
+            borderRadius: 0,
+            fontFamily: retroFont,
+          }
+        }}
+      >
+        <MenuItem onClick={handleEdit} sx={{fontFamily: retroFont, '&:hover': {backgroundColor: '#333'}}}>Edit</MenuItem>
+        <MenuItem onClick={handleDeleteClick} sx={{ color: '#ff0000', fontFamily: retroFont, '&:hover': {backgroundColor: '#333'} }}>
           Delete
         </MenuItem>
       </Menu>
@@ -225,7 +215,7 @@ export default function JobCard({ job, onDelete, onUpdate }) {
       <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
         <DialogTitle>Delete Job Post</DialogTitle>
         <DialogContent>
-          <Typography>Are you sure you want to delete this job posting? This action cannot be undone.</Typography>
+          <Typography>Are you sure you want to delete this job posting?</Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>

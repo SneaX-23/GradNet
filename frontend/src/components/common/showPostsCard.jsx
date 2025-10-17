@@ -22,6 +22,7 @@ import EditPostModal from './EditPostModal';
 import { useAuth } from '../../context/AuthContext';
 
 const backendUrl = 'http://localhost:3000';
+const retroFont = "'Courier New', Courier, monospace";
 
 const getFullUrl = (path) => {
   if (!path) return null;
@@ -100,8 +101,9 @@ export default function ShowPostsCard({ post, onDelete, onUpdate }) {
                   width: post.files.length === 1 ? '100%' : 'calc(50% - 4px)',
                   maxHeight: '400px',
                   objectFit: 'cover',
-                  borderRadius: '8px',
-                  cursor: 'pointer'
+                  borderRadius: 0,
+                  cursor: 'pointer',
+                  imageRendering: 'pixelated',
                 }}
               />
             );
@@ -115,7 +117,7 @@ export default function ShowPostsCard({ post, onDelete, onUpdate }) {
                 sx={{
                   width: post.files.length === 1 ? '100%' : 'calc(50% - 4px)',
                   maxHeight: '400px',
-                  borderRadius: '8px'
+                  borderRadius: 0,
                 }}
               />
             );
@@ -127,16 +129,16 @@ export default function ShowPostsCard({ post, onDelete, onUpdate }) {
                 sx={{
                   width: post.files.length === 1 ? '100%' : 'calc(50% - 4px)',
                   height: '200px',
-                  border: '2px solid #eee',
-                  borderRadius: '8px',
+                  border: '2px solid #333',
+                  borderRadius: 0,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
-                  '&:hover': { bgcolor: '#f5f5f5' }
+                  '&:hover': { bgcolor: '#333' }
                 }}
               >
-                <Typography>PDF Document - Click to view</Typography>
+                <Typography sx={{fontFamily: retroFont}}>PDF Document</Typography>
               </Box>
             );
           }
@@ -155,17 +157,27 @@ export default function ShowPostsCard({ post, onDelete, onUpdate }) {
           width: '100%',
           maxWidth: 700,
           boxShadow: 'none',
-          border: '1px solid #eee',
-          borderRadius: '8px'
+          border: '2px solid #ffffff',
+          borderRadius: 0,
+          bgcolor: '#000000',
+          color: '#ffffff',
         }}
       >
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Avatar src={avatarUrl || ''} sx={{ width: 40, height: 40 }}>
+            <Avatar 
+              src={avatarUrl || ''} 
+              sx={{ 
+                width: 40, 
+                height: 40, 
+                border: '2px solid #ffffff',
+                imageRendering: 'pixelated',
+              }}
+            >
               {!avatarUrl && authorInitial}
             </Avatar>
             <Box>
-              <Typography variant="body1" fontWeight="bold">
+              <Typography variant="body1" fontWeight="bold" sx={{ fontFamily: retroFont, color: '#ffffff' }}>
                 {post.author_name || 'Unknown'}
               </Typography>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -173,31 +185,35 @@ export default function ShowPostsCard({ post, onDelete, onUpdate }) {
                   <Link
                     href={`/profile/${post.handle}`}
                     underline="none"
-                    sx={{ color: 'text.secondary', '&:hover': { textDecoration: 'underline' } }}
+                    sx={{ 
+                      color: '#ffffff', 
+                      fontFamily: retroFont,
+                      '&:hover': { textDecoration: 'underline' } 
+                    }}
                   >
-                    <Typography variant="body2">@{post.handle}</Typography>
+                    <Typography variant="body2" sx={{ fontFamily: retroFont }}>@{post.handle}</Typography>
                   </Link>
                 )}
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{ fontFamily: retroFont, color: '#ffffff' }}>
                   · {new Date(post.created_at).toLocaleDateString()}
                 </Typography>
               </Box>
             </Box>
           </Box>
           {canModify && (
-            <IconButton size="small" onClick={handleMenuOpen}>
+            <IconButton size="small" onClick={handleMenuOpen} sx={{ color: '#ffffff' }}>
               <MoreVertIcon />
             </IconButton>
           )}
         </Box>
 
         {post.title && (
-          <Typography variant="h6" sx={{ mb: 1, fontWeight: 'bold' }}>
+          <Typography variant="h6" sx={{ mb: 1, fontWeight: 'bold', fontFamily: retroFont, color: '#ffffff' }}>
             {post.title}
           </Typography>
         )}
         {post.description && (
-          <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
+          <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap', fontFamily: retroFont, color: '#ffffff' }}>
             {post.description}
           </Typography>
         )}
@@ -205,9 +221,22 @@ export default function ShowPostsCard({ post, onDelete, onUpdate }) {
         {renderMedia()}
       </Card>
 
-      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-        <MenuItem onClick={handleEdit}>Edit</MenuItem>
-        <MenuItem onClick={handleDeleteClick} sx={{ color: 'error.main' }}>
+      <Menu 
+        anchorEl={anchorEl} 
+        open={Boolean(anchorEl)} 
+        onClose={handleMenuClose}
+        sx={{
+          '& .MuiPaper-root': {
+            backgroundColor: '#000000',
+            color: '#ffffff',
+            border: '2px solid #ffffff',
+            borderRadius: 0,
+            fontFamily: retroFont,
+          }
+        }}
+      >
+        <MenuItem onClick={handleEdit} sx={{fontFamily: retroFont, '&:hover': {backgroundColor: '#333'}}}>Edit</MenuItem>
+        <MenuItem onClick={handleDeleteClick} sx={{ color: '#ff0000', fontFamily: retroFont, '&:hover': {backgroundColor: '#333'} }}>
           Delete
         </MenuItem>
       </Menu>
@@ -221,10 +250,11 @@ export default function ShowPostsCard({ post, onDelete, onUpdate }) {
         />
       )}
 
+      
       <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
         <DialogTitle>Delete Post</DialogTitle>
         <DialogContent>
-          <Typography>Are you sure you want to delete this post? This action cannot be undone.</Typography>
+          <Typography>Are you sure you want to delete this post?</Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
@@ -233,7 +263,7 @@ export default function ShowPostsCard({ post, onDelete, onUpdate }) {
           </Button>
         </DialogActions>
       </Dialog>
-
+        
       <Dialog open={pdfDialogOpen} onClose={() => setPdfDialogOpen(false)} maxWidth="md" fullWidth>
         <DialogTitle>PDF Document</DialogTitle>
         <DialogContent>

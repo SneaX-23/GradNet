@@ -6,9 +6,33 @@ import { useAuth } from '../../context/AuthContext';
 import { socket } from '../../socket';
 
 const backendUrl = 'http://localhost:3000';
+const retroFont = "'Courier New', Courier, monospace";
+
 const getFullUrl = (path) => {
   if (!path) return null;
   return path.startsWith('http') ? path : `${backendUrl}${path}`;
+};
+
+const retroTextFieldStyles = {
+  '& label.Mui-focused': {
+    color: '#ffffff',
+  },
+  '& .MuiOutlinedInput-root': {
+    fontFamily: retroFont,
+    color: '#ffffff',
+    backgroundColor: '#000000',
+    borderRadius: 0,
+    '& fieldset': {
+      borderColor: '#ffffff',
+      borderWidth: '2px',
+    },
+    '&:hover fieldset': {
+      borderColor: '#ffffff',
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: '#ffffff',
+    },
+  },
 };
 
 function ChatWindow({ conversation }) {
@@ -62,7 +86,6 @@ function ChatWindow({ conversation }) {
     const messagePayload = { content: newMessage, to: conversation.other_participant.id };
     socket.emit('private_message', messagePayload);
     
-    // Optimistic UI update
     const optimisticMessage = {
       content: newMessage,
       sender_id: user.id,
@@ -81,14 +104,14 @@ function ChatWindow({ conversation }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          bgcolor: '#fafafa',
+          bgcolor: '#000000',
           p: 3,
         }}
       >
-        <Paper elevation={0} sx={{ textAlign: 'center', p: 4, borderRadius: 2, background: 'transparent' }}>
-          <ChatBubbleOutlineIcon sx={{ fontSize: 48, color: 'text.disabled', mb: 1 }} />
-          <Typography variant="h6">Select a conversation</Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+        <Paper elevation={0} sx={{ textAlign: 'center', p: 4, borderRadius: 0, border: '2px dashed #555', background: '#000000' }}>
+          <ChatBubbleOutlineIcon sx={{ fontSize: 48, color: '#555', mb: 1 }} />
+          <Typography variant="h6" sx={{ fontFamily: retroFont, color: '#ffffff' }}>Select a conversation</Typography>
+          <Typography variant="body2" sx={{ fontFamily: retroFont, color: '#aaaaaa', mt: 1 }}>
             Start chatting with your connections here.
           </Typography>
         </Paper>
@@ -103,9 +126,8 @@ function ChatWindow({ conversation }) {
       width: '100%',
       display: 'flex',
       flexDirection: 'column',
-      bgcolor: 'background.default'
+      bgcolor: '#000000'
     }}>
-      {/* Header - Fixed at top */}
       <Paper elevation={0} sx={{ 
         position: 'sticky',
         top: 0,
@@ -114,27 +136,29 @@ function ChatWindow({ conversation }) {
         display: 'flex', 
         alignItems: 'center', 
         gap: 2, 
-        borderBottom: '1px solid #eee',
-        bgcolor: 'background.paper'
+        borderBottom: '2px solid #ffffff',
+        bgcolor: 'background.paper',
+        borderRadius: 0,
+        bgcolor: '#000000'
       }}>
-        <Avatar src={getFullUrl(conversation.other_participant.profile_picture_url)} />
+        <Avatar src={getFullUrl(conversation.other_participant.profile_picture_url)} sx={{ border: '1px solid #ffffff' }} />
         <Box>
-          <Typography variant="body1" fontWeight="bold">{conversation.other_participant.name}</Typography>
-          <Typography variant="body2" color="text.secondary">@{conversation.other_participant.handle}</Typography>
+          <Typography variant="body1" fontWeight="bold" sx={{ fontFamily: retroFont, color: '#ffffff' }}>{conversation.other_participant.name}</Typography>
+          <Typography variant="body2" sx={{ fontFamily: retroFont, color: '#aaaaaa' }}>@{conversation.other_participant.handle}</Typography>
         </Box>
       </Paper>
       
-      {/* Messages - Scrollable middle section */}
       {loading ? (
         <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <CircularProgress />
+          <CircularProgress sx={{ color: '#ffffff' }} />
         </Box>
       ) : (
         <Box sx={{ 
           flex: 1,
           overflowY: 'auto', 
           overflowX: 'hidden',
-          p: 2
+          p: 2,
+          bgcolor: '#000000'
         }}>
           {messages.map((msg, index) => (
             <Box key={index} sx={{
@@ -143,13 +167,15 @@ function ChatWindow({ conversation }) {
               mb: 1
             }}>
               <Box sx={{
-                bgcolor: msg.sender_id === user.id ? 'primary.main' : '#f0f0f0',
-                color: msg.sender_id === user.id ? 'primary.contrastText' : 'text.primary',
+                
+                bgcolor: '#000000',
+                color: '#ffffff',
+                border: msg.sender_id === user.id ? '1px solid #ffffff' : '1px dashed #555555',
+                borderRadius: 0,
                 p: '8px 12px',
-                borderRadius: '16px',
                 maxWidth: '70%'
               }}>
-                <Typography variant="body1">{msg.content}</Typography>
+                <Typography variant="body1" sx={{ fontFamily: retroFont }}>{msg.content}</Typography>
               </Box>
             </Box>
           ))}
@@ -157,7 +183,6 @@ function ChatWindow({ conversation }) {
         </Box>
       )}
 
-      {/* Input - Fixed at bottom */}
       <Box 
         component="form" 
         onSubmit={handleSendMessage} 
@@ -166,10 +191,10 @@ function ChatWindow({ conversation }) {
           bottom: 0,
           zIndex: 10,
           p: 2, 
-          borderTop: '1px solid #eee', 
+          borderTop: '2px solid #ffffff', 
           display: 'flex', 
           alignItems: 'center', 
-          bgcolor: 'background.paper'
+          bgcolor: '#000000'
         }}
       >
         <TextField
@@ -180,9 +205,9 @@ function ChatWindow({ conversation }) {
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           autoComplete="off"
-          sx={{ '& .MuiOutlinedInput-root': { borderRadius: '20px' } }}
+          sx={retroTextFieldStyles}
         />
-        <IconButton type="submit" color="primary" sx={{ ml: 1 }}>
+        <IconButton type="submit" color="primary" sx={{ ml: 1, color: '#ffffff', border: '2px solid #ffffff', borderRadius: 0, '&:hover': { bgcolor: '#ffffff', color: '#000000'} }}>
           <SendIcon />
         </IconButton>
       </Box>

@@ -3,6 +3,8 @@ import Cropper from 'react-easy-crop';
 import { Modal, Box, Slider, Button, Typography } from '@mui/material';
 import getCroppedImg from './cropImage';
 
+const retroFont = "'Courier New', Courier, monospace";
+
 const cropperModalStyle = {
     position: 'absolute',
     top: '50%',
@@ -10,13 +12,16 @@ const cropperModalStyle = {
     transform: 'translate(-50%, -50%)',
     width: '90%',
     maxWidth: '500px',
-    bgcolor: 'background.paper',
+    bgcolor: '#000000',
+    color: '#ffffff',
+    border: '2px solid #ffffff',
+    borderRadius: 0,
     boxShadow: 24,
-    borderRadius: '8px',
     p: 4,
     display: 'flex',
     flexDirection: 'column',
-    gap: 2
+    gap: 2,
+    fontFamily: retroFont,
 };
 
 function ImageCropper({ image, aspect, onCropComplete, onClose }) {
@@ -41,7 +46,7 @@ function ImageCropper({ image, aspect, onCropComplete, onClose }) {
     return (
         <Modal open onClose={onClose}>
             <Box sx={cropperModalStyle}>
-                <Typography variant="h6">Crop Image</Typography>
+                <Typography variant="h6" sx={{ fontFamily: retroFont, fontWeight: 'bold' }}>Crop Image</Typography>
                 <Box sx={{ position: 'relative', width: '100%', height: 400 }}>
                     <Cropper
                         image={image}
@@ -54,7 +59,7 @@ function ImageCropper({ image, aspect, onCropComplete, onClose }) {
                     />
                 </Box>
                 <Box>
-                    <Typography>Zoom</Typography>
+                    <Typography sx={{ fontFamily: retroFont }}>Zoom</Typography>
                     <Slider
                         value={zoom}
                         min={1}
@@ -62,11 +67,44 @@ function ImageCropper({ image, aspect, onCropComplete, onClose }) {
                         step={0.1}
                         aria-labelledby="Zoom"
                         onChange={(e, newZoom) => setZoom(newZoom)}
+                        sx={{
+                            color: '#ffffff', 
+                            '& .MuiSlider-thumb': {
+                                backgroundColor: '#ffffff',
+                                border: '2px solid #000000',
+                                borderRadius: 0,
+                            },
+                            '& .MuiSlider-track': {
+                                backgroundColor: '#ffffff',
+                                border: 'none',
+                            },
+                            '& .MuiSlider-rail': {
+                                backgroundColor: '#555555',
+                            }
+                        }}
                     />
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
-                     <Button onClick={onClose}>Cancel</Button>
-                    <Button onClick={handleCrop} variant="contained">Apply</Button>
+                     <Button 
+                        onClick={onClose}
+                        sx={{ fontFamily: retroFont, color: '#ffffff', borderColor: '#ffffff', borderRadius: 0, '&:hover': { bgcolor: '#333' }}}
+                     >
+                        Cancel
+                     </Button>
+                    <Button 
+                      onClick={handleCrop} 
+                      variant="contained"
+                      sx={{ 
+                        fontFamily: retroFont, 
+                        bgcolor: '#ffffff', 
+                        color: '#000000', 
+                        borderRadius: 0, 
+                        border: '2px solid #ffffff',
+                        '&:hover': { bgcolor: '#000000', color: '#ffffff' }
+                      }}
+                    >
+                      Apply
+                    </Button>
                 </Box>
             </Box>
         </Modal>

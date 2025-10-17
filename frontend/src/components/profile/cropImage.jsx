@@ -1,8 +1,4 @@
-/**
- * @param {string} imageSrc - The source of the image to be cropped.
- * @param {Object} pixelCrop - The pixel crop values {x, y, width, height}.
- * @returns {Promise<File>} - A promise that resolves with the cropped image as a File object.
- */
+
 export default async function getCroppedImg(imageSrc, pixelCrop) {
   const image = new Image();
   image.src = imageSrc;

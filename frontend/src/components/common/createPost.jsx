@@ -6,6 +6,7 @@ import { useAuth } from '../../context/AuthContext';
 import AddIcon from '@mui/icons-material/Add';
 
 const backendUrl = 'http://localhost:3000';
+const retroFont = "'Courier New', Courier, monospace";
 
 function CreatePost() {
   const [postContent, setPostContent] = useState({ title: '', description: '' });
@@ -74,10 +75,28 @@ function CreatePost() {
     return <Box sx={{p:1}}><ArticleIcon /> File</Box>;
   };
 
-  return (
-    <Card sx={{ p: 2, mb: 3, width: '100%', maxWidth: 600, boxShadow: 'none', borderBottom: '1px solid #eee' }}>
+ return (
+    <Card sx={{ 
+      p: 2, 
+      mb: 3, 
+      width: '100%', 
+      maxWidth: 600, 
+      boxShadow: 'none', 
+      border: '2px solid #ffffff',
+      borderRadius: 0, 
+      bgcolor: '#000000', 
+      color: '#ffffff', 
+    }}>
       <Box sx={{ display: 'flex', gap: 2 }}>
-        <Avatar src={avatarUrl} sx={{ bgcolor: 'primary.main' }}>
+        <Avatar 
+          src={avatarUrl} 
+          sx={{ 
+            bgcolor: '#000000', 
+            border: '2px solid #ffffff',
+            color: '#ffffff',
+            imageRendering: 'pixelated',
+          }}
+        >
           {!avatarUrl && (user?.name ? user.name.charAt(0).toUpperCase() : 'U')}
         </Avatar>
         <Box sx={{ width: '100%' }}>
@@ -88,7 +107,10 @@ function CreatePost() {
             name="title"
             value={postContent.title}
             onChange={handleInputChange}
-            InputProps={{ disableUnderline: true }}
+            InputProps={{ 
+              disableUnderline: true, 
+              sx: { fontFamily: retroFont, color: '#ffffff', border: '1px dashed #333', padding: '8px', mb: 1 } 
+            }}
           />
           <TextField
             fullWidth
@@ -99,13 +121,16 @@ function CreatePost() {
             name="description"
             value={postContent.description}
             onChange={handleInputChange}
-            InputProps={{ disableUnderline: true }}
+            InputProps={{ 
+              disableUnderline: true, 
+              sx: { fontFamily: retroFont, color: '#ffffff', border: '1px dashed #333', padding: '8px' } 
+            }}
           />
 
           {selectedFiles.length > 0 && (
             <Grid container spacing={1} sx={{ mt: 2 }}>
               {selectedFiles.map((file, index) => (
-                <Grid item xs={6} key={index} sx={{ height: '150px', borderRadius: '16px', overflow: 'hidden', border: '1px solid #ddd' }}>
+                <Grid item xs={6} key={index} sx={{ height: '150px', borderRadius: 0, overflow: 'hidden', border: '1px solid #333' }}>
                   {renderPreview(file)}
                 </Grid>
               ))}
@@ -114,7 +139,7 @@ function CreatePost() {
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
             <Box>
-              <IconButton size="small" color="primary" component="label">
+              <IconButton size="small" component="label" sx={{ color: '#ffffff' }}>
                 <ImageIcon />
                 <input type="file" hidden onChange={handleFileChange} multiple />
               </IconButton>
@@ -123,7 +148,24 @@ function CreatePost() {
               variant="contained"
               disabled={!postContent.title.trim() && selectedFiles.length === 0}
               onClick={handlePost}
-              sx={{ borderRadius: '8px', textTransform: 'none', fontWeight: 'bold', minWidth: '40px', height: '40px', padding: 0 }}
+              sx={{ 
+                borderRadius: 0, 
+                textTransform: 'none', 
+                fontWeight: 'bold', 
+                fontFamily: retroFont,
+                bgcolor: '#ffffff',
+                color: '#000000',
+                border: '2px solid #ffffff',
+                '&:hover': {
+                  bgcolor: '#000000',
+                  color: '#ffffff',
+                },
+                '&.Mui-disabled': {
+                  bgcolor: '#333',
+                  borderColor: '#888',
+                  color: '#888'
+                }
+              }}
             >
               <AddIcon />
             </Button>

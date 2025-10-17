@@ -15,6 +15,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import RightSidebar from '../components/layout/RightSidebar';
 
 const backendUrl = 'http://localhost:3000';
+const retroFont = "'Courier New', Courier, monospace";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -27,7 +28,7 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ p: 3, fontFamily: retroFont, color: '#ffffff' }}>
           {children}
         </Box>
       )}
@@ -36,29 +37,30 @@ function TabPanel(props) {
 }
 
 const AboutContent = ({ profileData }) => {
+
   return (
     <>
-      {profileData.bio && <Typography variant="body1" sx={{ mb: 3 }}>{profileData.bio}</Typography>}
+      {profileData.bio && <Typography variant="body1" sx={{ mb: 3, fontFamily: retroFont, color: '#ffffff' }}>{profileData.bio}</Typography>}
       
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         {profileData.linkedin_url && (
-          <Link href={profileData.linkedin_url} target="_blank" rel="noopener noreferrer" sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', color: 'text.secondary', '&:hover': {textDecoration: 'underline'} }}>
-            <LinkedInIcon /> <Typography variant="body2">LinkedIn</Typography>
+          <Link href={profileData.linkedin_url} target="_blank" rel="noopener noreferrer" sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', color: '#ffffff', '&:hover': {textDecoration: 'underline'} }}>
+            <LinkedInIcon /> <Typography variant="body2" sx={{fontFamily: retroFont}}>LinkedIn</Typography>
           </Link>
         )}
         {profileData.github_url && (
-          <Link href={profileData.github_url} target="_blank" rel="noopener noreferrer" sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', color: 'text.secondary', '&:hover': {textDecoration: 'underline'} }}>
-            <GitHubIcon /> <Typography variant="body2">GitHub</Typography>
+          <Link href={profileData.github_url} target="_blank" rel="noopener noreferrer" sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', color: '#ffffff', '&:hover': {textDecoration: 'underline'} }}>
+            <GitHubIcon /> <Typography variant="body2" sx={{fontFamily: retroFont}}>GitHub</Typography>
           </Link>
         )}
         {profileData.twitter_url && (
-          <Link href={profileData.twitter_url} target="_blank" rel="noopener noreferrer" sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', color: 'text.secondary', '&:hover': {textDecoration: 'underline'} }}>
-            <XIcon /> <Typography variant="body2">X / Twitter</Typography>
+          <Link href={profileData.twitter_url} target="_blank" rel="noopener noreferrer" sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', color: '#ffffff', '&:hover': {textDecoration: 'underline'} }}>
+            <XIcon /> <Typography variant="body2" sx={{fontFamily: retroFont}}>X / Twitter</Typography>
           </Link>
         )}
       </Box>
       {!profileData.bio && !profileData.linkedin_url && !profileData.github_url && !profileData.twitter_url && (
-        <Typography color="text.secondary">No additional information to show.</Typography>
+        <Typography sx={{fontFamily: retroFont, color: '#aaaaaa'}}>No additional information to show.</Typography>
       )}
     </>
   );
@@ -70,6 +72,7 @@ const getFullUrl = (path) => {
 };
 
 const modalStyle = {
+  
   position: 'absolute',
   top: '50%',
   left: '50%',
@@ -88,14 +91,11 @@ function ProfilePage() {
   const [error, setError] = useState('');
   const [tabValue, setTabValue] = useState(0);
   const [editModalOpen, setEditModalOpen] = useState(false);
-
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
-
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-
   const loadProfile = async () => {
     try {
       setLoading(true);
@@ -111,11 +111,9 @@ function ProfilePage() {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     loadProfile();
   }, []);
-
   useEffect(() => {
     if (profileData && (profileData.role === 'admin' || profileData.role === 'faculty')) {
       const fetchUsersInitialPosts = async () => {
@@ -134,7 +132,6 @@ function ProfilePage() {
       fetchUsersInitialPosts();
     }
   }, [profileData]);
-
   const fetchMoreData = async () => {
     const nextPage = page + 1;
     try {
@@ -151,64 +148,59 @@ function ProfilePage() {
       setHasMore(false);
     }
   }
-
   const handleDeletePost = async (postId) => {
     try {
       const response = await fetch(`/api/home/delete-post/${postId}`, {
         method: 'DELETE',
       });
-
       if (!response.ok) {
         throw new Error('Failed to delete the post.');
       }
-
       setPosts(posts.filter(post => post.id !== postId));
     } catch (error) {
       setError(error.message);
     }
   };
-
   const handleUpdatePost = (updatedPost) => {
     setPosts(posts.map(post => 
       post.id === updatedPost.id ? { ...post, ...updatedPost } : post
     ));
   };
-
-  const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
-  };
-  
-  const handleProfileUpdate = () => {
-    loadProfile();
-  };
-
+  const handleTabChange = (event, newValue) => setTabValue(newValue);
+  const handleProfileUpdate = () => loadProfile();
   const handleOpenImage = (imageUrl) => {
     if (imageUrl) {
       setSelectedImage(imageUrl);
       setImageModalOpen(true);
     }
   };
-
-  const handleCloseImage = () => {
-    setImageModalOpen(false);
-  };
-
+  const handleCloseImage = () => setImageModalOpen(false);
   const bannerUrl = getFullUrl(profileData?.profile_banner_url);
   const avatarUrl = getFullUrl(profileData?.profile_picture_url);
 
+
+  
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', bgcolor: '#000000', minHeight: '100vh' }}>
       <CssBaseline />
 
       <Modal open={imageModalOpen} onClose={handleCloseImage}>
         <Box sx={modalStyle} onClick={handleCloseImage}>
-          <img src={selectedImage} alt="Expanded view" style={{ maxHeight: '90vh', maxWidth: '90vw', objectFit: 'contain' }} />
+          <img src={selectedImage} alt="Expanded view" style={{ maxHeight: '90vh', maxWidth: '90vw', objectFit: 'contain', border: '2px solid white' }} />
         </Box>
       </Modal>
 
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <AppBar 
+        position="fixed" 
+        sx={{ 
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          backgroundColor: '#000000',
+          borderBottom: '2px solid #ffffff',
+          boxShadow: 'none',
+        }}
+      >
         <Toolbar>
-          <Typography variant="h6" noWrap component="div">GradNet</Typography>
+          <Typography variant="h6" noWrap component="div" sx={{fontFamily: retroFont, color: '#ffffff', fontWeight: 'bold'}}>GradNet</Typography>
         </Toolbar>
       </AppBar>
       <Sidebar />
@@ -221,11 +213,12 @@ function ProfilePage() {
           marginRight: '320px',
           display: 'flex',
           justifyContent: 'center',
-          p: 3
+          p: 3,
+          bgcolor: '#000000'
         }}
       >
-        {loading && <Box sx={{p:3}}><CircularProgress /></Box>}
-        {error && <Box sx={{p:3}}><Alert severity="error">{error}</Alert></Box>}
+        {loading && <Box sx={{p:3}}><CircularProgress sx={{color: '#fff'}} /></Box>}
+        {error && <Box sx={{p:3}}><Alert severity="error" sx={{bgcolor: '#333', color: 'red', fontFamily: retroFont}}>{error}</Alert></Box>}
         
         {profileData && (
           <>
@@ -240,9 +233,12 @@ function ProfilePage() {
                 width: '100%', 
                 maxWidth: '800px', 
                 minWidth: '600px', 
-                border: '1px solid #eee',
-                borderRadius: '8px',
-                overflow: 'hidden'
+                border: '2px solid #ffffff',
+                borderRadius: 0,
+                overflow: 'hidden',
+                bgcolor: '#000000',
+                color: '#ffffff',
+                fontFamily: retroFont,
               }}
             >
               <Box sx={{ position: 'relative' }}>
@@ -250,7 +246,8 @@ function ProfilePage() {
                   onClick={() => handleOpenImage(bannerUrl)}
                   sx={{
                     height: '260px',
-                    bgcolor: '#cfd9de', 
+                    bgcolor: '#000000', 
+                    borderBottom: '2px solid #ffffff',
                     backgroundImage: bannerUrl ? `url(${bannerUrl})` : 'none',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
@@ -266,7 +263,8 @@ function ProfilePage() {
                     position: 'absolute',
                     top: '190px',
                     left: '16px',
-                    border: '4px solid #fff', 
+                    border: '4px solid #000000', 
+                    borderRadius: 0, 
                     fontSize: '4rem',
                     cursor: avatarUrl ? 'pointer' : 'default',
                   }}
@@ -274,27 +272,55 @@ function ProfilePage() {
                   {profileData.name ? profileData.name.charAt(0).toUpperCase() : 'U'}
                 </Avatar>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: '12px 16px' }}>
-                  <Button onClick={() => setEditModalOpen(true)} variant="outlined" sx={{ borderRadius: '99px', textTransform: 'none', fontWeight: 'bold' }}>
+                  <Button 
+                    onClick={() => setEditModalOpen(true)} 
+                    variant="outlined" 
+                    sx={{ 
+                      borderRadius: 0, 
+                      textTransform: 'none', 
+                      fontWeight: 'bold',
+                      fontFamily: retroFont,
+                      color: '#ffffff',
+                      borderColor: '#ffffff',
+                      '&:hover': {
+                        bgcolor: '#ffffff',
+                        color: '#000000',
+                        borderColor: '#ffffff'
+                      }
+                    }}
+                  >
                     Edit profile
                   </Button>
                 </Box>
               </Box>
 
               <Box sx={{ p: '12px 16px', mt: '60px' }}>
-                <Typography variant="h5" component="div" fontWeight="bold">
+                <Typography variant="h5" component="div" fontWeight="bold" sx={{fontFamily: retroFont}}>
                   {profileData.name}
                 </Typography>
-                <Typography color="text.secondary">
+                <Typography sx={{fontFamily: retroFont, color: '#aaaaaa'}}>
                   @{profileData.handle}
                 </Typography>
               </Box>
 
               {(profileData.role === 'admin' || profileData.role === 'faculty') ? (
                 <>
-                  <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <Tabs value={tabValue} onChange={handleTabChange} variant="fullWidth" textColor="inherit">
-                      <Tab label="About" id="profile-tab-0" sx={{textTransform: 'none', fontWeight: 'bold'}} />
-                      <Tab label="Posts" id="profile-tab-1" sx={{textTransform: 'none', fontWeight: 'bold'}} />
+                  <Box sx={{ borderBottom: 1, borderColor: '#ffffff' }}>
+                    <Tabs 
+                      value={tabValue} 
+                      onChange={handleTabChange} 
+                      variant="fullWidth" 
+                      textColor="inherit"
+                      sx={{
+                        color: '#ffffff',
+                        fontFamily: retroFont,
+                        "& .MuiTabs-indicator": {
+                          backgroundColor: '#ffffff' 
+                        }
+                      }}
+                    >
+                      <Tab label="About" id="profile-tab-0" sx={{textTransform: 'none', fontWeight: 'bold', fontFamily: retroFont}} />
+                      <Tab label="Posts" id="profile-tab-1" sx={{textTransform: 'none', fontWeight: 'bold', fontFamily: retroFont}} />
                     </Tabs>
                   </Box>
                   
@@ -306,9 +332,9 @@ function ProfilePage() {
                       dataLength={posts.length}
                       next={fetchMoreData}
                       hasMore={hasMore}
-                      loader={<CircularProgress sx={{ my: 2 }} />}
+                      loader={<CircularProgress sx={{ my: 2, color: '#ffffff' }} />}
                       endMessage={
-                        <p style={{ textAlign: 'center', marginTop: '20px' }}>
+                        <p style={{ textAlign: 'center', marginTop: '20px', fontFamily: retroFont, color: '#ffffff' }}>
                           <b>You have seen it all!</b>
                         </p>
                       }
@@ -333,7 +359,7 @@ function ProfilePage() {
                   </TabPanel>
                 </>
               ) : (
-                <Box sx={{ p: 3, borderTop: '1px solid #eee' }}>
+                <Box sx={{ p: 3, borderTop: '1px solid #555' }}>
                   <AboutContent profileData={profileData} />
                 </Box>
               )}

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Box, Typography, TextField, List, ListItem, ListItemButton, ListItemAvatar, Avatar, ListItemText, CircularProgress, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
+const retroFont = "'Courier New', Courier, monospace";
+
 const modalStyle = {
   position: 'absolute',
   top: '50%',
@@ -9,12 +11,37 @@ const modalStyle = {
   transform: 'translate(-50%, -50%)',
   width: '100%',
   maxWidth: 500,
-  bgcolor: 'background.paper',
-  boxShadow: 24,
-  borderRadius: '16px',
+  bgcolor: '#000000',
+  color: '#ffffff',
+  border: '2px solid #ffffff',
+  borderRadius: 0,
+  boxShadow: 'none',
   height: '70vh',
   display: 'flex',
-  flexDirection: 'column'
+  flexDirection: 'column',
+  fontFamily: retroFont,
+};
+
+const retroTextFieldStyles = {
+  '& label.Mui-focused': {
+    color: '#ffffff',
+  },
+  '& .MuiOutlinedInput-root': {
+    fontFamily: retroFont,
+    color: '#ffffff',
+    backgroundColor: '#000000',
+    borderRadius: 0,
+    '& fieldset': {
+      borderColor: '#ffffff',
+      borderWidth: '2px',
+    },
+    '&:hover fieldset': {
+      borderColor: '#ffffff',
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: '#ffffff',
+    },
+  },
 };
 
 const backendUrl = 'http://localhost:3000';
@@ -70,9 +97,9 @@ function NewMessageModal({ open, onClose, onSelectUser }) {
   return (
     <Modal open={open} onClose={onClose}>
       <Box sx={modalStyle}>
-        <Box sx={{ display: 'flex', alignItems: 'center', p: 2, borderBottom: '1px solid #ddd' }}>
-            <IconButton onClick={onClose}><CloseIcon /></IconButton>
-            <Typography variant="h6" sx={{ ml: 2 }}>New message</Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', p: 2, borderBottom: '1px solid #555' }}>
+            <IconButton onClick={onClose} sx={{ color: '#ffffff' }}><CloseIcon /></IconButton>
+            <Typography variant="h6" sx={{ ml: 2, fontFamily: retroFont }}>New message</Typography>
         </Box>
         <Box sx={{ p: 2 }}>
             <TextField
@@ -82,18 +109,31 @@ function NewMessageModal({ open, onClose, onSelectUser }) {
                 placeholder="Search for people"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                sx={retroTextFieldStyles}
             />
         </Box>
         <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
-            {loading && <Box sx={{display: 'flex', justifyContent: 'center', p:2}}><CircularProgress size={24} /></Box>}
+            {loading && <Box sx={{display: 'flex', justifyContent: 'center', p:2}}><CircularProgress size={24} sx={{ color: '#ffffff' }} /></Box>}
             <List>
                 {results.map((user) => (
                     <ListItem key={user.id} disablePadding>
-                        <ListItemButton onClick={() => handleSelect(user)}>
+                        <ListItemButton 
+                          onClick={() => handleSelect(user)}
+                          sx={{
+                            '&:hover': {
+                              backgroundColor: '#333333'
+                            }
+                          }}
+                        >
                             <ListItemAvatar>
-                                <Avatar src={getFullUrl(user.profile_picture_url)} />
+                                <Avatar src={getFullUrl(user.profile_picture_url)} sx={{ border: '1px solid #ffffff' }} />
                             </ListItemAvatar>
-                            <ListItemText primary={user.name} secondary={`@${user.handle}`} />
+                            <ListItemText 
+                              primary={user.name} 
+                              secondary={`@${user.handle}`} 
+                              primaryTypographyProps={{ fontFamily: retroFont, color: '#ffffff' }}
+                              secondaryTypographyProps={{ fontFamily: retroFont, color: '#aaaaaa' }}
+                            />
                         </ListItemButton>
                     </ListItem>
                 ))}
