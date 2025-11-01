@@ -1,7 +1,7 @@
 import db from "../config/database.js";
 
 export class Jobs {
-    static async getJobs(page = 1) {
+    static async getJobs(page = 1, userId) {
         try {
             const limit = 15;
             const offset = (page - 1) * limit;
@@ -23,13 +23,22 @@ export class Jobs {
                     u.name AS author_name,
                     u.handle,
                     u.profile_picture_url
+
+                    (CASE WHEN b.users_id IS NOT NULL THEN true ELSE false END) AS is_bookmarked
+
                 FROM job_posts j
                 INNER JOIN users u ON j.posted_by = u.id
+
+                LEFT JOIN public.bookmarks b 
+                    ON b.bookmarkable_id = j.id
+                    AND b.user_id = $3
+                    AND b.bookmarkable_type = 'job'
+
                 WHERE j.is_active = true
                 ORDER BY j.updated_at DESC
                 LIMIT $1 OFFSET $2
             `;
-            const result = await db.query(query, [limit, offset]);
+            const result = await db.query(query, [limit, offset, userId]);
             return result;
         } catch (error) {
             throw new Error(`Error getting jobs from DB: ${error.message}`);

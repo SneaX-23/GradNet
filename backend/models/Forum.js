@@ -1,8 +1,7 @@
-
 import db from "../config/database.js";
 
-export default class Forum{
-    static async getAllForums(page = 1){
+export default class Forum {
+    static async getAllForums(page = 1, userId) { 
         try {
             const limit = 10;
             const offset = (page - 1) * limit;
@@ -16,14 +15,20 @@ export default class Forum{
                     f.created_at,
                     u.name AS author_name,
                     u.handle,
-                    u.profile_picture_url
+                    u.profile_picture_url,
+                    (CASE WHEN b.user_id IS NOT NULL THEN true ELSE false END) AS is_bookmarked
                 FROM forum_categories f
                 INNER JOIN users u ON f.created_by = u.id
+                LEFT JOIN public.bookmarks b
+                    ON b.bookmarkable_id = f.id
+                    AND b.user_id = $3
+                    AND b.bookmarkable_type = 'forum'
                 WHERE f.is_active = true 
                 ORDER BY f.created_at DESC
                 LIMIT $1 OFFSET $2
             `;
-            const result = await db.query(query, [limit, offset]);
+            
+            const result = await db.query(query, [limit, offset, userId]);
 
             return result;
         } catch (error) {

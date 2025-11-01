@@ -1,7 +1,7 @@
 import db from "../config/database.js";
 
 export default class Post {
-    static async getPostsByTopicId(topicId, page = 1) {
+    static async getPostsByTopicId(topicId, page = 1, userId) { 
         try {
             const limit = 20;
             const offset = (page - 1) * limit;
@@ -16,14 +16,20 @@ export default class Post {
                     u.id AS author_id,
                     u.name AS author_name,
                     u.handle,
-                    u.profile_picture_url
+                    u.profile_picture_url,
+                    (CASE WHEN b.user_id IS NOT NULL THEN true ELSE false END) AS is_bookmarked
                 FROM forum_posts p
                 INNER JOIN users u ON p.author_id = u.id
+                LEFT JOIN public.bookmarks b
+                    ON b.bookmarkable_id = p.id
+                    AND b.user_id = $4
+                    AND b.bookmarkable_type = 'post'
                 WHERE p.topic_id = $1
                 ORDER BY p.created_at ASC
                 LIMIT $2 OFFSET $3
             `;
-            const result = await db.query(query, [topicId, limit, offset]);
+            
+            const result = await db.query(query, [topicId, limit, offset, userId]);
             return result;
         } catch (error) {
             throw new Error(`Error getting posts: ${error.message}`);

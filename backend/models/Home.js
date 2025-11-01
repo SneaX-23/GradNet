@@ -1,7 +1,7 @@
 import db from "../config/database.js";
 
 export class Home {
-    static async GetFeed(page = 1) {
+    static async GetFeed(page = 1, userId) {
         try {
             const limit = 10;
             const offset = (page - 1) * limit;
@@ -19,14 +19,24 @@ export class Home {
                         SELECT json_agg(json_build_object('file_url', ef.file_url, 'file_mime_type', ef.file_mime_type))
                         FROM event_files ef
                         WHERE ef.event_id = e.id
-                    ) AS files
+                    ) AS files,
+
+                    (CASE WHEN b.user_id IS NOT NULL THEN true ELSE false END) AS is_bookmarked
+
                 FROM events e 
                 INNER JOIN users u ON e.posted_by = u.id 
+                
+                
+                LEFT JOIN public.bookmarks b 
+                    ON b.bookmarkable_id = e.id 
+                    AND b.user_id = $3 
+                    AND b.bookmarkable_type = 'post' 
+                
                 WHERE e.is_active = true
                 ORDER BY e.created_at DESC 
                 LIMIT $1 OFFSET $2;
             `;
-            const result = await db.query(query, [limit, offset]);
+            const result = await db.query(query, [limit, offset, userId]);
             result.rows.forEach(row => {
                 if (row.files && row.files.length === 1 && row.files[0] === null) {
                     row.files = [];

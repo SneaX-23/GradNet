@@ -7,7 +7,14 @@ export default class ForumController {
     static async getForums(req, res) {
         try {
             const page = parseInt(req.query.page, 10) || 1;
-            const result = await Forum.getAllForums(page);
+
+            const { userId, user } = req.session;
+
+            if (!user) {
+                return res.status(401).json({ success: false, message: 'Authentication required.' });
+            }
+
+            const result = await Forum.getAllForums(page, userId);
             if (!result) {
                 return res.status(500).json({ success: false, message: "Error getting forums" });
             }
@@ -28,7 +35,14 @@ export default class ForumController {
         try {
             const { forumId } = req.params;
             const page = parseInt(req.query.page, 10) || 1;
-            const result = await Topic.getTopicsByForumId(forumId, page);
+
+            const { userId, user } = req.session;
+
+            if (!user) {
+                return res.status(401).json({ success: false, message: 'Authentication required.' });
+            }
+
+            const result = await Topic.getTopicsByForumId(forumId, page, userId);
             const hasMore = result.rows.length === 15;
             res.json({
                 topics: result.rows,
@@ -46,7 +60,12 @@ export default class ForumController {
         try {
             const { topicId } = req.params;
             const page = parseInt(req.query.page, 10) || 1;
-            const result = await Post.getPostsByTopicId(topicId, page);
+            const { userId, user } = req.session;
+
+            if (!user) {
+                return res.status(401).json({ success: false, message: 'Authentication required.' });
+            }
+            const result = await Post.getPostsByTopicId(topicId, page, userId);
             const hasMore = result.rows.length === 20;
             res.json({
                 posts: result.rows,

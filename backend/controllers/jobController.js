@@ -4,7 +4,12 @@ export class JobController {
     static async getJobs(req, res) {
         try {
             const page = parseInt(req.query.page, 10) || 1;
-            const result = await Jobs.getJobs(page);
+            const { userId, user } = req.session;
+
+            if (!user) {
+                return res.status(401).json({ success: false, message: 'Authentication required.' });
+            }
+            const result = await Jobs.getJobs(page, userId);
 
             if (!result) {
                 return res.status(500).json({ success: false, message: "Error getting jobs" });

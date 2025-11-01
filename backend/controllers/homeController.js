@@ -5,7 +5,13 @@ export class HomeController{
     static async getFeed(req, res) {
         try {
             const page = parseInt(req.query.page, 10) || 1;
-            const result = await Home.GetFeed(page);
+            const { userId, user } = req.session;
+
+            if (!user) {
+                return res.status(401).json({ success: false, message: 'Authentication required.' });
+            }
+
+            const result = await Home.GetFeed(page, userId);
 
             if (!result) {
                 return res.status(500).json({ success: false, message: "Error getting the feed" });
