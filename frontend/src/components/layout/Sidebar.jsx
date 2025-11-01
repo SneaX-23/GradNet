@@ -98,14 +98,16 @@ function Sidebar() {
             </ListItem>
             
             {/* --- Dashboard Link --- */}
-            <ListItem disablePadding>
-              <ListItemButton component={NavLink} to="/dashboard" sx={retroSx}>
-                <ListItemIcon>
-                  <DashboardIcon />
-                </ListItemIcon>
-                <ListItemText primary="Dashboard" />
-              </ListItemButton>
-            </ListItem>
+            {user && (user.role === 'admin' || user.role === 'faculty') && (
+              <ListItem disablePadding>
+                <ListItemButton component={NavLink} to="/dashboard" sx={retroSx}>
+                  <ListItemIcon>
+                    <DashboardIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Dashboard" />
+                </ListItemButton>
+              </ListItem>
+            )}
 
             {/* --- Jobs Link --- */}
             <ListItem disablePadding>

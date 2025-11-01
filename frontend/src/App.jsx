@@ -1,7 +1,7 @@
 import './styles/App.css';
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Box, Typography } from '@mui/material'; // Import Box and Typography for placeholders
+import { Box, Typography } from '@mui/material';
 import Login from './pages/LoginPage';
 import VerifyOtp from './pages/VerifyOtpPage';
 import { AuthProvider } from './context/AuthContext';
@@ -14,6 +14,7 @@ import MessagesPage from './pages/MessagesPage';
 import ForumPage from './pages/ForumPage';
 import TopicPage from './pages/TopicPage';
 import PostPage from './pages/PostPage';
+import DashboardPage from './pages/DashboardPage'; 
 
 // --- Placeholder component ---
 const PlaceholderPage = ({ title }) => (
@@ -46,8 +47,10 @@ function App() {
           <Route path="/forums/:forumId" element={<TopicPage />} />
           <Route path="/topic/:topicId" element={<PostPage />} />
 
-          {/* ---  (Placeholders) --- */}
-          <Route path="/dashboard" element={<PlaceholderPage title="Dashboard" />} />
+          {/* ---  (Admin/Faculty Routes) --- */}
+          <Route path="/dashboard" element={<DashboardPage />} /> 
+
+          {/*--- Placeholder ---*/}
           <Route path="/bookmarks" element={<PlaceholderPage title="Bookmarks" />} />
 
         </Routes>

@@ -4,7 +4,7 @@ export class Alumni{
     static async getAlumniList(page = 1){
         try {
                 const limit = 30;
-                offset = (page - 1) * limit;
+                const offset = (page - 1) * limit;
                 const query = `
                     SELECT * FROM alumni_master_data ORDER BY graduation_year DESC
                     LIMIT $1 OFFSET $2

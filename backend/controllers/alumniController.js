@@ -12,7 +12,7 @@ export class AlumniController{
             const hasMore = result.rows.length === 30;
 
             res.json({
-                data: result.rows,
+                alumni: result.rows,
                 success: true,
                 hasMore
             })
