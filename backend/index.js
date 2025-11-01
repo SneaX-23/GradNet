@@ -16,6 +16,7 @@ import { Message } from "./models/Message.js";
 import messageRoutes from "./routes/messageRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import forumRoutes from "./routes/forumRoutes.js";
+import alumniRoutes from "./routes/alumniRoutes.js";
 
 dotenv.config();
 
@@ -113,6 +114,7 @@ app.use("/jobs", jobRoutes);
 app.use("/messages", messageRoutes);
 app.use("/users", userRoutes);
 app.use("/forum", forumRoutes);
+app.use("/alumni", alumniRoutes);
 
 app.use((err, req, res, next) => {
     console.error('Unhandled error:', err);

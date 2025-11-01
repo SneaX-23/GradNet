@@ -58,9 +58,9 @@ function MessagesPage() {
           height: 'calc(100vh - 64px)',
           marginRight: '320px',
           border: '2px solid #ffffff',
-          borderLeft: 'none', // Sidebar already has a border
-          borderRight: 'none', // RightSidebar already has a border
-          borderTop: 'none', // AppBar already has a border
+          borderLeft: 'none', 
+          borderRight: 'none', 
+          borderTop: 'none', 
         }}
       >
         <Box sx={{ 

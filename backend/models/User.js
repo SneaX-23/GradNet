@@ -150,11 +150,7 @@ export class User{
             throw new Error(`Error getting users posts from DB: ${error.message}`);
         }
     }
-     /**
-     * @param {string} query - 
-     * @param {string} currentUserId 
-     * @returns {Promise<Array>} 
-     */
+    
     static async search(query, currentUserId) {
         try {
             const searchQuery = `
@@ -171,4 +167,6 @@ export class User{
             throw new Error(`Error searching for users: ${error.message}`);
         }
     }
+
+    
 }

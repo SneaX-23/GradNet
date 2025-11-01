@@ -1,24 +1,14 @@
 import React, { useState } from 'react';
 import {
-  Box,
-  Card,
-  Typography,
-  Avatar,
-  IconButton,
-  Menu,
-  MenuItem,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  Link
+  Box, Card, Typography, Avatar, IconButton, Menu, MenuItem,
+  Dialog, DialogTitle, DialogContent, DialogActions, Button, Link, Modal
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Document, Page, pdfjs } from 'react-pdf';
+import { Document, Page } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 import EditPostModal from './EditPostModal';
+import ImageModal from './ImageModal'; 
 import { useAuth } from '../../context/AuthContext';
 
 const backendUrl = 'http://localhost:3000';
@@ -27,6 +17,32 @@ const retroFont = "'Courier New', Courier, monospace";
 const getFullUrl = (path) => {
   if (!path) return null;
   return path.startsWith('http') ? path : `${backendUrl}${path}`;
+};
+
+
+const retroDialogSx = {
+  '& .MuiDialog-paper': {
+    bgcolor: '#000000',
+    color: '#ffffff',
+    border: '2px solid #ffffff',
+    borderRadius: 0,
+    fontFamily: retroFont,
+  },
+  '& .MuiTypography-root': {
+    fontFamily: retroFont,
+  },
+  '& .MuiButton-root': {
+    fontFamily: retroFont,
+    color: '#ffffff',
+    borderColor: '#ffffff',
+    borderRadius: 0,
+    '&:hover': { bgcolor: '#333' }
+  },
+  '& .MuiButton-contained': {
+    bgcolor: '#ffffff',
+    color: '#000000',
+    '&:hover': { bgcolor: '#000000', color: '#ffffff' }
+  }
 };
 
 export default function ShowPostsCard({ post, onDelete, onUpdate }) {
@@ -38,17 +54,25 @@ export default function ShowPostsCard({ post, onDelete, onUpdate }) {
   const [selectedPdf, setSelectedPdf] = useState(null);
   const [numPages, setNumPages] = useState(null);
 
+  const [imageModalOpen, setImageModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
+
+  const handleOpenImage = (imageUrl) => {
+    if (imageUrl) {
+      setSelectedImage(imageUrl);
+      setImageModalOpen(true);
+    }
+  };
+  const handleCloseImage = () => setImageModalOpen(false);
+ 
+
+
   const isOwner = user?.id === post.posted_by;
   const isAdmin = user?.role === 'admin';
   const canModify = isOwner || isAdmin;
 
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
+  const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
+  const handleMenuClose = () => setAnchorEl(null);
 
   const handleEdit = () => {
     handleMenuClose();
@@ -66,9 +90,7 @@ export default function ShowPostsCard({ post, onDelete, onUpdate }) {
   };
 
   const handleSaveEdit = (updatedPost) => {
-    if (onUpdate) {
-      onUpdate(updatedPost);
-    }
+    if (onUpdate) onUpdate(updatedPost);
   };
 
   const handlePdfClick = (pdfUrl) => {
@@ -76,9 +98,7 @@ export default function ShowPostsCard({ post, onDelete, onUpdate }) {
     setPdfDialogOpen(true);
   };
 
-  const onDocumentLoadSuccess = ({ numPages }) => {
-    setNumPages(numPages);
-  };
+  const onDocumentLoadSuccess = ({ numPages }) => setNumPages(numPages);
 
   const authorInitial = post.author_name ? post.author_name.charAt(0).toUpperCase() : '?';
   const avatarUrl = getFullUrl(post.profile_picture_url);
@@ -97,13 +117,15 @@ export default function ShowPostsCard({ post, onDelete, onUpdate }) {
                 component="img"
                 src={fileUrl}
                 alt={`Post media ${index + 1}`}
+                onClick={() => handleOpenImage(fileUrl)} 
                 sx={{
                   width: post.files.length === 1 ? '100%' : 'calc(50% - 4px)',
                   maxHeight: '400px',
                   objectFit: 'cover',
-                  borderRadius: 0,
+                  borderRadius: 0, 
+                  border: '1px solid #555', 
                   cursor: 'pointer',
-                  imageRendering: 'pixelated',
+                  imageRendering: 'pixelated' 
                 }}
               />
             );
@@ -117,7 +139,7 @@ export default function ShowPostsCard({ post, onDelete, onUpdate }) {
                 sx={{
                   width: post.files.length === 1 ? '100%' : 'calc(50% - 4px)',
                   maxHeight: '400px',
-                  borderRadius: 0,
+                  borderRadius: 0, 
                 }}
               />
             );
@@ -129,8 +151,8 @@ export default function ShowPostsCard({ post, onDelete, onUpdate }) {
                 sx={{
                   width: post.files.length === 1 ? '100%' : 'calc(50% - 4px)',
                   height: '200px',
-                  border: '2px solid #333',
-                  borderRadius: 0,
+                  border: '2px solid #555', 
+                  borderRadius: 0, 
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -138,7 +160,7 @@ export default function ShowPostsCard({ post, onDelete, onUpdate }) {
                   '&:hover': { bgcolor: '#333' }
                 }}
               >
-                <Typography sx={{fontFamily: retroFont}}>PDF Document</Typography>
+                <Typography sx={{fontFamily: retroFont, color: '#ffffff'}}>PDF Document</Typography>
               </Box>
             );
           }
@@ -157,10 +179,10 @@ export default function ShowPostsCard({ post, onDelete, onUpdate }) {
           width: '100%',
           maxWidth: 700,
           boxShadow: 'none',
-          border: '2px solid #ffffff',
-          borderRadius: 0,
-          bgcolor: '#000000',
-          color: '#ffffff',
+          border: '2px solid #ffffff', 
+          borderRadius: 0, 
+          bgcolor: '#000000', 
+          color: '#ffffff', 
         }}
       >
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
@@ -169,9 +191,10 @@ export default function ShowPostsCard({ post, onDelete, onUpdate }) {
               src={avatarUrl || ''} 
               sx={{ 
                 width: 40, 
-                height: 40, 
-                border: '2px solid #ffffff',
-                imageRendering: 'pixelated',
+                height: 40,
+                border: '2px solid #ffffff', 
+                borderRadius: 0, 
+                imageRendering: 'pixelated'
               }}
             >
               {!avatarUrl && authorInitial}
@@ -185,16 +208,12 @@ export default function ShowPostsCard({ post, onDelete, onUpdate }) {
                   <Link
                     href={`/profile/${post.handle}`}
                     underline="none"
-                    sx={{ 
-                      color: '#ffffff', 
-                      fontFamily: retroFont,
-                      '&:hover': { textDecoration: 'underline' } 
-                    }}
+                    sx={{ color: '#aaaaaa', '&:hover': { textDecoration: 'underline' } }}
                   >
                     <Typography variant="body2" sx={{ fontFamily: retroFont }}>@{post.handle}</Typography>
                   </Link>
                 )}
-                <Typography variant="body2" sx={{ fontFamily: retroFont, color: '#ffffff' }}>
+                <Typography variant="body2" sx={{ fontFamily: retroFont, color: '#aaaaaa' }}>
                   · {new Date(post.created_at).toLocaleDateString()}
                 </Typography>
               </Box>
@@ -250,11 +269,10 @@ export default function ShowPostsCard({ post, onDelete, onUpdate }) {
         />
       )}
 
-      
-      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
+      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)} sx={retroDialogSx}>
         <DialogTitle>Delete Post</DialogTitle>
         <DialogContent>
-          <Typography>Are you sure you want to delete this post?</Typography>
+          <Typography>Are you sure you want to delete this post? This action cannot be undone.</Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
@@ -263,10 +281,10 @@ export default function ShowPostsCard({ post, onDelete, onUpdate }) {
           </Button>
         </DialogActions>
       </Dialog>
-        
-      <Dialog open={pdfDialogOpen} onClose={() => setPdfDialogOpen(false)} maxWidth="md" fullWidth>
+
+      <Dialog open={pdfDialogOpen} onClose={() => setPdfDialogOpen(false)} maxWidth="md" fullWidth sx={retroDialogSx}>
         <DialogTitle>PDF Document</DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{bgcolor: '#ffffff'}}>
           {selectedPdf && (
             <Document file={selectedPdf} onLoadSuccess={onDocumentLoadSuccess}>
               {Array.from(new Array(numPages), (el, index) => (
@@ -279,6 +297,12 @@ export default function ShowPostsCard({ post, onDelete, onUpdate }) {
           <Button onClick={() => setPdfDialogOpen(false)}>Close</Button>
         </DialogActions>
       </Dialog>
+
+      <ImageModal
+        open={imageModalOpen}
+        onClose={handleCloseImage}
+        imageUrl={selectedImage}
+      />
     </>
   );
 }

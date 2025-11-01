@@ -11,6 +11,8 @@ import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined
 import MailOutlineTwoToneIcon from '@mui/icons-material/MailOutlineTwoTone';
 import ForumTwoToneIcon from '@mui/icons-material/ForumTwoTone';
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
+import DashboardIcon from '@mui/icons-material/Dashboard'; 
+import BookmarkIcon from '@mui/icons-material/Bookmark'; 
 
 const drawerWidth = 240;
 const backendUrl = 'http://localhost:3000';
@@ -19,7 +21,26 @@ const backendUrl = 'http://localhost:3000';
 const retroFont = "'Courier New', Courier, monospace";
 const retroSx = {
     fontFamily: retroFont,
-    color: '#ffffff', // White text
+    color: '#ffffff', 
+    '&.Mui-selected': { 
+        backgroundColor: '#ffffff',
+        color: '#000000',
+        '& .MuiListItemIcon-root': {
+            color: '#000000',
+        },
+        '&:hover': {
+            backgroundColor: '#ffffff', 
+        }
+    },
+    '&:hover': { // Hover style
+        backgroundColor: '#333333',
+    },
+    '& .MuiListItemIcon-root': {
+        color: '#ffffff',
+    },
+    '& .MuiListItemText-primary': { 
+        fontFamily: retroFont,
+    }
 };
 
 function Sidebar() {
@@ -53,13 +74,12 @@ function Sidebar() {
       sx={{
         width: drawerWidth,
         flexShrink: 0,
-        // Target the paper element inside the drawer
         [`& .MuiDrawer-paper`]: { 
             width: drawerWidth, 
             boxSizing: 'border-box',
-            backgroundColor: '#000000', // Black background
-            borderRight: '2px solid #ffffff', // White border
-            color: '#ffffff', // White text
+            backgroundColor: '#000000', 
+            borderRight: '2px solid #ffffff', 
+            color: '#ffffff', 
          },
       }}
     >
@@ -69,56 +89,27 @@ function Sidebar() {
           <List>
             {/* --- Home Link --- */}
             <ListItem disablePadding>
-              <ListItemButton 
-                component={NavLink} 
-                to="/home" 
-                end
-                sx={{
-                    ...retroSx,
-                    '&.Mui-selected': { // Style for active link
-                        backgroundColor: '#ffffff',
-                        color: '#000000',
-                        '& .MuiListItemIcon-root': {
-                            color: '#000000',
-                        }
-                    },
-                    '&:hover': { // Hover style
-                        backgroundColor: '#333333',
-                    },
-                    '& .MuiListItemIcon-root': {
-                        color: '#ffffff',
-                    }
-                }}
-              >
+              <ListItemButton component={NavLink} to="/home" end sx={retroSx}>
                 <ListItemIcon>
                   <HomeOutlinedIcon />
                 </ListItemIcon>
                 <ListItemText primary="Home" />
               </ListItemButton>
             </ListItem>
+            
+            {/* --- Dashboard Link --- */}
+            <ListItem disablePadding>
+              <ListItemButton component={NavLink} to="/dashboard" sx={retroSx}>
+                <ListItemIcon>
+                  <DashboardIcon />
+                </ListItemIcon>
+                <ListItemText primary="Dashboard" />
+              </ListItemButton>
+            </ListItem>
 
             {/* --- Jobs Link --- */}
             <ListItem disablePadding>
-              <ListItemButton 
-                component={NavLink} 
-                to="/jobs"
-                sx={{
-                    ...retroSx,
-                    '&.Mui-selected': {
-                        backgroundColor: '#ffffff',
-                        color: '#000000',
-                        '& .MuiListItemIcon-root': {
-                            color: '#000000',
-                        }
-                    },
-                    '&:hover': {
-                        backgroundColor: '#333333',
-                    },
-                    '& .MuiListItemIcon-root': {
-                        color: '#ffffff',
-                    }
-                }}
-              >
+              <ListItemButton component={NavLink} to="/jobs" sx={retroSx}>
                 <ListItemIcon>
                   <WorkOutlineOutlinedIcon />
                 </ListItemIcon>
@@ -128,55 +119,17 @@ function Sidebar() {
 
             {/* --- Messages Link --- */}
             <ListItem disablePadding>
-              <ListItemButton 
-                component={NavLink} 
-                to="/messages"
-                sx={{
-                    ...retroSx,
-                    '&.Mui-selected': {
-                        backgroundColor: '#ffffff',
-                        color: '#000000',
-                        '& .MuiListItemIcon-root': {
-                            color: '#000000',
-                        }
-                    },
-                    '&:hover': {
-                        backgroundColor: '#333333',
-                    },
-                    '& .MuiListItemIcon-root': {
-                        color: '#ffffff',
-                    }
-                }}
-              >
+              <ListItemButton component={NavLink} to="/messages" sx={retroSx}>
                 <ListItemIcon>
                   <MailOutlineTwoToneIcon />
                 </ListItemIcon>
-                <ListItemText primary="Messages" />
-              </ListItemButton>
+              <ListItemText primary="Messages" />
+            </ListItemButton>
             </ListItem>
 
             {/* --- Forums Link --- */}
             <ListItem disablePadding>
-              <ListItemButton 
-                component={NavLink} 
-                to="/forums"
-                sx={{
-                    ...retroSx,
-                    '&.Mui-selected': {
-                        backgroundColor: '#ffffff',
-                        color: '#000000',
-                        '& .MuiListItemIcon-root': {
-                            color: '#000000',
-                        }
-                    },
-                    '&:hover': {
-                        backgroundColor: '#333333',
-                    },
-                    '& .MuiListItemIcon-root': {
-                        color: '#ffffff',
-                    }
-                }}
-              >
+              <ListItemButton component={NavLink} to="/forums" sx={retroSx}>
                 <ListItemIcon>
                   <ForumTwoToneIcon />
                 </ListItemIcon>
@@ -184,28 +137,19 @@ function Sidebar() {
               </ListItemButton>
             </ListItem>
 
+            {/* --- Bookmarks Link --- */}
+            <ListItem disablePadding>
+              <ListItemButton component={NavLink} to="/bookmarks" sx={retroSx}>
+                <ListItemIcon>
+                  <BookmarkIcon />
+                </ListItemIcon>
+                <ListItemText primary="Bookmarks" />
+              </ListItemButton>
+            </ListItem>
+
             {/* --- Profile Link --- */}
             <ListItem disablePadding>
-              <ListItemButton 
-                component={NavLink} 
-                to="/profile"
-                sx={{
-                    ...retroSx,
-                    '&.Mui-selected': {
-                        backgroundColor: '#ffffff',
-                        color: '#000000',
-                        '& .MuiListItemIcon-root': {
-                            color: '#000000',
-                        }
-                    },
-                    '&:hover': {
-                        backgroundColor: '#333333',
-                    },
-                    '& .MuiListItemIcon-root': {
-                        color: '#ffffff',
-                    }
-                }}
-              >
+              <ListItemButton component={NavLink} to="/profile" sx={retroSx}>
                 <ListItemIcon>
                   <PersonOutlineOutlinedIcon />
                 </ListItemIcon>
@@ -224,21 +168,21 @@ function Sidebar() {
               alignItems: 'center',
               gap: 1.5,
               p: 1.5,
-              borderRadius: 0, // No rounded corners
+              borderRadius: 0, 
               cursor: 'pointer',
-              border: '2px dashed #333333', // Subtle border
+              border: '2px dashed #333333', 
               '&:hover': {
-                backgroundColor: '#333333', // Dark hover
+                backgroundColor: '#333333', 
                 borderColor: '#ffffff',
               }
             }}
           >
-            <Avatar src={avatarUrl} sx={{ border: '2px solid #ffffff' }}> 
+            <Avatar src={avatarUrl} sx={{ border: '2px solid #ffffff', borderRadius: 0 }}> 
                {!avatarUrl && (user?.name ? user.name.charAt(0).toUpperCase() : 'U')}
             </Avatar>
             <Box sx={{ overflow: 'hidden' }}>
               <Typography variant="body1" fontWeight="bold" noWrap sx={{...retroSx}}>{user?.name}</Typography>
-              <Typography variant="body2" noWrap sx={{...retroSx}} >@{user?.handle}</Typography>
+              <Typography variant="body2" noWrap sx={{...retroSx, color: '#aaaaaa'}} >@{user?.handle}</Typography>
             </Box>
           </Box>
           
@@ -250,7 +194,7 @@ function Sidebar() {
             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             sx={{
-              '& .MuiPaper-root': { // Style the menu dropdown
+              '& .MuiPaper-root': { 
                 width: drawerWidth - 16, 
                 mb: 1,
                 backgroundColor: '#000000',
