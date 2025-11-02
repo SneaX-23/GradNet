@@ -65,7 +65,7 @@ export class HomeController{
                 return res.status(401).json({ success: false, message: 'Authentication required.' });
             }
 
-            const post = await Home.findById(postId);
+            const post = await Home.findById(postId, userId);
 
             if (!post) {
                 return res.status(404).json({ success: false, message: 'Post not found.' });

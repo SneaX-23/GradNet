@@ -36,6 +36,36 @@ export default class Forum {
         }
     }
 
+    static async findById(id, userId){
+        try {
+            const query = `
+                SELECT 
+                    f.id,
+                    f.name,
+                    f.description,
+                    f.color,
+                    f.created_by,
+                    f.created_at,
+                    u.name AS author_name,
+                    u.handle,
+                    u.profile_picture_url,
+                    (CASE WHEN b.user_id IS NOT NULL THEN true ELSE false END) AS is_bookmarked
+                FROM forum_categories f
+                INNER JOIN users u ON f.created_by = u.id
+                LEFT JOIN public.bookmarks b
+                    ON b.bookmarkable_id = f.id
+                    AND b.user_id = $2
+                    AND b.bookmarkable_type = 'forum'
+                WHERE f.is_active = true AND f.id = $1
+            `;
+            const result = await db.query(query, [id, userId])
+
+            return result.rows[0];
+        } catch (error) {
+            throw new Error(`Error getting the forum: ${error.message}`)
+        }
+    }
+
     static async create(name, description, color, createdBy) {
         try {
             const query = `

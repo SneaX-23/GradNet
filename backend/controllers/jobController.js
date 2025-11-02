@@ -88,7 +88,7 @@ export class JobController {
                 return res.status(401).json({ success: false, message: 'Authentication required.' });
             }
 
-            const job = await Jobs.findById(jobId);
+            const job = await Jobs.findById(jobId, userId);
 
             if (!job) {
                 return res.status(404).json({ success: false, message: 'Job not found.' });

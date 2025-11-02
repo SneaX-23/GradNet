@@ -45,10 +45,40 @@ export class Jobs {
         }
     }
 
-    static async findById(id) {
+    static async findById(id, userId) {
         try {
-            const query = 'SELECT * FROM job_posts WHERE id = $1';
-            const result = await db.query(query, [id]);
+           const query = `
+                SELECT 
+                    j.id,
+                    j.title,
+                    j.company,
+                    j.location,
+                    j.job_type,
+                    j.salary_range,
+                    j.description,
+                    j.requirements,
+                    j.application_deadline,
+                    j.external_link,
+                    j.updated_at,
+                    j.work_location,
+                    j.posted_by,
+                    u.name AS author_name,
+                    u.handle,
+                    u.profile_picture_url
+
+                    (CASE WHEN b.user_id IS NOT NULL THEN true ELSE false END) AS is_bookmarked
+
+                FROM job_posts j
+                INNER JOIN users u ON j.posted_by = u.id
+
+                LEFT JOIN public.bookmarks b 
+                    ON b.bookmarkable_id = j.id
+                    AND b.user_id = $2
+                    AND b.bookmarkable_type = 'job'
+
+                WHERE j.is_active = true AND j.id = $1
+            `;
+            const result = await db.query(query, [id, userId]);
             return result.rows[0];
         } catch (error) {
             throw new Error(`Error finding job by ID: ${error.message}`);

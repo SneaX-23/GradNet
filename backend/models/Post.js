@@ -23,7 +23,7 @@ export default class Post {
                 LEFT JOIN public.bookmarks b
                     ON b.bookmarkable_id = p.id
                     AND b.user_id = $4
-                    AND b.bookmarkable_type = 'post'
+                    AND b.bookmarkable_type = 'forum_post'
                 WHERE p.topic_id = $1
                 ORDER BY p.created_at ASC
                 LIMIT $2 OFFSET $3

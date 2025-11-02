@@ -22,7 +22,7 @@ export default class Topic {
                 LEFT JOIN public.bookmarks b
                     ON b.bookmarkable_id = t.id
                     AND b.user_id = $4
-                    AND b.bookmarkable_type = 'topic'
+                    AND b.bookmarkable_type = 'forum_topic'
                 WHERE t.category_id = $1
                 ORDER BY t.is_pinned DESC, t.updated_at DESC
                 LIMIT $2 OFFSET $3

@@ -48,10 +48,43 @@ export class Home {
         }
     }
     
-    static async findById(id) {
+    static async findById(id, userId) {
         try {
-            const query = 'SELECT * FROM events WHERE id = $1';
-            const result = await db.query(query, [id]);
+            const query = `
+                SELECT 
+                    e.id, 
+                    e.title, 
+                    e.description, 
+                    e.created_at,
+                    e.posted_by, 
+                    u.name AS author_name,
+                    u.handle,
+                    u.profile_picture_url,
+                    (
+                        SELECT json_agg(json_build_object('file_url', ef.file_url, 'file_mime_type', ef.file_mime_type))
+                        FROM event_files ef
+                        WHERE ef.event_id = e.id
+                    ) AS files,
+
+                    (CASE WHEN b.user_id IS NOT NULL THEN true ELSE false END) AS is_bookmarked
+
+                FROM events e 
+                INNER JOIN users u ON e.posted_by = u.id 
+                
+                
+                LEFT JOIN public.bookmarks b 
+                    ON b.bookmarkable_id = e.id 
+                    AND b.user_id = $2 
+                    AND b.bookmarkable_type = 'post' 
+                
+                WHERE e.is_active = true AND e.id = $1;
+            `;
+            const result = await db.query(query, [id, userId]);
+            result.rows.forEach(row => {
+                if (row.files && row.files.length === 1 && row.files[0] === null) {
+                    row.files = [];
+                }
+            });
             return result.rows[0];
         } catch (error) {
             throw new Error(`Error finding post by ID: ${error.message}`);
