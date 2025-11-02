@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.get('/get-forums', ForumController.getForums);
 router.post('/create-forum', ForumController.createForum);
+router.get('/:forumId', ForumController.getForumById);
 
 router.get('/:forumId/topics', ForumController.getTopics);
 router.post('/:forumId/topics', ForumController.createTopic);

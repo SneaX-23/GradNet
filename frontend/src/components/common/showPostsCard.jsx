@@ -4,12 +4,15 @@ import {
   Dialog, DialogTitle, DialogContent, DialogActions, Button, Link, Modal
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import BookmarkIcon from '@mui/icons-material/Bookmark'; 
 import { Document, Page } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 import EditPostModal from './EditPostModal';
 import ImageModal from './ImageModal'; 
 import { useAuth } from '../../context/AuthContext';
+import { addBookmark, deleteBookmark } from '../../services/bookmarksService'; 
 
 const backendUrl = 'http://localhost:3000';
 const retroFont = "'Courier New', Courier, monospace";
@@ -45,7 +48,7 @@ const retroDialogSx = {
   }
 };
 
-export default function ShowPostsCard({ post, onDelete, onUpdate }) {
+export default function ShowPostsCard({ post, onDelete, onUpdate, onBookmarkToggle }) { 
   const { user } = useAuth();
   const [anchorEl, setAnchorEl] = useState(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -56,6 +59,10 @@ export default function ShowPostsCard({ post, onDelete, onUpdate }) {
 
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
+
+  const [isBookmarked, setIsBookmarked] = useState(post.is_bookmarked);
+  const [isBookmarkPending, setIsBookmarkPending] = useState(false);
+
 
   const handleOpenImage = (imageUrl) => {
     if (imageUrl) {
@@ -99,6 +106,28 @@ export default function ShowPostsCard({ post, onDelete, onUpdate }) {
   };
 
   const onDocumentLoadSuccess = ({ numPages }) => setNumPages(numPages);
+
+  const handleBookmarkClick = async (e) => {
+    e.stopPropagation(); 
+    setIsBookmarkPending(true);
+    try {
+      if (isBookmarked) {
+        await deleteBookmark(post.id, 'post');
+        setIsBookmarked(false);
+      } else {
+        await addBookmark(post.id, 'post');
+        setIsBookmarked(true);
+      }
+      if (onBookmarkToggle) {
+        onBookmarkToggle(post.id, 'post');
+      }
+    } catch (err) {
+      console.error("Failed to update bookmark:", err);
+    } finally {
+      setIsBookmarkPending(false);
+    }
+  };
+
 
   const authorInitial = post.author_name ? post.author_name.charAt(0).toUpperCase() : '?';
   const avatarUrl = getFullUrl(post.profile_picture_url);
@@ -219,11 +248,16 @@ export default function ShowPostsCard({ post, onDelete, onUpdate }) {
               </Box>
             </Box>
           </Box>
-          {canModify && (
-            <IconButton size="small" onClick={handleMenuOpen} sx={{ color: '#ffffff' }}>
-              <MoreVertIcon />
+          <Box sx={{ display: 'flex', alignItems: 'center' }}> 
+            <IconButton size="small" onClick={handleBookmarkClick} disabled={isBookmarkPending} sx={{ color: '#ffffff' }}>
+                {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
             </IconButton>
-          )}
+            {canModify && (
+              <IconButton size="small" onClick={handleMenuOpen} sx={{ color: '#ffffff' }}>
+                <MoreVertIcon />
+              </IconButton>
+            )}
+          </Box>
         </Box>
 
         {post.title && (

@@ -1,23 +1,95 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Box, Typography, CssBaseline, AppBar, Toolbar, CircularProgress, List, ListItem, ListItemButton, ListItemText, Fab } from '@mui/material';
+import { Box, Typography, CssBaseline, AppBar, Toolbar, CircularProgress, List, ListItem, ListItemButton, ListItemText, Fab, IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 import Sidebar from '../components/layout/Sidebar.jsx';
 import RightSidebar from '../components/layout/RightSidebar';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { getTopics } from "../services/ForumService.jsx";
+import { getTopics, getForumById } from "../services/ForumService.jsx"; 
+import { addBookmark, deleteBookmark } from "../services/bookmarksService.jsx";
 import { socket } from '../socket.js';
 import CreateTopicModal from '../components/forum/CreateTopicModal.jsx';
 
 const retroFont = "'Courier New', Courier, monospace";
 
+
+function TopicListItem({ topic, onBookmarkToggle }) {
+    const [isBookmarked, setIsBookmarked] = useState(topic.is_bookmarked);
+    const [isBookmarkPending, setIsBookmarkPending] = useState(false);
+
+    const handleBookmarkClick = async (e) => {
+        e.preventDefault(); 
+        e.stopPropagation(); 
+        setIsBookmarkPending(true);
+        try {
+            if (isBookmarked) {
+                await deleteBookmark(topic.id, 'forum_topic');
+                setIsBookmarked(false);
+            } else {
+                await addBookmark(topic.id, 'forum_topic');
+                setIsBookmarked(true);
+            }
+            if (onBookmarkToggle) {
+                onBookmarkToggle(topic.id, 'forum_topic');
+            }
+        } catch (err) {
+            console.error("Failed to update bookmark:", err);
+        } finally {
+            setIsBookmarkPending(false);
+        }
+    };
+
+    return (
+        <ListItem 
+            key={topic.id} 
+            disablePadding 
+            sx={{ border: '2px solid #ffffff', mb: 1, borderRadius: 0 }}
+            secondaryAction={
+                <IconButton 
+                    edge="end" 
+                    aria-label="bookmark" 
+                    onClick={handleBookmarkClick}
+                    disabled={isBookmarkPending}
+                    sx={{ color: '#ffffff' }}
+                >
+                    {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
+                </IconButton>
+            }
+        >
+            <ListItemButton component={Link} to={`/topic/${topic.id}`} sx={{ '&:hover': { bgcolor: '#333' } }}>
+                <ListItemText
+                    primary={topic.title}
+                    secondary={`By ${topic.author_name} • ${topic.post_count} posts`}
+                    primaryTypographyProps={{ fontFamily: retroFont, color: '#ffffff', fontWeight: 'bold' }}
+                    secondaryTypographyProps={{ fontFamily: retroFont, color: '#aaaaaa' }}
+                />
+            </ListItemButton>
+        </ListItem>
+    );
+}
+
+
 function TopicPage() {
     const { forumId } = useParams();
+    const [forumInfo, setForumInfo] = useState(null); 
     const [topics, setTopics] = useState([]);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [error, setError] = useState('');
     const [isCreateModalOpen, setCreateModalOpen] = useState(false);
+
+    const fetchForumInfo = async () => {
+        try {
+            const response = await getForumById(forumId);
+            if (response.success) {
+                setForumInfo(response.forum);
+            }
+        } catch (err) {
+            setError(err.message); 
+        }
+    };
 
     const fetchInitialTopics = async () => {
         try {
@@ -33,10 +105,12 @@ function TopicPage() {
     };
 
     useEffect(() => {
+        fetchForumInfo(); 
         fetchInitialTopics();
 
         const handleNewTopic = (newTopic) => {
-            setTopics(prevTopics => [newTopic, ...prevTopics]);
+            const augmentedTopic = { ...newTopic, is_bookmarked: false };
+            setTopics(prevTopics => [augmentedTopic, ...prevTopics]);
         };
         socket.on(`forum:${forumId}:new_topic`, handleNewTopic);
 
@@ -62,13 +136,17 @@ function TopicPage() {
         }
     };
 
+    const handleBookmarkToggle = (topicId, type) => {
+        console.log(`Bookmark toggled for ${type} ${topicId}`);
+    };
+
     return (
         <Box sx={{ display: 'flex', bgcolor: '#000000' }}>
             <CssBaseline />
             <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: '#000000', borderBottom: '2px solid #ffffff', boxShadow: 'none' }}>
                 <Toolbar>
                     <Typography variant="h6" noWrap component="div" sx={{ fontFamily: retroFont, fontWeight: 'bold', color: '#ffffff' }}>
-                        Forum Topics
+                        {forumInfo ? forumInfo.name : 'Forum Topics'}
                     </Typography>
                 </Toolbar>
             </AppBar>
@@ -89,8 +167,11 @@ function TopicPage() {
                 minHeight: 'calc(100vh - 64px)' 
               }}
             >
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', maxWidth: '800px', mb: 2 }}>
-                    <Typography variant="h4" gutterBottom sx={{fontFamily: retroFont, color: '#ffffff'}}>Topics</Typography>
+                
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', maxWidth: '800px', mb: 2 }}>
+                    <Typography variant="h4" gutterBottom sx={{ color: '#ffffff', fontWeight: 'bold', fontFamily: retroFont }}>
+                        {forumInfo ? forumInfo.name : 'Topics'}
+                    </Typography>
                 </Box>
                 
                 <CreateTopicModal
@@ -129,22 +210,17 @@ function TopicPage() {
                     style={{width: '100%', maxWidth: '800px'}}
                     endMessage={
                         <p style={{ textAlign: 'center', marginTop: '20px', fontFamily: retroFont, color: '#ffffff' }}>
-                            <b>END OF TOPICS</b>
+                            <b>...</b>
                         </p>
                     }
                 >
                     <List sx={{ width: '100%' }}>
                         {topics.map((topic) => (
-                             <ListItem key={topic.id} disablePadding sx={{ border: '2px solid #ffffff', mb: 1, borderRadius: 0 }}>
-                                <ListItemButton component={Link} to={`/topic/${topic.id}`} sx={{ '&:hover': { bgcolor: '#333' } }}>
-                                     <ListItemText
-                                        primary={topic.title}
-                                        secondary={`By ${topic.author_name} • ${topic.post_count} posts`}
-                                        primaryTypographyProps={{ fontFamily: retroFont, color: '#ffffff', fontWeight: 'bold' }}
-                                        secondaryTypographyProps={{ fontFamily: retroFont, color: '#aaaaaa' }}
-                                     />
-                                </ListItemButton>
-                             </ListItem>
+                             <TopicListItem 
+                                key={topic.id} 
+                                topic={topic} 
+                                onBookmarkToggle={handleBookmarkToggle} 
+                             />
                         ))}
                     </List>
                 </InfiniteScroll>

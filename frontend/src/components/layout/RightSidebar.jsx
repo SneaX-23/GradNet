@@ -1,24 +1,79 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   TextField,
   InputAdornment,
   Typography,
   Paper,
-  Divider
+  Divider,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemAvatar,
+  Avatar,
+  ListItemText,
+  CircularProgress
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import InboxIcon from '@mui/icons-material/Inbox';
+import ConversationList from '../messages/ConversationList'; 
+import { searchUsers } from '../../services/userService'; 
 
 const rightSidebarWidth = 320;
 const retroFont = "'Courier New', Courier, monospace";
 
+const backendUrl = 'http://localhost:3000';
+const getFullUrl = (path) => {
+  if (!path) return null;
+  return path.startsWith('http') ? path : `${backendUrl}${path}`;
+};
+
 function RightSidebar() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearchLoading, setIsSearchLoading] = useState(false);
+  const [searchError, setSearchError] = useState('');
+  
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (searchQuery.trim() === '') {
+      setSearchResults([]);
+      setSearchError('');
+      return;
+    }
+
+    setIsSearchLoading(true);
+    const debounceTimer = setTimeout(async () => {
+      try {
+        setSearchError('');
+        const data = await searchUsers(searchQuery);
+        setSearchResults(data.users);
+      } catch (err) {
+        setSearchError(err.message);
+      } finally {
+        setIsSearchLoading(false);
+      }
+    }, 500); 
+
+    return () => clearTimeout(debounceTimer);
+  }, [searchQuery]);
+
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
-    //  search functionality
+  };
+
+  const handleUserClick = (handle) => {
+    setSearchQuery('');
+    setSearchResults([]);
+    navigate(`/profile/${handle}`);
+  };
+
+
+  const handleSelectConversation = (conversation) => {
+    navigate('/messages');
   };
 
   return (
@@ -30,19 +85,16 @@ function RightSidebar() {
         right: 0,
         top: 64,
         height: 'calc(100vh - 64px)',
-        overflowY: 'auto',
-        borderLeft: '2px solid #ffffff', // White border
-        bgcolor: '#000000', // Black background
-        color: '#ffffff', // White text
-        p: 2,
+        borderLeft: '2px solid #ffffff', 
+        bgcolor: '#000000', 
+        color: '#ffffff', 
+        fontFamily: retroFont,
         display: 'flex',
         flexDirection: 'column',
-        gap: 2,
-        fontFamily: retroFont,
       }}
     >
-      {/* Search Box */}
-      <Box>
+
+      <Box sx={{ p: 2, borderBottom: '2px solid #333' }}>
         <TextField
           fullWidth
           size="small"
@@ -52,7 +104,11 @@ function RightSidebar() {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <SearchIcon sx={{ color: '#ffffff' }} />
+                {isSearchLoading ? (
+                  <CircularProgress size={20} sx={{ color: '#ffffff' }} />
+                ) : (
+                  <SearchIcon sx={{ color: '#ffffff' }} />
+                )}
               </InputAdornment>
             ),
           }}
@@ -61,9 +117,9 @@ function RightSidebar() {
               fontFamily: retroFont,
               color: '#ffffff',
               backgroundColor: '#000000',
-              borderRadius: 0, // No rounded corners
+              borderRadius: 0, 
               '& fieldset': {
-                borderColor: '#ffffff', // White border
+                borderColor: '#ffffff', 
                 borderWidth: '2px',
               },
               '&:hover fieldset': {
@@ -76,50 +132,83 @@ function RightSidebar() {
               },
             },
             '& .MuiInputBase-input': {
-              color: '#ffffff', // White text for input
+              color: '#ffffff', 
             },
           }}
         />
       </Box>
 
-      {/* Inbox Section */}
-      <Paper
-        elevation={0}
-        sx={{
-          p: 2,
-          border: '2px solid #ffffff', // White border
-          borderRadius: 0, // No rounded corners
-          bgcolor: '#000000', // Black background
-          color: '#ffffff',
-          fontFamily: retroFont,
-          minHeight: '200px'
-        }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-          <InboxIcon sx={{ color: '#ffffff' }} />
-          <Typography variant="h6" fontWeight="bold" sx={{ fontFamily: retroFont, color: '#ffffff' }}>
-            Inbox
-          </Typography>
-        </Box>
-        <Divider sx={{ borderColor: '#ffffff', mb: 2 }} />
-        
-        {/* Empty State */}
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            py: 4,
-            color: '#ffffff'
-          }}
-        >
-          <InboxIcon sx={{ fontSize: 48, mb: 1, opacity: 0.7 }} />
-          <Typography variant="body2" sx={{ fontFamily: retroFont, color: '#ffffff' }}>
-            No messages yet
-          </Typography>
-        </Box>
-      </Paper>
+      <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
+        {searchQuery.trim().length > 0 ? (
+          
+          <Paper
+            elevation={0}
+            sx={{
+              p: 0,
+              border: 'none',
+              borderRadius: 0,
+              bgcolor: '#000000',
+              color: '#ffffff',
+              fontFamily: retroFont,
+            }}
+          >
+            {searchError && <Typography sx={{p: 2, color: 'red', fontFamily: retroFont}}>{searchError}</Typography>}
+            
+            <List disablePadding>
+              {searchResults.length > 0 ? (
+                searchResults.map((user) => (
+                  <ListItem key={user.id} disablePadding>
+                    <ListItemButton onClick={() => handleUserClick(user.handle)} sx={{'&:hover': {bgcolor: '#333'}}}>
+                      <ListItemAvatar>
+                        <Avatar src={getFullUrl(user.profile_picture_url)} sx={{border: '1px solid #fff'}} />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={user.name}
+                        secondary={`@${user.handle}`}
+                        primaryTypographyProps={{ fontFamily: retroFont, color: '#fff', fontWeight: 'bold' }}
+                        secondaryTypographyProps={{ fontFamily: retroFont, color: '#aaa' }}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                ))
+              ) : (
+                !isSearchLoading && !searchError && (
+                  <Typography sx={{ p: 2, fontFamily: retroFont, color: '#aaa', textAlign: 'center' }}>
+                    No users found for "{searchQuery}"
+                  </Typography>
+                )
+              )}
+            </List>
+          </Paper>
+        ) : (
+          // --- INBOX SECTION ---
+          <Paper
+            elevation={0}
+            sx={{
+              border: 'none',
+              borderRadius: 0, 
+              bgcolor: '#000000',
+              color: '#ffffff',
+              fontFamily: retroFont,
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, p: 2 }}>
+              <InboxIcon sx={{ color: '#ffffff' }} />
+              <Typography variant="h6" fontWeight="bold" sx={{ fontFamily: retroFont, color: '#ffffff' }}>
+                Inbox
+              </Typography>
+            </Box>
+            <Divider sx={{ borderColor: '#ffffff' }} />
+            
+  
+            <ConversationList onSelectConversation={handleSelectConversation} />
+            
+          </Paper>
+        )}
+      </Box>
     </Box>
   );
 }

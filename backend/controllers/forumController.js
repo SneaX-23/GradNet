@@ -30,6 +30,30 @@ export default class ForumController {
         }
     }
 
+    static async getForumById(req, res) {
+        try {
+            const { forumId } = req.params;
+            const { userId, user } = req.session;
+
+            if (!user) {
+                return res.status(401).json({ success: false, message: 'Authentication required.' });
+            }
+
+            const forum = await Forum.findById(forumId, userId);
+            if (!forum) {
+                return res.status(404).json({ success: false, message: "Forum not found" });
+            }
+            
+            res.json({
+                forum: forum,
+                success: true
+            });
+        } catch (error) {
+            console.error("Error getting forum by ID: ", error);
+            res.status(500).json({ success: false, message: 'Server error while getting forum' });
+        }
+    }
+
     // Get all topics for a specific forum
     static async getTopics(req, res) {
         try {

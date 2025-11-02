@@ -117,6 +117,7 @@ function JobsPage() {
           alignItems: 'center',
           bgcolor: '#000000',
           color: '#ffffff',
+          minHeight: 'calc(100vh - 64px)',
         }}
       >
         

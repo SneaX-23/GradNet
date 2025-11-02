@@ -22,9 +22,9 @@ export class Jobs {
                     j.posted_by,
                     u.name AS author_name,
                     u.handle,
-                    u.profile_picture_url
+                    u.profile_picture_url,
 
-                    (CASE WHEN b.users_id IS NOT NULL THEN true ELSE false END) AS is_bookmarked
+                    (CASE WHEN b.user_id IS NOT NULL THEN true ELSE false END) AS is_bookmarked
 
                 FROM job_posts j
                 INNER JOIN users u ON j.posted_by = u.id
@@ -64,7 +64,7 @@ export class Jobs {
                     j.posted_by,
                     u.name AS author_name,
                     u.handle,
-                    u.profile_picture_url
+                    u.profile_picture_url,
 
                     (CASE WHEN b.user_id IS NOT NULL THEN true ELSE false END) AS is_bookmarked
 

@@ -102,7 +102,7 @@ export default function ConversationList({ onSelectConversation }) {
                   </ListItemAvatar>
                   <ListItemText
                     primary={conv.other_participant?.name || 'Unknown'}
-                    secondary={conv.last_message?.content || 'No messages yet'}
+                    secondary={conv.last_message?.content || ''} 
                     primaryTypographyProps={{ noWrap: true, fontFamily: retroFont, fontWeight: 'bold' }}
                     secondaryTypographyProps={{ noWrap: true, variant: 'body2', fontFamily: retroFont, color: 'inherit', opacity: 0.7 }}
                   />

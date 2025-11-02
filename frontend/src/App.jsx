@@ -1,7 +1,6 @@
 import './styles/App.css';
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Box, Typography } from '@mui/material';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';;
 import Login from './pages/LoginPage';
 import VerifyOtp from './pages/VerifyOtpPage';
 import { AuthProvider } from './context/AuthContext';
@@ -15,15 +14,9 @@ import ForumPage from './pages/ForumPage';
 import TopicPage from './pages/TopicPage';
 import PostPage from './pages/PostPage';
 import DashboardPage from './pages/DashboardPage'; 
+import BookmarksPage from './pages/BookmarksPage'; 
 
-// --- Placeholder component ---
-const PlaceholderPage = ({ title }) => (
-  <Box sx={{ display: 'flex', bgcolor: '#000', color: '#fff', minHeight: '100vh', fontFamily: "'Courier New', Courier, monospace" }}>
-    <Typography variant="h1" sx={{ m: 'auto', fontFamily: "'Courier New', Courier, monospace" }}>
-      {title} Page
-    </Typography>
-  </Box>
-);
+
 
 function App() {
   return (
@@ -41,6 +34,7 @@ function App() {
           <Route path="/profile/:handle" element={<UserProfilePage />} />
           <Route path='/jobs' element={<JobsPage />}/>
           <Route path="/messages" element={<MessagesPage />} />
+          <Route path="/bookmarks" element={<BookmarksPage />} />
           
           {/* Forum Routes */}
           <Route path="/forums" element={<ForumPage />} />
@@ -49,9 +43,6 @@ function App() {
 
           {/* ---  (Admin/Faculty Routes) --- */}
           <Route path="/dashboard" element={<DashboardPage />} /> 
-
-          {/*--- Placeholder ---*/}
-          <Route path="/bookmarks" element={<PlaceholderPage title="Bookmarks" />} />
 
         </Routes>
       </BrowserRouter>

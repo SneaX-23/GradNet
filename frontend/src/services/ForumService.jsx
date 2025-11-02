@@ -8,6 +8,15 @@ export const getForums = async (page = 1) => {
     return data;
 };
 
+export const getForumById = async (forumId) => {
+    const response = await fetch(`/api/forum/${forumId}`);
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.message || 'Failed to fetch forum details.');
+    }
+    return data;
+};
+
 export const getTopics = async (forumId, page = 1) => {
     const response = await fetch(`/api/forum/${forumId}/topics?page=${page}`);
     const data = await response.json();

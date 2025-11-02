@@ -17,8 +17,11 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'; 
+import BookmarkIcon from '@mui/icons-material/Bookmark'; 
 import EditJobModal from './EditJobModal';
 import { useAuth } from '../../context/AuthContext';
+import { addBookmark, deleteBookmark } from '../../services/bookmarksService'; 
 
 const backendUrl = 'http://localhost:3000';
 const retroFont = "'Courier New', Courier, monospace";
@@ -28,12 +31,15 @@ const getFullUrl = (path) => {
   return path.startsWith('http') ? path : `${backendUrl}${path}`;
 };
 
-export default function JobCard({ job, onDelete, onUpdate }) {
+export default function JobCard({ job, onDelete, onUpdate, onBookmarkToggle }) { 
   const { user } = useAuth();
   const [expanded, setExpanded] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  const [isBookmarked, setIsBookmarked] = useState(job.is_bookmarked);
+  const [isBookmarkPending, setIsBookmarkPending] = useState(false);
 
   const isOwner = user?.id === job.posted_by;
   const isAdmin = user?.role === 'admin';
@@ -60,6 +66,28 @@ export default function JobCard({ job, onDelete, onUpdate }) {
 
   const handleSaveEdit = (updatedJob) => {
     if (onUpdate) onUpdate(updatedJob);
+  };
+
+  const handleBookmarkClick = async (e) => {
+    e.stopPropagation(); 
+    setIsBookmarkPending(true);
+    try {
+      if (isBookmarked) {
+        await deleteBookmark(job.id, 'job');
+        setIsBookmarked(false);
+      } else {
+        await addBookmark(job.id, 'job');
+        setIsBookmarked(true);
+      }
+      
+      if (onBookmarkToggle) {
+        onBookmarkToggle(job.id, 'job');
+      }
+    } catch (err) {
+      console.error("Failed to update bookmark:", err);
+    } finally {
+      setIsBookmarkPending(false);
+    }
   };
 
   const authorInitial = job.author_name ? job.author_name.charAt(0).toUpperCase() : '?';
@@ -116,11 +144,16 @@ export default function JobCard({ job, onDelete, onUpdate }) {
                       </Typography>
                     )}
                   </Box>
-                  {canModify && (
-                    <IconButton size="small" onClick={handleMenuOpen} sx={{ ml: 1, color: '#ffffff' }}>
-                      <MoreVertIcon />
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}> 
+                    <IconButton size="small" onClick={handleBookmarkClick} disabled={isBookmarkPending} sx={{ color: '#ffffff', ml: 1 }}>
+                        {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
                     </IconButton>
-                  )}
+                    {canModify && (
+                        <IconButton size="small" onClick={handleMenuOpen} sx={{ ml: 0, color: '#ffffff' }}>
+                        <MoreVertIcon />
+                        </IconButton>
+                    )}
+                  </Box>
                 </Box>
                 <Typography variant="caption" sx={{ fontFamily: retroFont, color: '#aaaaaa' }}>
                   {new Date(job.updated_at).toLocaleDateString()}
