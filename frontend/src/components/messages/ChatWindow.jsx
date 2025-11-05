@@ -138,7 +138,6 @@ function ChatWindow({ conversation }) {
         alignItems: 'center', 
         gap: 2, 
         borderBottom: '2px solid #ffffff',
-        bgcolor: 'background.paper',
         borderRadius: 0,
         bgcolor: '#000000'
       }}>
