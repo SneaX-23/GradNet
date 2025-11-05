@@ -34,6 +34,6 @@ schema.sql
 *.gif
 *.webp
 *.svg
-
+schema_v1.sql
 !frontend/src/assets/
 !gradnet-logo.png

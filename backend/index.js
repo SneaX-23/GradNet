@@ -53,14 +53,15 @@ app.use(express.static('public'));
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json())
-
+app.set('trust proxy', 1);
 const sessionMiddleware = session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
         maxAge: 1000 * 60 * 60 * 24,
-        secure: process.env.NODE_ENV === 'production'
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
     }
 });
 
