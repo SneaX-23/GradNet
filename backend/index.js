@@ -26,20 +26,27 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 const port = process.env.PORT || 3000;
 
+
+const corsOptions = {
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"] 
+};
+
 const httpServer = app.listen(port, () => {
     console.log(`Server running on port ${port}`);
     console.log(`http://localhost:${port}`);
 })
 
+
 const io = new Server(httpServer, {
-    cors: {
-        origin: "http://localhost:5173",
-        methods: ["GET", "POST"],
-        credentials: true
-    }
+    cors: corsOptions
 });
+
 app.set('io', io);
-app.use(cors());
+
+
+app.use(cors(corsOptions)); 
 
 app.use(express.static('dist'));
 app.use(express.static('public'));
@@ -60,15 +67,15 @@ const sessionMiddleware = session({
 app.use(sessionMiddleware);
 io.use((socket, next) => {
   sessionMiddleware(socket.request, {}, () => {
-    console.log("--- Socket.IO Middleware Check ---");
-    console.log("Session object:", socket.request.session);
+    // console.log("--- Socket.IO Middleware Check ---");
+    // console.log("Session object:", socket.request.session);
     
     next();
   });
 });
 
 io.on('connection', (socket) => {
-    console.log('A user connected with socket ID:', socket.id);
+    // console.log('A user connected with socket ID:', socket.id);
 
     const userId = socket.request.session.userId;
 
@@ -106,17 +113,19 @@ io.on('connection', (socket) => {
     });
 });
 
-app.use("/", authRoutes);
+
+app.use("/api", authRoutes);
 
 app.use(requireAuth);
-app.use("/home", homeRoutes);
-app.use("/profile", profileRoutes);
-app.use("/jobs", jobRoutes);
-app.use("/messages", messageRoutes);
-app.use("/users", userRoutes);
-app.use("/forum", forumRoutes);
-app.use("/alumni", alumniRoutes);
-app.use("/bookmarks", bookmarkRoutes);
+
+app.use("/api/home", homeRoutes);
+app.use("/api/profile", profileRoutes);
+app.use("/api/jobs", jobRoutes);
+app.use("/api/messages", messageRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/forum", forumRoutes);
+app.use("/api/alumni", alumniRoutes);
+app.use("/api/bookmarks", bookmarkRoutes);
 
 app.use((err, req, res, next) => {
     console.error('Unhandled error:', err);

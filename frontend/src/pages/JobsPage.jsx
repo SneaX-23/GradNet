@@ -8,6 +8,7 @@ import JobCard from '../components/jobs/JobCard.jsx';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CreateJob from '../components/jobs/CreateJob.jsx';
 import RightSidebar from '../components/layout/RightSidebar';
+import { API_BASE_URL } from '../config';
 
 const retroFont = "'Courier New', Courier, monospace";
 
@@ -58,8 +59,9 @@ function JobsPage() {
 
   const handleDeleteJob = async (jobId) => {
     try {
-        const response = await fetch(`/api/jobs/delete-job/${jobId}`, {
+        const response = await fetch(`${API_BASE_URL}/api/jobs/delete-job/${jobId}`, {
             method: 'DELETE',
+            credentials: 'include',
         });
 
         if (!response.ok) {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Box, Typography, TextField, List, ListItem, ListItemButton, ListItemAvatar, Avatar, ListItemText, CircularProgress, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { API_BASE_URL } from '../../config';
 
 const retroFont = "'Courier New', Courier, monospace";
 
@@ -70,7 +71,7 @@ function NewMessageModal({ open, onClose, onSelectUser }) {
     const fetchUsers = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`/api/users/search?q=${searchQuery}`);
+        const response = await fetch(`${API_BASE_URL}/api/users/search?q=${searchQuery}`, { credentials: 'include' });
         const data = await response.json();
         if (data.success) {
           setResults(data.users);

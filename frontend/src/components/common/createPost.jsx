@@ -4,6 +4,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import ArticleIcon from '@mui/icons-material/Article';
 import { useAuth } from '../../context/AuthContext';
 import AddIcon from '@mui/icons-material/Add';
+import { API_BASE_URL } from '../../config';
 
 const backendUrl = 'http://localhost:3000';
 const retroFont = "'Courier New', Courier, monospace";
@@ -45,9 +46,10 @@ function CreatePost() {
     formData.append("description", postContent.description);
 
     try {
-      const response = await fetch("/api/home/create-post", {
+      const response = await fetch(`${API_BASE_URL}/api/home/create-post`, {
         method: "POST",
         body: formData,
+        credentials: 'include',
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || 'Upload failed');

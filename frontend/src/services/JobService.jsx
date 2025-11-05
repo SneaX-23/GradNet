@@ -1,5 +1,7 @@
+import { API_BASE_URL } from '../config';
+
 export const getJobs = async (page) => {
-    const response = await fetch(`/api/jobs/get-jobs?page=${page}`);
+    const response = await fetch(`${API_BASE_URL}/api/jobs/get-jobs?page=${page}`, { credentials: 'include' });
     const data = await response.json();
     if (!response.ok) {
         throw new Error(data.message || 'Failed to fetch jobs.');
@@ -8,12 +10,13 @@ export const getJobs = async (page) => {
 }
 
 export const createJob = async (jobData) => {
-    const response = await fetch('/api/jobs/create-job', {
+    const response = await fetch(`${API_BASE_URL}/api/jobs/create-job`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(jobData),
+        credentials: 'include',
     });
     const data = await response.json();
     if (!response.ok) {

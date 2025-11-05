@@ -13,6 +13,7 @@ import { showUserPosts } from "../services/showPostsService";
 import ShowPostsCard from '../components/common/showPostsCard';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import RightSidebar from '../components/layout/RightSidebar';
+import { API_BASE_URL } from '../config';
 
 const backendUrl = 'http://localhost:3000';
 const retroFont = "'Courier New', Courier, monospace";
@@ -150,8 +151,9 @@ function ProfilePage() {
   }
   const handleDeletePost = async (postId) => {
     try {
-      const response = await fetch(`/api/home/delete-post/${postId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/home/delete-post/${postId}`, {
         method: 'DELETE',
+        credentials: 'include',
       });
       if (!response.ok) {
         throw new Error('Failed to delete the post.');

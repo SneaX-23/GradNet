@@ -12,6 +12,7 @@ import {
   Slide
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { API_BASE_URL } from '../../config';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -41,12 +42,13 @@ function EditPostModal({ open, onClose, post, onSave }) {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`/api/home/update-post/${post.id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/home/update-post/${post.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
+        credentials: 'include',
       });
 
       const data = await response.json();

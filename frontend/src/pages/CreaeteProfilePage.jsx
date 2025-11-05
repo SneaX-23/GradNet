@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/pages/CreateProfilePage.css'; 
+import { API_BASE_URL } from '../config';
 
 function CreateProfilePage() {
     const [prefilledData, setPrefilledData] = useState(null);
@@ -14,7 +15,7 @@ function CreateProfilePage() {
     useEffect(() => {
         const fetchOnboardingDetails = async () => {
             try {
-                const response = await fetch('/api/onboard');
+                const response = await fetch(`${API_BASE_URL}/api/onboard`, { credentials: 'include' });
                 const data = await response.json();
 
                 if (!response.ok) {
@@ -43,10 +44,11 @@ function CreateProfilePage() {
         const debounceTimer = setTimeout(() => {
             const checkHandleAvailability = async () => {
                 try {
-                    const response = await fetch('/api/check-handle', {
+                    const response = await fetch(`${API_BASE_URL}/api/check-handle`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ handle }),
+                        credentials: 'include',
                     });
                     const data = await response.json();
                     if (response.ok) {
@@ -72,7 +74,7 @@ function CreateProfilePage() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await fetch('/api/create-profile', {
+            const response = await fetch(`${API_BASE_URL}/api/create-profile`, {
                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -80,6 +82,7 @@ function CreateProfilePage() {
                     name: prefilledData.name,
                     email: prefilledData.email,
                     handle: handle }), 
+                credentials: 'include',
             });
             const result = await response.json();
             if (!response.ok) throw new Error(result.message);

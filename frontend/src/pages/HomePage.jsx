@@ -9,6 +9,7 @@ import ShowPostsCard from '../components/common/showPostsCard';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CreatePost from '../components/common/createPost'
 import RightSidebar from '../components/layout/RightSidebar'
+import { API_BASE_URL } from '../config';
 
 const retroFont = "'Courier New', Courier, monospace";
  
@@ -83,8 +84,9 @@ function HomePage() {
 
   const handleDeletePost = async (postId) => {
     try {
-        const response = await fetch(`/api/home/delete-post/${postId}`, {
+        const response = await fetch(`${API_BASE_URL}/api/home/delete-post/${postId}`, {
             method: 'DELETE',
+            credentials: 'include',
         });
 
         if (!response.ok) {

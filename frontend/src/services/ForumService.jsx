@@ -1,6 +1,7 @@
+import { API_BASE_URL } from '../config';
 
 export const getForums = async (page = 1) => {
-    const response = await fetch(`/api/forum/get-forums?page=${page}`);
+    const response = await fetch(`${API_BASE_URL}/api/forum/get-forums?page=${page}`, { credentials: 'include' });
     const data = await response.json();
     if (!response.ok) {
         throw new Error(data.message || `Failed to fetch forums`);
@@ -9,7 +10,7 @@ export const getForums = async (page = 1) => {
 };
 
 export const getForumById = async (forumId) => {
-    const response = await fetch(`/api/forum/${forumId}`);
+    const response = await fetch(`${API_BASE_URL}/api/forum/${forumId}`, { credentials: 'include' });
     const data = await response.json();
     if (!response.ok) {
         throw new Error(data.message || 'Failed to fetch forum details.');
@@ -18,7 +19,7 @@ export const getForumById = async (forumId) => {
 };
 
 export const getTopics = async (forumId, page = 1) => {
-    const response = await fetch(`/api/forum/${forumId}/topics?page=${page}`);
+    const response = await fetch(`${API_BASE_URL}/api/forum/${forumId}/topics?page=${page}`, { credentials: 'include' });
     const data = await response.json();
     if (!response.ok) {
         throw new Error(data.message || 'Failed to fetch topics.');
@@ -27,7 +28,7 @@ export const getTopics = async (forumId, page = 1) => {
 };
 
 export const getPosts = async (topicId, page = 1) => {
-    const response = await fetch(`/api/forum/topics/${topicId}/posts?page=${page}`);
+    const response = await fetch(`${API_BASE_URL}/api/forum/topics/${topicId}/posts?page=${page}`, { credentials: 'include' });
     const data = await response.json();
     if (!response.ok) {
         throw new Error(data.message || 'Failed to fetch posts.');
@@ -36,10 +37,11 @@ export const getPosts = async (topicId, page = 1) => {
 };
 
 export const createTopic = async (forumId, title, description) => {
-    const response = await fetch(`/api/forum/${forumId}/topics`, {
+    const response = await fetch(`${API_BASE_URL}/api/forum/${forumId}/topics`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title, description }),
+        credentials: 'include',
     });
     const data = await response.json();
     if (!response.ok) {
@@ -49,10 +51,11 @@ export const createTopic = async (forumId, title, description) => {
 };
 
 export const createPost = async (topicId, content) => {
-    const response = await fetch(`/api/forum/topics/${topicId}/posts`, {
+    const response = await fetch(`${API_BASE_URL}/api/forum/topics/${topicId}/posts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content }),
+        credentials: 'include',
     });
     const data = await response.json();
     if (!response.ok) {
@@ -62,10 +65,11 @@ export const createPost = async (topicId, content) => {
 };
 
 export const createForum = async (forumData) => {
-    const response = await fetch('/api/forum/create-forum', {
+    const response = await fetch(`${API_BASE_URL}/api/forum/create-forum`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(forumData),
+        credentials: 'include',
     });
     const data = await response.json();
     if (!response.ok) {

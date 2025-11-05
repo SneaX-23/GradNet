@@ -1,5 +1,7 @@
+import { API_BASE_URL } from '../config';
+
 export const fetchUserProfile = async () => {
-    const response = await fetch('/api/profile');
+    const response = await fetch(`${API_BASE_URL}/api/profile`, { credentials: 'include' });
     const data = await response.json();
     
     if (!response.ok) {
@@ -9,7 +11,7 @@ export const fetchUserProfile = async () => {
 };
 
 export const fetchUserProfileByHandle = async (handle) => {
-    const response = await fetch(`/api/profile/${handle}`);
+    const response = await fetch(`${API_BASE_URL}/api/profile/${handle}`, { credentials: 'include' });
     const data = await response.json();
 
     if (!response.ok) {

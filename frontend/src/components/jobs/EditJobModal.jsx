@@ -4,6 +4,7 @@ import {
   Box, Typography, IconButton, Slide, Select, MenuItem, InputLabel, FormControl
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { API_BASE_URL } from '../../config';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -93,12 +94,13 @@ function EditJobModal({ open, onClose, job, onSave }) {
         submitData.application_deadline = null;
       }
 
-      const response = await fetch(`/api/jobs/update-job/${job.id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/jobs/update-job/${job.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(submitData),
+        credentials: 'include',
       });
 
       const data = await response.json();

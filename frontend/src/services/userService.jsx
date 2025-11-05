@@ -1,9 +1,11 @@
+import { API_BASE_URL } from '../config';
+
 export const searchUsers = async (query) => {
     if (!query || query.trim() === '') {
         return { success: true, users: [] };
     }
     
-    const response = await fetch(`/api/users/search?q=${query}`);
+    const response = await fetch(`${API_BASE_URL}/api/users/search?q=${query}`, { credentials: 'include' });
     const data = await response.json();
     
     if (!response.ok) {

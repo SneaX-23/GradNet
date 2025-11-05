@@ -3,6 +3,7 @@ import { Modal, Box, Typography, TextField, Button, IconButton, Avatar } from '@
 import CloseIcon from '@mui/icons-material/Close';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import ImageCropper from './ImageCropper'; 
+import { API_BASE_URL } from '../../config';
 
 const backendUrl = 'http://localhost:3000';
 const retroFont = "'Courier New', Courier, monospace";
@@ -111,9 +112,10 @@ function EditProfileModal({ open, onClose, profileData, onSave }) {
         if (profileImage) data.append('profileImage', profileImage);
         if (bannerImage) data.append('bannerImage', bannerImage);
         try {
-            const response = await fetch('/api/profile/update', {
+            const response = await fetch(`${API_BASE_URL}/api/profile/update`, {
                 method: 'POST',
                 body: data,
+                credentials: 'include',
             });
             const result = await response.json();
             if (!response.ok) throw new Error(result.message || 'Failed to update.');

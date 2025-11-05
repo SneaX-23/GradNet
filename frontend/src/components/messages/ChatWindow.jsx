@@ -4,6 +4,7 @@ import SendIcon from '@mui/icons-material/Send';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import { useAuth } from '../../context/AuthContext';
 import { socket } from '../../socket';
+import { API_BASE_URL } from '../../config';
 
 const backendUrl = 'http://localhost:3000';
 const retroFont = "'Courier New', Courier, monospace";
@@ -57,7 +58,7 @@ function ChatWindow({ conversation }) {
       setLoading(true);
       setMessages([]);
       try {
-        const response = await fetch(`/api/messages/conversations/${conversation.id}`);
+        const response = await fetch(`${API_BASE_URL}/api/messages/conversations/${conversation.id}`, { credentials: 'include' });
         const data = await response.json();
         if (data.success) setMessages(data.messages);
       } catch (err) {

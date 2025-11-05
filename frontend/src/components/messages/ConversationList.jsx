@@ -12,6 +12,7 @@ import {
   ListItemButton 
 } from '@mui/material';
 import { socket } from '../../socket';
+import { API_BASE_URL } from '../../config';
 
 const backendUrl = 'http://localhost:3000';
 const retroFont = "'Courier New', Courier, monospace";
@@ -31,7 +32,7 @@ export default function ConversationList({ onSelectConversation }) {
       if (conversations.length === 0) {
         setLoading(true);
       }
-      const response = await fetch('/api/messages/conversations');
+      const response = await fetch(`${API_BASE_URL}/api/messages/conversations`, { credentials: 'include' });
       const data = await response.json();
       if (data.success) {
         setConversations(data.conversations);

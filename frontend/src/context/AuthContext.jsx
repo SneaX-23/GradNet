@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { socket } from '../socket';
+import { API_BASE_URL } from '../config';
 
 const AuthContext = createContext(null);
 
@@ -11,7 +12,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const checkUserSession = async () => {
             try {
-                const response = await fetch('/api/session-status');
+                const response = await fetch(`${API_BASE_URL}/api/session-status`, { credentials: 'include' });
                 if (response.ok) {
                     const data = await response.json();
                     setUser(data.user); 
@@ -47,7 +48,7 @@ export const AuthProvider = ({ children }) => {
 
     const logout = async () => {
         try {
-            await fetch('/api/logout', { method: 'POST' });
+            await fetch(`${API_BASE_URL}/api/logout`, { method: 'POST', credentials: 'include' });
         } catch (error) {
             console.error("Logout failed:", error);
         } finally {
