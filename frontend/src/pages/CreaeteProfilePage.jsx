@@ -113,7 +113,6 @@ function CreateProfilePage() {
         </div>
     );
     
-    // Show a full-page error
     if (error && !prefilledData) return (
         <div className="create-profile-container">
              <div className="create-profile-card">
