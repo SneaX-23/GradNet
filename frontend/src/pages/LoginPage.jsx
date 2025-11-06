@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import LoginForm from "../components/auth/LoginForm";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth as useLoginHook } from "../hooks/useAuth";
+import { useAuth } from "../context/AuthContext"; 
 import '../styles/pages/LoginPage.css';
 import logo from '../assets/icons/gradnet-logo.png';
 
@@ -12,9 +14,28 @@ function Login() {
     error, 
     isLoading, 
     handleLoginSubmit 
-  } = useAuth();
+  } = useLoginHook();
 
- return (
+  const { isLoggedIn, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!authLoading && isLoggedIn) {
+      navigate('/home');
+    }
+  }, [isLoggedIn, authLoading, navigate]);
+
+  if (authLoading || isLoggedIn) {
+    return (
+      <div className="login-page-container">
+        <p style={{ color: 'white', fontFamily: "'Courier New', Courier, monospace" }}>
+          Loading...
+        </p>
+      </div>
+    );
+  }
+
+  return (
     <div className="login-page-container">
       <div className="login-card">
         <img src={logo} alt="GradNet Logo" className="login-logo" /> 
