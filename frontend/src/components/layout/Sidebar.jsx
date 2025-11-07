@@ -13,9 +13,10 @@ import ForumTwoToneIcon from '@mui/icons-material/ForumTwoTone';
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
 import DashboardIcon from '@mui/icons-material/Dashboard'; 
 import BookmarkIcon from '@mui/icons-material/Bookmark'; 
+import { API_BASE_URL } from '../../config';
 
 const drawerWidth = 240;
-const backendUrl = 'http://localhost:3000';
+
 
 // Retro styles
 const retroFont = "'Courier New', Courier, monospace";
@@ -65,7 +66,7 @@ function Sidebar() {
   };
 
   const avatarUrl = user?.profile_image_url
-    ? (user.profile_image_url.startsWith('http') ? user.profile_image_url : `${backendUrl}${user.profile_image_url}`)
+    ? (user.profile_image_url.startsWith('http') ? user.profile_image_url : `${API_BASE_URL}${user.profile_image_url}`)
     : null;
 
   return (

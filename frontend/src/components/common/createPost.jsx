@@ -5,8 +5,7 @@ import ArticleIcon from '@mui/icons-material/Article';
 import { useAuth } from '../../context/AuthContext';
 import AddIcon from '@mui/icons-material/Add';
 import { API_BASE_URL } from '../../config';
-
-const backendUrl = 'http://localhost:3000';
+;
 const retroFont = "'Courier New', Courier, monospace";
 
 function CreatePost() {
@@ -15,10 +14,11 @@ function CreatePost() {
   const [previewUrl, setPreviewUrl] = useState(null);
   const { user } = useAuth();
 
-  const getFullUrl = (path) => {
-    if (!path) return null;
-    return path.startsWith('http') ? path : `${backendUrl}${path}`;
-  };
+const getFullUrl = (path) => {
+  if (!path) return null;
+  if (path.startsWith('http')) return path;
+  return `${API_BASE_URL}${path}`;
+};
 
   const avatarUrl = getFullUrl(user?.profile_image_url);
 

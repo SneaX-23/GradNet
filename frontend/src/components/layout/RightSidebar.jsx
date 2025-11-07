@@ -19,14 +19,15 @@ import SearchIcon from '@mui/icons-material/Search';
 import InboxIcon from '@mui/icons-material/Inbox';
 import ConversationList from '../messages/ConversationList'; 
 import { searchUsers } from '../../services/userService'; 
+import { API_BASE_URL } from '../../config';
 
 const rightSidebarWidth = 320;
 const retroFont = "'Courier New', Courier, monospace";
 
-const backendUrl = 'http://localhost:3000';
 const getFullUrl = (path) => {
   if (!path) return null;
-  return path.startsWith('http') ? path : `${backendUrl}${path}`;
+  if (path.startsWith('http')) return path;
+  return `${API_BASE_URL}${path}`;
 };
 
 function RightSidebar() {

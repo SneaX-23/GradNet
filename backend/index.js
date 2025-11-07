@@ -27,8 +27,17 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 
+const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:5173').split(',');
+
 const corsOptions = {
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: function (origin, callback) {
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"] 
 };
@@ -98,7 +107,7 @@ io.on('connection', (socket) => {
                 to: to, 
             });
 
-            console.log(`Saved and sending message from ${senderId} to ${to}`);
+            // console.log(`Saved and sending message from ${senderId} to ${to}`);
             
             io.to(to.toString()).emit('private_message', {
                 content: message.content,

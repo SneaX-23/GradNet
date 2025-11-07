@@ -6,13 +6,14 @@ import RightSidebar from '../components/layout/RightSidebar';
 // import InfiniteScroll from 'react-infinite-scroll-component'; 
 import { getPosts, createPost } from "../services/ForumService.jsx";
 import { socket } from '../socket.js';
+import { API_BASE_URL } from '../config.js';
 
 const retroFont = "'Courier New', Courier, monospace";
 
 const getFullUrl = (path) => {
   if (!path) return null;
-  const backendUrl = 'http://localhost:3000'; 
-  return path.startsWith('http') ? path : `${backendUrl}${path}`;
+  if (path.startsWith('http')) return path;
+  return `${API_BASE_URL}${path}`;
 };
 
 

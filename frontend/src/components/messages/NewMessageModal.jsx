@@ -45,10 +45,11 @@ const retroTextFieldStyles = {
   },
 };
 
-const backendUrl = 'http://localhost:3000';
+
 const getFullUrl = (path) => {
   if (!path) return null;
-  return path.startsWith('http') ? path : `${backendUrl}${path}`;
+  if (path.startsWith('http')) return path;
+  return `${API_BASE_URL}${path}`;
 };
 
 function NewMessageModal({ open, onClose, onSelectUser }) {

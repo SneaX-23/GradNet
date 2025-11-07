@@ -5,7 +5,6 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import ImageCropper from './ImageCropper'; 
 import { API_BASE_URL } from '../../config';
 
-const backendUrl = 'http://localhost:3000';
 const retroFont = "'Courier New', Courier, monospace";
 
 const modalStyle = {
@@ -50,9 +49,9 @@ const retroDialogTextFieldStyles = {
 
 const getFullUrl = (path) => {
   if (!path) return null;
-  return path.startsWith('http') ? path : `${backendUrl}${path}`;
+  if (path.startsWith('http')) return path;
+  return `${API_BASE_URL}${path}`;
 };
-
 function EditProfileModal({ open, onClose, profileData, onSave }) {
     const [formData, setFormData] = useState({});
     const [profileImage, setProfileImage] = useState(null);

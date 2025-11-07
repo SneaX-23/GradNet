@@ -22,13 +22,14 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import EditJobModal from './EditJobModal';
 import { useAuth } from '../../context/AuthContext';
 import { addBookmark, deleteBookmark } from '../../services/bookmarksService'; 
+import { API_BASE_URL } from '../../config';
 
-const backendUrl = 'http://localhost:3000';
 const retroFont = "'Courier New', Courier, monospace";
 
 const getFullUrl = (path) => {
   if (!path) return null;
-  return path.startsWith('http') ? path : `${backendUrl}${path}`;
+  if (path.startsWith('http')) return path;
+  return `${API_BASE_URL}${path}`;
 };
 
 export default function JobCard({ job, onDelete, onUpdate, onBookmarkToggle }) { 

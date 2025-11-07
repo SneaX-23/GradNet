@@ -15,7 +15,6 @@ import { useParams } from 'react-router-dom';
 import RightSidebar from '../components/layout/RightSidebar';
 import { API_BASE_URL } from '../config';
 
-const backendUrl = 'http://localhost:3000';
 const retroFont = "'Courier New', Courier, monospace";
 
 function TabPanel(props) {
@@ -68,7 +67,8 @@ const AboutContent = ({ profileData }) => {
 
 const getFullUrl = (path) => {
   if (!path) return null;
-  return path.startsWith('http') ? path : `${backendUrl}${path}`;
+  if (path.startsWith('http')) return path;
+  return `${API_BASE_URL}${path}`;
 };
 
 const modalStyle = {

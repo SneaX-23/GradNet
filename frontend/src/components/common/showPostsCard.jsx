@@ -13,14 +13,21 @@ import EditPostModal from './EditPostModal';
 import ImageModal from './ImageModal'; 
 import { useAuth } from '../../context/AuthContext';
 import { addBookmark, deleteBookmark } from '../../services/bookmarksService'; 
+import { API_BASE_URL } from '../../config';
 
-const backendUrl = 'http://localhost:3000';
+// const backendUrl = 'http://localhost:3000';
 const retroFont = "'Courier New', Courier, monospace";
 
+// const getFullUrl = (path) => {
+//   if (!path) return null;
+//   return path.startsWith('http') ? path : `${backendUrl}${path}`;
+// };
 const getFullUrl = (path) => {
   if (!path) return null;
-  return path.startsWith('http') ? path : `${backendUrl}${path}`;
+  if (path.startsWith('http')) return path;
+  return `${API_BASE_URL}${path}`;
 };
+
 
 
 const retroDialogSx = {
