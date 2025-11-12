@@ -12,7 +12,7 @@ import {
   Slide
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { API_BASE_URL } from '../../config';
+import { API_BASE_URL } from '/src/config.js';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -25,6 +25,15 @@ function EditPostModal({ open, onClose, post, onSave }) {
   });
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  React.useEffect(() => {
+    if (post) {
+      setFormData({
+        title: post.title || '',
+        description: post.description || ''
+      });
+    }
+  }, [post, open]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -77,7 +86,7 @@ function EditPostModal({ open, onClose, post, onSave }) {
       <DialogTitle>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           Edit Post
-          <IconButton onClick={onClose} size="small">
+          <IconButton onClick={onClose} size="small" sx={{ border: 'none' }}>
             <CloseIcon />
           </IconButton>
         </Box>

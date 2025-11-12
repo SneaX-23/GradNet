@@ -1,51 +1,17 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Typography, CssBaseline, AppBar, Toolbar, CircularProgress, Paper, Avatar, TextField, Button, List } from '@mui/material';
-import Sidebar from '../components/layout/Sidebar.jsx';
-import RightSidebar from '../components/layout/RightSidebar';
-// import InfiniteScroll from 'react-infinite-scroll-component'; 
-import { getPosts, createPost } from "../services/ForumService.jsx";
-import { socket } from '../socket.js';
-import { API_BASE_URL } from '../config.js';
-
-const retroFont = "'Courier New', Courier, monospace";
+import Sidebar from '/src/components/layout/Sidebar.jsx';
+import RightSidebar from '/src/components/layout/RightSidebar.jsx';
+import { getPosts, createPost } from "/src/services/ForumService.jsx";
+import { socket } from '/src/socket.js';
+import { API_BASE_URL } from '/src/config.js';
 
 const getFullUrl = (path) => {
   if (!path) return null;
   if (path.startsWith('http')) return path;
   return `${API_BASE_URL}${path}`;
 };
-
-
-const retroTextFieldStyles = {
-  '& label': {
-    color: '#ffffff',
-    fontFamily: retroFont,
-  },
-  '& label.Mui-focused': {
-    color: '#ffffff',
-  },
-  '& .MuiInputBase-root': {
-    color: '#ffffff',
-    fontFamily: retroFont,
-    border: '2px solid #ffffff',
-    borderRadius: 0,
-    backgroundColor: '#000000',
-    padding: '8px 12px', 
-    '&:hover': {
-        borderColor: '#ffffff', 
-    },
-    '&.Mui-focused': {
-        borderColor: '#ffffff', 
-        outline: '1px dashed #ffffff', 
-        outlineOffset: '2px'
-    },
-  },
-  '& .MuiOutlinedInput-notchedOutline': { 
-    border: 'none',
-  },
-};
-
 
 function PostPage() {
     const { topicId } = useParams();
@@ -88,7 +54,6 @@ function PostPage() {
     }, [topicId]);
 
     const fetchMorePosts = async () => {
-        // Implementation for infinite scroll (optional for now)
          const nextPage = page + 1;
          try {
              const response = await getPosts(topicId, nextPage);
@@ -116,19 +81,16 @@ function PostPage() {
     };
 
     return (
-        <Box sx={{ display: 'flex', bgcolor: '#000000', minHeight: '100vh' }}>
+        <Box sx={{ display: 'flex', minHeight: '100vh' }}>
             <CssBaseline />
             <AppBar 
               position="fixed" 
               sx={{ 
                 zIndex: (theme) => theme.zIndex.drawer + 1,
-                backgroundColor: '#000000',
-                borderBottom: '2px solid #ffffff',
-                boxShadow: 'none',
               }}
             >
                 <Toolbar>
-                  <Typography variant="h6" sx={{ fontFamily: retroFont, color: '#ffffff', fontWeight: 'bold' }}>Topic Discussion</Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Topic Discussion</Typography>
                 </Toolbar>
             </AppBar>
             <Sidebar />
@@ -154,19 +116,17 @@ function PostPage() {
                                 mb: 2, 
                                 display: 'flex', 
                                 gap: 2, 
-                                bgcolor: '#000000', 
                                 border: '1px dashed #555',
-                                borderRadius: 0 
                               }}
                             >
                                 <Avatar 
                                   src={getFullUrl(post.profile_picture_url)} 
-                                  sx={{ border: '1px solid #ffffff', borderRadius: 0, width: 40, height: 40 }} 
+                                  sx={{ border: '1px solid #ffffff', width: 40, height: 40 }} 
                                 />
                                 <Box>
-                                    <Typography variant="subtitle2" component="span" fontWeight="bold" sx={{ fontFamily: retroFont, color: '#ffffff' }}>{post.author_name}</Typography>
-                                    <Typography variant="caption" sx={{ ml: 1, fontFamily: retroFont, color: '#aaaaaa' }}>@{post.handle}</Typography>
-                                    <Typography variant="body1" sx={{ mt: 1, fontFamily: retroFont, color: '#ffffff' }}>{post.content}</Typography>
+                                    <Typography variant="subtitle2" component="span" fontWeight="bold">{post.author_name}</Typography>
+                                    <Typography variant="caption" sx={{ ml: 1, color: '#aaaaaa' }}>@{post.handle}</Typography>
+                                    <Typography variant="body1" sx={{ mt: 1 }}>{post.content}</Typography>
                                 </Box>
                             </Paper>
                         ))}
@@ -181,25 +141,16 @@ function PostPage() {
                             placeholder="Write a reply..."
                             value={newPostContent}
                             onChange={(e) => setNewPostContent(e.target.value)}
-                            sx={retroTextFieldStyles}
                             InputLabelProps={{ shrink: true }} 
                         />
                         <Button 
                           type="submit" 
                           variant="contained" 
-                          sx={{ 
-                            mt: 1, 
-                            fontFamily: retroFont, 
-                            bgcolor: '#ffffff', 
-                            color: '#000000', 
-                            borderRadius: 0, 
-                            border: '2px solid #ffffff',
-                            '&:hover': { bgcolor: '#000000', color: '#ffffff' }
-                          }}
+                          sx={{ mt: 1 }}
                         >
                           Post Reply
                         </Button>
-                        {error && <Typography color="error" sx={{ fontFamily: retroFont, mt: 1 }}>{error}</Typography>}
+                        {error && <Typography color="error" sx={{ mt: 1 }}>{error}</Typography>}
                     </Box>
                 </Box>
             </Box>

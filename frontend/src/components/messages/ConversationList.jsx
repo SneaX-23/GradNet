@@ -11,10 +11,8 @@ import {
   Divider,
   ListItemButton 
 } from '@mui/material';
-import { socket } from '../../socket';
-import { API_BASE_URL } from '../../config';
-
-const retroFont = "'Courier New', Courier, monospace";
+import { socket } from '../../socket.js';
+import { API_BASE_URL } from '../../config.js';
 
 const getFullUrl = (path) => {
   if (!path) return null;
@@ -61,13 +59,13 @@ export default function ConversationList({ onSelectConversation }) {
   }, [fetchConversations]);
 
   return (
-    <Box sx={{ flexGrow: 1, overflowY: 'auto', bgcolor: '#000000', color: '#ffffff' }}>
+    <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
       {loading ? (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
           <CircularProgress size={24} sx={{ color: '#ffffff' }} />
         </Box>
       ) : conversations.length === 0 ? (
-        <Typography variant="body2" sx={{ textAlign: 'center', mt: 3, fontFamily: retroFont, color: '#aaaaaa' }}>
+        <Typography variant="body2" sx={{ textAlign: 'center', mt: 3, color: '#aaaaaa' }}>
           No conversations yet.
         </Typography>
       ) : (
@@ -77,20 +75,6 @@ export default function ConversationList({ onSelectConversation }) {
               <ListItem disablePadding>
                 <ListItemButton 
                   onClick={() => onSelectConversation(conv)}
-                  sx={{
-                    fontFamily: retroFont,
-                    color: '#ffffff',
-                    '&:hover': {
-                      backgroundColor: '#333333'
-                    },
-                    '&.Mui-selected': {
-                      backgroundColor: '#ffffff',
-                      color: '#000000',
-                      '&:hover': {
-                        backgroundColor: '#ffffff',
-                      }
-                    }
-                  }}
                 >
                   <ListItemAvatar>
                     <Avatar 
@@ -104,8 +88,8 @@ export default function ConversationList({ onSelectConversation }) {
                   <ListItemText
                     primary={conv.other_participant?.name || 'Unknown'}
                     secondary={conv.last_message?.content || ''} 
-                    primaryTypographyProps={{ noWrap: true, fontFamily: retroFont, fontWeight: 'bold' }}
-                    secondaryTypographyProps={{ noWrap: true, variant: 'body2', fontFamily: retroFont, color: 'inherit', opacity: 0.7 }}
+                    primaryTypographyProps={{ noWrap: true, fontWeight: 'bold' }}
+                    secondaryTypographyProps={{ noWrap: true, variant: 'body2', color: 'inherit', opacity: 0.7 }}
                   />
                 </ListItemButton>
               </ListItem>

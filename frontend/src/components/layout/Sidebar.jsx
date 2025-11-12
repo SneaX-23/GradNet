@@ -6,43 +6,16 @@ import {
 } from '@mui/material';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '/src/context/AuthContext.jsx';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import MailOutlineTwoToneIcon from '@mui/icons-material/MailOutlineTwoTone';
 import ForumTwoToneIcon from '@mui/icons-material/ForumTwoTone';
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
 import DashboardIcon from '@mui/icons-material/Dashboard'; 
 import BookmarkIcon from '@mui/icons-material/Bookmark'; 
-import { API_BASE_URL } from '../../config';
+import { API_BASE_URL } from '/src/config.js';
 
 const drawerWidth = 240;
-
-
-// Retro styles
-const retroFont = "'Courier New', Courier, monospace";
-const retroSx = {
-    fontFamily: retroFont,
-    color: '#ffffff', 
-    '&.Mui-selected': { 
-        backgroundColor: '#ffffff',
-        color: '#000000',
-        '& .MuiListItemIcon-root': {
-            color: '#000000',
-        },
-        '&:hover': {
-            backgroundColor: '#ffffff', 
-        }
-    },
-    '&:hover': { // Hover style
-        backgroundColor: '#333333',
-    },
-    '& .MuiListItemIcon-root': {
-        color: '#ffffff',
-    },
-    '& .MuiListItemText-primary': { 
-        fontFamily: retroFont,
-    }
-};
 
 function Sidebar() {
   const { user, logout } = useAuth();
@@ -78,9 +51,6 @@ function Sidebar() {
         [`& .MuiDrawer-paper`]: { 
             width: drawerWidth, 
             boxSizing: 'border-box',
-            backgroundColor: '#000000', 
-            borderRight: '2px solid #ffffff', 
-            color: '#ffffff', 
          },
       }}
     >
@@ -88,9 +58,8 @@ function Sidebar() {
         <Box>
           <Toolbar />
           <List>
-            {/* --- Home Link --- */}
             <ListItem disablePadding>
-              <ListItemButton component={NavLink} to="/home" end sx={retroSx}>
+              <ListItemButton component={NavLink} to="/home" end>
                 <ListItemIcon>
                   <HomeOutlinedIcon />
                 </ListItemIcon>
@@ -98,10 +67,9 @@ function Sidebar() {
               </ListItemButton>
             </ListItem>
             
-            {/* --- Dashboard Link --- */}
             {user && (user.role === 'admin' || user.role === 'faculty') && (
               <ListItem disablePadding>
-                <ListItemButton component={NavLink} to="/dashboard" sx={retroSx}>
+                <ListItemButton component={NavLink} to="/dashboard">
                   <ListItemIcon>
                     <DashboardIcon />
                   </ListItemIcon>
@@ -110,9 +78,8 @@ function Sidebar() {
               </ListItem>
             )}
 
-            {/* --- Jobs Link --- */}
             <ListItem disablePadding>
-              <ListItemButton component={NavLink} to="/jobs" sx={retroSx}>
+              <ListItemButton component={NavLink} to="/jobs">
                 <ListItemIcon>
                   <WorkOutlineOutlinedIcon />
                 </ListItemIcon>
@@ -120,9 +87,8 @@ function Sidebar() {
               </ListItemButton>
             </ListItem>
 
-            {/* --- Messages Link --- */}
             <ListItem disablePadding>
-              <ListItemButton component={NavLink} to="/messages" sx={retroSx}>
+              <ListItemButton component={NavLink} to="/messages">
                 <ListItemIcon>
                   <MailOutlineTwoToneIcon />
                 </ListItemIcon>
@@ -130,9 +96,8 @@ function Sidebar() {
             </ListItemButton>
             </ListItem>
 
-            {/* --- Forums Link --- */}
             <ListItem disablePadding>
-              <ListItemButton component={NavLink} to="/forums" sx={retroSx}>
+              <ListItemButton component={NavLink} to="/forums">
                 <ListItemIcon>
                   <ForumTwoToneIcon />
                 </ListItemIcon>
@@ -140,9 +105,8 @@ function Sidebar() {
               </ListItemButton>
             </ListItem>
 
-            {/* --- Bookmarks Link --- */}
             <ListItem disablePadding>
-              <ListItemButton component={NavLink} to="/bookmarks" sx={retroSx}>
+              <ListItemButton component={NavLink} to="/bookmarks">
                 <ListItemIcon>
                   <BookmarkIcon />
                 </ListItemIcon>
@@ -150,9 +114,8 @@ function Sidebar() {
               </ListItemButton>
             </ListItem>
 
-            {/* --- Profile Link --- */}
             <ListItem disablePadding>
-              <ListItemButton component={NavLink} to="/profile" sx={retroSx}>
+              <ListItemButton component={NavLink} to="/profile">
                 <ListItemIcon>
                   <PersonOutlineOutlinedIcon />
                 </ListItemIcon>
@@ -162,7 +125,6 @@ function Sidebar() {
           </List>
         </Box>
 
-        {/* --- User Profile Box --- */}
         <Box sx={{ marginTop: 'auto', p: 1 }}>
           <Box
             onClick={handleClick}
@@ -171,7 +133,6 @@ function Sidebar() {
               alignItems: 'center',
               gap: 1.5,
               p: 1.5,
-              borderRadius: 0, 
               cursor: 'pointer',
               border: '2px dashed #333333', 
               '&:hover': {
@@ -180,16 +141,15 @@ function Sidebar() {
               }
             }}
           >
-            <Avatar src={avatarUrl} sx={{ border: '2px solid #ffffff', borderRadius: 0 }}> 
+            <Avatar src={avatarUrl} sx={{ border: '2px solid #ffffff' }}> 
                {!avatarUrl && (user?.name ? user.name.charAt(0).toUpperCase() : 'U')}
             </Avatar>
             <Box sx={{ overflow: 'hidden' }}>
-              <Typography variant="body1" fontWeight="bold" noWrap sx={{...retroSx}}>{user?.name}</Typography>
-              <Typography variant="body2" noWrap sx={{...retroSx, color: '#aaaaaa'}} >@{user?.handle}</Typography>
+              <Typography variant="body1" fontWeight="bold" noWrap>{user?.name}</Typography>
+              <Typography variant="body2" noWrap sx={{ color: '#aaaaaa' }} >@{user?.handle}</Typography>
             </Box>
           </Box>
           
-          {/* --- Logout Menu --- */}
           <Menu
             anchorEl={anchorEl}
             open={open}
@@ -200,16 +160,12 @@ function Sidebar() {
               '& .MuiPaper-root': { 
                 width: drawerWidth - 16, 
                 mb: 1,
-                backgroundColor: '#000000',
-                color: '#ffffff',
-                border: '2px solid #ffffff',
-                borderRadius: 0,
               }
             }}
           >
-            <MenuItem onClick={handleLogout} sx={{...retroSx, '&:hover': {backgroundColor: '#333333'}}}>
+            <MenuItem onClick={handleLogout}>
               <ListItemIcon>
-                <LogoutIcon fontSize="small" sx={{color: '#ffffff'}} />
+                <LogoutIcon fontSize="small" />
               </ListItemIcon>
               <ListItemText>Logout @{user?.handle}</ListItemText>
             </MenuItem>

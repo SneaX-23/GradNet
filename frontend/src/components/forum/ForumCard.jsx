@@ -4,11 +4,9 @@ import { Box, Card, Typography, Avatar, IconButton, Menu, MenuItem } from '@mui/
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'; 
 import BookmarkIcon from '@mui/icons-material/Bookmark'; 
-import { useAuth } from '../../context/AuthContext';
-import { addBookmark, deleteBookmark } from '../../services/bookmarksService'; 
-import { API_BASE_URL } from '../../config';
-
-const retroFont = "'Courier New', Courier, monospace";
+import { useAuth } from '/src/context/AuthContext.jsx';
+import { addBookmark, deleteBookmark } from '/src/services/bookmarksService.jsx'; 
+import { API_BASE_URL } from '/src/config.js';
 
 const getFullUrl = (path) => {
   if (!path) return null;
@@ -70,12 +68,6 @@ export default function ForumCard({ forum, onDelete, onUpdate, onBookmarkToggle 
                     mb: 2,
                     width: '100%',
                     maxWidth: 700,
-                    boxShadow: 'none',
-                    border: '2px solid #ffffff',
-                    borderRadius: 0,
-                    bgcolor: '#000000',
-                    color: '#ffffff',
-                    fontFamily: retroFont,
                     textDecoration: 'none',
                     '&:hover': {
                         backgroundColor: '#222222'
@@ -85,10 +77,10 @@ export default function ForumCard({ forum, onDelete, onUpdate, onBookmarkToggle 
                 <Box sx={{ width: '100%' }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                         <Box>
-                            <Typography variant="h6" sx={{ fontWeight: 'bold', fontFamily: retroFont }}>
+                            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
                                 {forum.name}
                             </Typography>
-                            <Typography variant="body1" sx={{ mt: 0.5, fontFamily: retroFont, color: '#aaaaaa' }}>
+                            <Typography variant="body1" sx={{ mt: 0.5, color: '#aaaaaa' }}>
                                 {forum.description}
                             </Typography>
                         </Box>
@@ -102,22 +94,31 @@ export default function ForumCard({ forum, onDelete, onUpdate, onBookmarkToggle 
                                     {!avatarUrl && authorInitial}
                                 </Avatar>
                                 <Box sx={{ textAlign: 'right' }}>
-                                    <Typography variant="body2" sx={{ fontWeight: 500, fontFamily: retroFont }}>
+                                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
                                         {forum.author_name || 'Unknown'}
                                     </Typography>
                                 </Box>
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}> 
-                                    <IconButton size="small" onClick={handleBookmarkClick} disabled={isBookmarkPending} sx={{ color: '#ffffff', ml: 1 }}>
+                                    <IconButton 
+                                      size="small" 
+                                      onClick={handleBookmarkClick} 
+                                      disabled={isBookmarkPending} 
+                                      sx={{ ml: 1, border: 'none', '&:hover': { backgroundColor: 'transparent' } }}
+                                    >
                                         {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
                                     </IconButton>
                                     {canModify && (
-                                        <IconButton size="small" onClick={handleMenuOpen} sx={{ ml: 0, color: '#ffffff' }}>
+                                        <IconButton 
+                                          size="small" 
+                                          onClick={handleMenuOpen} 
+                                          sx={{ ml: 0, border: 'none', '&:hover': { backgroundColor: 'transparent' } }}
+                                        >
                                             <MoreVertIcon />
                                         </IconButton>
                                     )}
                                 </Box>
                             </Box>
-                            <Typography variant="caption" sx={{ fontFamily: retroFont, color: '#aaaaaa' }}>
+                            <Typography variant="caption" sx={{ color: '#aaaaaa' }}>
                                 {new Date(forum.created_at).toLocaleDateString()}
                             </Typography>
                         </Box>
@@ -129,18 +130,9 @@ export default function ForumCard({ forum, onDelete, onUpdate, onBookmarkToggle 
               anchorEl={anchorEl} 
               open={Boolean(anchorEl)} 
               onClose={handleMenuClose}
-              sx={{
-                '& .MuiPaper-root': {
-                  backgroundColor: '#000000',
-                  color: '#ffffff',
-                  border: '2px solid #ffffff',
-                  borderRadius: 0,
-                  fontFamily: retroFont,
-                }
-              }}
             >
-                <MenuItem sx={{fontFamily: retroFont, '&:hover': {backgroundColor: '#333'}}}>Edit</MenuItem>
-                <MenuItem sx={{ color: '#ff0000', fontFamily: retroFont, '&:hover': {backgroundColor: '#333'} }}>
+                <MenuItem>Edit</MenuItem>
+                <MenuItem sx={{ color: '#ff0000' }}>
                     Delete
                 </MenuItem>
             </Menu>

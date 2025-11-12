@@ -3,49 +3,6 @@ import { Modal, Box, Typography, TextField, List, ListItem, ListItemButton, List
 import CloseIcon from '@mui/icons-material/Close';
 import { API_BASE_URL } from '../../config';
 
-const retroFont = "'Courier New', Courier, monospace";
-
-const modalStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: '100%',
-  maxWidth: 500,
-  bgcolor: '#000000',
-  color: '#ffffff',
-  border: '2px solid #ffffff',
-  borderRadius: 0,
-  boxShadow: 'none',
-  height: '70vh',
-  display: 'flex',
-  flexDirection: 'column',
-  fontFamily: retroFont,
-};
-
-const retroTextFieldStyles = {
-  '& label.Mui-focused': {
-    color: '#ffffff',
-  },
-  '& .MuiOutlinedInput-root': {
-    fontFamily: retroFont,
-    color: '#ffffff',
-    backgroundColor: '#000000',
-    borderRadius: 0,
-    '& fieldset': {
-      borderColor: '#ffffff',
-      borderWidth: '2px',
-    },
-    '&:hover fieldset': {
-      borderColor: '#ffffff',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: '#ffffff',
-    },
-  },
-};
-
-
 const getFullUrl = (path) => {
   if (!path) return null;
   if (path.startsWith('http')) return path;
@@ -98,10 +55,20 @@ function NewMessageModal({ open, onClose, onSelectUser }) {
 
   return (
     <Modal open={open} onClose={onClose}>
-      <Box sx={modalStyle}>
+      <Box sx={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '100%',
+        maxWidth: 500,
+        height: '70vh',
+        display: 'flex',
+        flexDirection: 'column',
+      }}>
         <Box sx={{ display: 'flex', alignItems: 'center', p: 2, borderBottom: '1px solid #555' }}>
             <IconButton onClick={onClose} sx={{ color: '#ffffff' }}><CloseIcon /></IconButton>
-            <Typography variant="h6" sx={{ ml: 2, fontFamily: retroFont }}>New message</Typography>
+            <Typography variant="h6" sx={{ ml: 2 }}>New message</Typography>
         </Box>
         <Box sx={{ p: 2 }}>
             <TextField
@@ -111,7 +78,6 @@ function NewMessageModal({ open, onClose, onSelectUser }) {
                 placeholder="Search for people"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                sx={retroTextFieldStyles}
             />
         </Box>
         <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
@@ -121,11 +87,6 @@ function NewMessageModal({ open, onClose, onSelectUser }) {
                     <ListItem key={user.id} disablePadding>
                         <ListItemButton 
                           onClick={() => handleSelect(user)}
-                          sx={{
-                            '&:hover': {
-                              backgroundColor: '#333333'
-                            }
-                          }}
                         >
                             <ListItemAvatar>
                                 <Avatar src={getFullUrl(user.profile_picture_url)} sx={{ border: '1px solid #ffffff' }} />
@@ -133,8 +94,8 @@ function NewMessageModal({ open, onClose, onSelectUser }) {
                             <ListItemText 
                               primary={user.name} 
                               secondary={`@${user.handle}`} 
-                              primaryTypographyProps={{ fontFamily: retroFont, color: '#ffffff' }}
-                              secondaryTypographyProps={{ fontFamily: retroFont, color: '#aaaaaa' }}
+                              primaryTypographyProps={{ color: '#ffffff' }}
+                              secondaryTypographyProps={{ color: '#aaaaaa' }}
                             />
                         </ListItemButton>
                     </ListItem>

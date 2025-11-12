@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { socket } from '../socket'
-import { useAuth } from '../context/AuthContext';
+import { socket } from '../socket.js'
+import { useAuth } from '../context/AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
-import Sidebar from '../components/layout/Sidebar';
+import Sidebar from '../components/layout/Sidebar.jsx';
 import { Box, Typography, CssBaseline, AppBar, Toolbar, CircularProgress, Button } from '@mui/material';
-import initiateShowPosts from "../services/showPostsService";
-import ShowPostsCard from '../components/common/showPostsCard';
+import initiateShowPosts from "../services/showPostsService.jsx";
+import ShowPostsCard from '../components/common/showPostsCard.jsx';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import CreatePost from '../components/common/createPost'
-import RightSidebar from '../components/layout/RightSidebar'
-import { API_BASE_URL } from '../config';
-
-const retroFont = "'Courier New', Courier, monospace";
+import CreatePost from '../components/common/createPost.jsx'
+import RightSidebar from '../components/layout/RightSidebar.jsx'
+import { API_BASE_URL } from '../config.js';
  
 function HomePage() {
   const { user } = useAuth();
@@ -25,7 +23,6 @@ function HomePage() {
   useEffect(() => {
     function onPrivateMessage({ content, from }) {
       console.log(`Received message from ${from}: ${content}`);
-      alert(`New message from user ${from}: ${content}`); 
     }
 
     socket.on('private_message', onPrivateMessage);
@@ -111,20 +108,16 @@ function HomePage() {
   }
 
   return (
-    <Box sx={{ display: 'flex', bgcolor: '#000000' }}>
+    <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar 
         position="fixed" 
         sx={{ 
           zIndex: (theme) => theme.zIndex.drawer + 1,
-          backgroundColor: '#000000',
-          borderBottom: '2px solid #ffffff',
-          boxShadow: 'none', 
-          color: '#ffffff',
         }}
       >
         <Toolbar>
-          <Typography variant="h6" noWrap component="div" sx={{ fontFamily: retroFont, fontWeight: 'bold' }}>
+          <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 'bold' }}>
             GradNet
           </Typography>
         </Toolbar>
@@ -140,20 +133,18 @@ function HomePage() {
         display: 'flex', 
         flexDirection: 'column', 
         alignItems: 'center',
-        bgcolor: '#000000', 
-        color: '#ffffff', 
       }}>
         
         {user && (user.role === 'admin' || user.role === 'faculty') && <CreatePost />}
 
-        {error && <Typography color="error" sx={{ fontFamily: retroFont, border: '1px dashed #ff0000', p: 1 }}>{error}</Typography>}
+        {error && <Typography color="error">{error}</Typography>}
         <InfiniteScroll
           dataLength={posts.length}
           next={fetchMoreData}
           hasMore={hasMore}
           loader={<CircularProgress sx={{ my: 2, color: '#ffffff' }} />}
           endMessage={
-            <p style={{ textAlign: 'center', marginTop: '20px', fontFamily: retroFont, color: '#ffffff' }}>
+            <p style={{ textAlign: 'center', marginTop: '20px' }}>
               <b>You have seen it all!</b>
             </p>
           }

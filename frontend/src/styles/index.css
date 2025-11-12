@@ -2,15 +2,14 @@
   Global Retro Terminal (Black & White) Theme
 */
 :root {
-  /* Set the retro font as the default for the entire app */
   font-family: 'Courier New', Courier, monospace;
   line-height: 1.5;
   font-weight: 400;
 
-  /* Set the default color scheme */
+
   color-scheme: dark;
-  color: #ffffff; /* Default text is white */
-  background-color: #000000; /* Default background is black */
+  color: #ffffff; 
+  background-color: #000000; 
 }
 
 body {
@@ -22,7 +21,7 @@ body {
   background-color: #000000;
 }
 
-/* Remove default browser padding/margin from MUI */
+
 #root {
   max-width: none;
   margin: 0;
@@ -30,7 +29,7 @@ body {
   width: 100%;
 }
 
-/* Remove default styles from App.css if they exist */
+
 .card, .read-the-docs {
   padding: 0;
   color: inherit;

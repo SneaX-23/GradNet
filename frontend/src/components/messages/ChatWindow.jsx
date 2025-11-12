@@ -2,38 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Box, Typography, TextField, IconButton, CircularProgress, Paper, Avatar } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import { useAuth } from '../../context/AuthContext';
-import { socket } from '../../socket';
-import { API_BASE_URL } from '../../config';
-
-const retroFont = "'Courier New', Courier, monospace";
+import { useAuth } from '../../context/AuthContext.jsx';
+import { socket } from '../../socket.js';
+import { API_BASE_URL } from '../../config.js';
 
 const getFullUrl = (path) => {
   if (!path) return null;
   if (path.startsWith('http')) return path;
   return `${API_BASE_URL}${path}`;
-};
-
-const retroTextFieldStyles = {
-  '& label.Mui-focused': {
-    color: '#ffffff',
-  },
-  '& .MuiOutlinedInput-root': {
-    fontFamily: retroFont,
-    color: '#ffffff',
-    backgroundColor: '#000000',
-    borderRadius: 0,
-    '& fieldset': {
-      borderColor: '#ffffff',
-      borderWidth: '2px',
-    },
-    '&:hover fieldset': {
-      borderColor: '#ffffff',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: '#ffffff',
-    },
-  },
 };
 
 function ChatWindow({ conversation }) {
@@ -105,14 +81,21 @@ function ChatWindow({ conversation }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          bgcolor: '#000000',
           p: 3,
         }}
       >
-        <Paper elevation={0} sx={{ textAlign: 'center', p: 4, borderRadius: 0, border: '2px dashed #555', background: '#000000' }}>
+        <Paper 
+          elevation={0} 
+          sx={{ 
+            textAlign: 'center', 
+            p: 4, 
+            border: '2px dashed #555', 
+            background: '#000000' 
+          }}
+        >
           <ChatBubbleOutlineIcon sx={{ fontSize: 48, color: '#555', mb: 1 }} />
-          <Typography variant="h6" sx={{ fontFamily: retroFont, color: '#ffffff' }}>Select a conversation</Typography>
-          <Typography variant="body2" sx={{ fontFamily: retroFont, color: '#aaaaaa', mt: 1 }}>
+          <Typography variant="h6">Select a conversation</Typography>
+          <Typography variant="body2" sx={{ color: '#aaaaaa', mt: 1 }}>
             Start chatting with your connections here.
           </Typography>
         </Paper>
@@ -127,24 +110,24 @@ function ChatWindow({ conversation }) {
       width: '100%',
       display: 'flex',
       flexDirection: 'column',
-      bgcolor: '#000000'
     }}>
-      <Paper elevation={0} sx={{ 
-        position: 'sticky',
-        top: 0,
-        zIndex: 10,
-        p: 1.5, 
-        display: 'flex', 
-        alignItems: 'center', 
-        gap: 2, 
-        borderBottom: '2px solid #ffffff',
-        borderRadius: 0,
-        bgcolor: '#000000'
-      }}>
+      <Paper 
+        elevation={0} 
+        sx={{ 
+          position: 'sticky',
+          top: 0,
+          zIndex: 10,
+          p: 1.5, 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: 2, 
+          borderBottom: '2px solid #ffffff',
+        }}
+      >
         <Avatar src={getFullUrl(conversation.other_participant.profile_picture_url)} sx={{ border: '1px solid #ffffff' }} />
         <Box>
-          <Typography variant="body1" fontWeight="bold" sx={{ fontFamily: retroFont, color: '#ffffff' }}>{conversation.other_participant.name}</Typography>
-          <Typography variant="body2" sx={{ fontFamily: retroFont, color: '#aaaaaa' }}>@{conversation.other_participant.handle}</Typography>
+          <Typography variant="body1" fontWeight="bold">{conversation.other_participant.name}</Typography>
+          <Typography variant="body2" sx={{ color: '#aaaaaa' }}>@{conversation.other_participant.handle}</Typography>
         </Box>
       </Paper>
       
@@ -158,7 +141,6 @@ function ChatWindow({ conversation }) {
           overflowY: 'auto', 
           overflowX: 'hidden',
           p: 2,
-          bgcolor: '#000000'
         }}>
           {messages.map((msg, index) => (
             <Box key={index} sx={{
@@ -167,15 +149,11 @@ function ChatWindow({ conversation }) {
               mb: 1
             }}>
               <Box sx={{
-                
-                bgcolor: '#000000',
-                color: '#ffffff',
                 border: msg.sender_id === user.id ? '1px solid #ffffff' : '1px dashed #555555',
-                borderRadius: 0,
                 p: '8px 12px',
                 maxWidth: '70%'
               }}>
-                <Typography variant="body1" sx={{ fontFamily: retroFont }}>{msg.content}</Typography>
+                <Typography variant="body1">{msg.content}</Typography>
               </Box>
             </Box>
           ))}
@@ -194,7 +172,6 @@ function ChatWindow({ conversation }) {
           borderTop: '2px solid #ffffff', 
           display: 'flex', 
           alignItems: 'center', 
-          bgcolor: '#000000'
         }}
       >
         <TextField
@@ -205,9 +182,8 @@ function ChatWindow({ conversation }) {
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           autoComplete="off"
-          sx={retroTextFieldStyles}
         />
-        <IconButton type="submit" color="primary" sx={{ ml: 1, color: '#ffffff', border: '2px solid #ffffff', borderRadius: 0, '&:hover': { bgcolor: '#ffffff', color: '#000000'} }}>
+        <IconButton type="submit" color="primary" sx={{ ml: 1 }}>
           <SendIcon />
         </IconButton>
       </Box>

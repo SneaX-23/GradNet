@@ -17,12 +17,11 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import InboxIcon from '@mui/icons-material/Inbox';
-import ConversationList from '../messages/ConversationList'; 
-import { searchUsers } from '../../services/userService'; 
-import { API_BASE_URL } from '../../config';
+import ConversationList from '../messages/ConversationList.jsx'; 
+import { searchUsers } from '../../services/userService.jsx'; 
+import { API_BASE_URL } from '../../config.js';
 
 const rightSidebarWidth = 320;
-const retroFont = "'Courier New', Courier, monospace";
 
 const getFullUrl = (path) => {
   if (!path) return null;
@@ -87,9 +86,6 @@ function RightSidebar() {
         top: 64,
         height: 'calc(100vh - 64px)',
         borderLeft: '2px solid #ffffff', 
-        bgcolor: '#000000', 
-        color: '#ffffff', 
-        fontFamily: retroFont,
         display: 'flex',
         flexDirection: 'column',
       }}
@@ -113,29 +109,6 @@ function RightSidebar() {
               </InputAdornment>
             ),
           }}
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              fontFamily: retroFont,
-              color: '#ffffff',
-              backgroundColor: '#000000',
-              borderRadius: 0, 
-              '& fieldset': {
-                borderColor: '#ffffff', 
-                borderWidth: '2px',
-              },
-              '&:hover fieldset': {
-                borderColor: '#ffffff',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: '#ffffff',
-                outline: '2px dashed #ffffff',
-                outlineOffset: '2px',
-              },
-            },
-            '& .MuiInputBase-input': {
-              color: '#ffffff', 
-            },
-          }}
         />
       </Box>
 
@@ -147,34 +120,30 @@ function RightSidebar() {
             sx={{
               p: 0,
               border: 'none',
-              borderRadius: 0,
-              bgcolor: '#000000',
-              color: '#ffffff',
-              fontFamily: retroFont,
             }}
           >
-            {searchError && <Typography sx={{p: 2, color: 'red', fontFamily: retroFont}}>{searchError}</Typography>}
+            {searchError && <Typography sx={{p: 2, color: 'red'}}>{searchError}</Typography>}
             
             <List disablePadding>
               {searchResults.length > 0 ? (
                 searchResults.map((user) => (
                   <ListItem key={user.id} disablePadding>
-                    <ListItemButton onClick={() => handleUserClick(user.handle)} sx={{'&:hover': {bgcolor: '#333'}}}>
+                    <ListItemButton onClick={() => handleUserClick(user.handle)}>
                       <ListItemAvatar>
                         <Avatar src={getFullUrl(user.profile_picture_url)} sx={{border: '1px solid #fff'}} />
                       </ListItemAvatar>
                       <ListItemText
                         primary={user.name}
                         secondary={`@${user.handle}`}
-                        primaryTypographyProps={{ fontFamily: retroFont, color: '#fff', fontWeight: 'bold' }}
-                        secondaryTypographyProps={{ fontFamily: retroFont, color: '#aaa' }}
+                        primaryTypographyProps={{ fontWeight: 'bold' }}
+                        secondaryTypographyProps={{ color: '#aaa' }}
                       />
                     </ListItemButton>
                   </ListItem>
                 ))
               ) : (
                 !isSearchLoading && !searchError && (
-                  <Typography sx={{ p: 2, fontFamily: retroFont, color: '#aaa', textAlign: 'center' }}>
+                  <Typography sx={{ p: 2, color: '#aaa', textAlign: 'center' }}>
                     No users found for "{searchQuery}"
                   </Typography>
                 )
@@ -182,23 +151,18 @@ function RightSidebar() {
             </List>
           </Paper>
         ) : (
-          // --- INBOX SECTION ---
           <Paper
             elevation={0}
             sx={{
               border: 'none',
-              borderRadius: 0, 
-              bgcolor: '#000000',
-              color: '#ffffff',
-              fontFamily: retroFont,
               height: '100%',
               display: 'flex',
               flexDirection: 'column'
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, p: 2 }}>
-              <InboxIcon sx={{ color: '#ffffff' }} />
-              <Typography variant="h6" fontWeight="bold" sx={{ fontFamily: retroFont, color: '#ffffff' }}>
+              <InboxIcon />
+              <Typography variant="h6" fontWeight="bold">
                 Inbox
               </Typography>
             </Box>

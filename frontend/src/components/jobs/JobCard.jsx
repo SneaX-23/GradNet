@@ -19,12 +19,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'; 
 import BookmarkIcon from '@mui/icons-material/Bookmark'; 
-import EditJobModal from './EditJobModal';
-import { useAuth } from '../../context/AuthContext';
-import { addBookmark, deleteBookmark } from '../../services/bookmarksService'; 
-import { API_BASE_URL } from '../../config';
-
-const retroFont = "'Courier New', Courier, monospace";
+import EditJobModal from './EditJobModal.jsx';
+import { useAuth } from '/src/context/AuthContext.jsx';
+import { addBookmark, deleteBookmark } from '/src/services/bookmarksService.jsx'; 
+import { API_BASE_URL } from '/src/config.js';
 
 const getFullUrl = (path) => {
   if (!path) return null;
@@ -103,25 +101,19 @@ export default function JobCard({ job, onDelete, onUpdate, onBookmarkToggle }) {
           mb: 2,
           width: '100%',
           maxWidth: 700,
-          boxShadow: 'none',
-          border: '2px solid #ffffff',
-          borderRadius: 0,
-          bgcolor: '#000000',
-          color: '#ffffff',
-          fontFamily: retroFont,
         }}
       >
         <Box sx={{ width: '100%' }}>
           <Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <Box>
-                <Typography variant="h6" sx={{ fontWeight: 'bold', fontFamily: retroFont }}>
+                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
                   {job.title}
                 </Typography>
-                <Typography variant="body1" sx={{ mt: 0.5, fontFamily: retroFont }}>
+                <Typography variant="body1" sx={{ mt: 0.5 }}>
                   {job.company}
                 </Typography>
-                <Typography variant="body2" sx={{ mt: 0.5, fontFamily: retroFont, color: '#aaaaaa' }}>
+                <Typography variant="body2" sx={{ mt: 0.5, color: '#aaaaaa' }}>
                   {job.location} ({job.work_location})
                 </Typography>
               </Box>
@@ -136,49 +128,49 @@ export default function JobCard({ job, onDelete, onUpdate, onBookmarkToggle }) {
                     {!avatarUrl && authorInitial}
                   </Avatar>
                   <Box sx={{ textAlign: 'right' }}>
-                    <Typography variant="body2" sx={{ fontWeight: 500, fontFamily: retroFont }}>
+                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
                       {job.author_name || 'Unknown'}
                     </Typography>
                     {job.handle && (
-                      <Typography variant="caption" sx={{ fontFamily: retroFont, color: '#aaaaaa' }}>
+                      <Typography variant="caption" sx={{ color: '#aaaaaa' }}>
                         @{job.handle}
                       </Typography>
                     )}
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}> 
-                    <IconButton size="small" onClick={handleBookmarkClick} disabled={isBookmarkPending} sx={{ color: '#ffffff', ml: 1 }}>
+                    <IconButton size="small" onClick={handleBookmarkClick} disabled={isBookmarkPending} sx={{ ml: 1, border: 'none', '&:hover': { backgroundColor: 'transparent' } }}>
                         {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
                     </IconButton>
                     {canModify && (
-                        <IconButton size="small" onClick={handleMenuOpen} sx={{ ml: 0, color: '#ffffff' }}>
+                        <IconButton size="small" onClick={handleMenuOpen} sx={{ ml: 0, border: 'none', '&:hover': { backgroundColor: 'transparent' } }}>
                         <MoreVertIcon />
                         </IconButton>
                     )}
                   </Box>
                 </Box>
-                <Typography variant="caption" sx={{ fontFamily: retroFont, color: '#aaaaaa' }}>
+                <Typography variant="caption" sx={{ color: '#aaaaaa' }}>
                   {new Date(job.updated_at).toLocaleDateString()}
                 </Typography>
               </Box>
             </Box>
 
             <Collapse in={expanded} timeout="auto" unmountOnExit sx={{ mt: 2 }}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold', fontFamily: retroFont }}>Job Type:</Typography>
-              <Typography paragraph sx={{ mb: 1.5, fontFamily: retroFont }}>{job.job_type}</Typography>
+              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Job Type:</Typography>
+              <Typography paragraph sx={{ mb: 1.5 }}>{job.job_type}</Typography>
 
-              <Typography variant="body2" sx={{ fontWeight: 'bold', fontFamily: retroFont }}>Salary Range:</Typography>
-              <Typography paragraph sx={{ mb: 1.5, fontFamily: retroFont }}>{job.salary_range || 'Not specified'}</Typography>
+              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Salary Range:</Typography>
+              <Typography paragraph sx={{ mb: 1.5 }}>{job.salary_range || 'Not specified'}</Typography>
 
-              <Typography variant="body2" sx={{ fontWeight: 'bold', fontFamily: retroFont }}>Description:</Typography>
-              <Typography paragraph sx={{ mb: 1.5, fontFamily: retroFont }}>{job.description}</Typography>
+              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Description:</Typography>
+              <Typography paragraph sx={{ mb: 1.5 }}>{job.description}</Typography>
 
-              <Typography variant="body2" sx={{ fontWeight: 'bold', fontFamily: retroFont }}>Requirements:</Typography>
-              <Typography paragraph sx={{ mb: 1.5, fontFamily: retroFont }}>{job.requirements || 'Not specified'}</Typography>
+              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Requirements:</Typography>
+              <Typography paragraph sx={{ mb: 1.5 }}>{job.requirements || 'Not specified'}</Typography>
 
               {job.application_deadline && (
                 <>
-                  <Typography variant="body2" sx={{ fontWeight: 'bold', fontFamily: retroFont }}>Deadline:</Typography>
-                  <Typography paragraph sx={{ mb: 1.5, fontFamily: retroFont }}>
+                  <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Deadline:</Typography>
+                  <Typography paragraph sx={{ mb: 1.5 }}>
                     {new Date(job.application_deadline).toLocaleDateString()}
                   </Typography>
                 </>
@@ -186,8 +178,8 @@ export default function JobCard({ job, onDelete, onUpdate, onBookmarkToggle }) {
 
               {job.external_link && job.external_link.trim() !== '' && (
                 <>
-                  <Typography variant="body2" sx={{ fontWeight: 'bold', fontFamily: retroFont }}>Apply here:</Typography>
-                  <Typography paragraph sx={{ mb: 1.5, fontFamily: retroFont }}>
+                  <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Apply here:</Typography>
+                  <Typography paragraph sx={{ mb: 1.5 }}>
                     <a href={job.external_link} style={{ color: '#ffffff' }}>{job.external_link}</a>
                   </Typography>
                 </>
@@ -200,10 +192,7 @@ export default function JobCard({ job, onDelete, onUpdate, onBookmarkToggle }) {
                 onClick={handleExpandClick}
                 endIcon={<ExpandMoreIcon />}
                 sx={{
-                  fontFamily: retroFont,
-                  color: '#ffffff',
                   border: '1px solid #ffffff',
-                  borderRadius: 0,
                   '& .MuiButton-endIcon': {
                     transform: !expanded ? 'rotate(0deg)' : 'rotate(180deg)',
                     transition: '0.3s'
@@ -221,18 +210,9 @@ export default function JobCard({ job, onDelete, onUpdate, onBookmarkToggle }) {
         anchorEl={anchorEl} 
         open={Boolean(anchorEl)} 
         onClose={handleMenuClose}
-        sx={{
-          '& .MuiPaper-root': {
-            backgroundColor: '#000000',
-            color: '#ffffff',
-            border: '2px solid #ffffff',
-            borderRadius: 0,
-            fontFamily: retroFont,
-          }
-        }}
       >
-        <MenuItem onClick={handleEdit} sx={{fontFamily: retroFont, '&:hover': {backgroundColor: '#333'}}}>Edit</MenuItem>
-        <MenuItem onClick={handleDeleteClick} sx={{ color: '#ff0000', fontFamily: retroFont, '&:hover': {backgroundColor: '#333'} }}>
+        <MenuItem onClick={handleEdit}>Edit</MenuItem>
+        <MenuItem onClick={handleDeleteClick} sx={{ color: '#ff0000' }}>
           Delete
         </MenuItem>
       </Menu>

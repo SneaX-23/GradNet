@@ -2,11 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Box, Avatar, TextField, Button, IconButton, Card, Typography, Grid } from '@mui/material';
 import ImageIcon from '@mui/icons-material/Image';
 import ArticleIcon from '@mui/icons-material/Article';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '/src/context/AuthContext.jsx';
 import AddIcon from '@mui/icons-material/Add';
-import { API_BASE_URL } from '../../config';
-;
-const retroFont = "'Courier New', Courier, monospace";
+import { API_BASE_URL } from '/src/config.js';
 
 function CreatePost() {
   const [postContent, setPostContent] = useState({ title: '', description: '' });
@@ -83,20 +81,12 @@ const getFullUrl = (path) => {
       mb: 3, 
       width: '100%', 
       maxWidth: 600, 
-      boxShadow: 'none', 
-      border: '2px solid #ffffff',
-      borderRadius: 0, 
-      bgcolor: '#000000', 
-      color: '#ffffff', 
     }}>
       <Box sx={{ display: 'flex', gap: 2 }}>
         <Avatar 
           src={avatarUrl} 
           sx={{ 
-            bgcolor: '#000000', 
             border: '2px solid #ffffff',
-            color: '#ffffff',
-            imageRendering: 'pixelated',
           }}
         >
           {!avatarUrl && (user?.name ? user.name.charAt(0).toUpperCase() : 'U')}
@@ -111,7 +101,7 @@ const getFullUrl = (path) => {
             onChange={handleInputChange}
             InputProps={{ 
               disableUnderline: true, 
-              sx: { fontFamily: retroFont, color: '#ffffff', border: '1px dashed #333', padding: '8px', mb: 1 } 
+              sx: { border: '1px dashed #333', padding: '8px', mb: 1 } 
             }}
           />
           <TextField
@@ -125,7 +115,7 @@ const getFullUrl = (path) => {
             onChange={handleInputChange}
             InputProps={{ 
               disableUnderline: true, 
-              sx: { fontFamily: retroFont, color: '#ffffff', border: '1px dashed #333', padding: '8px' } 
+              sx: { border: '1px dashed #333', padding: '8px' } 
             }}
           />
 
@@ -141,7 +131,7 @@ const getFullUrl = (path) => {
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
             <Box>
-              <IconButton size="small" component="label" sx={{ color: '#ffffff' }}>
+              <IconButton size="small" component="label" sx={{ border: 'none' }}>
                 <ImageIcon />
                 <input type="file" hidden onChange={handleFileChange} multiple />
               </IconButton>
@@ -151,17 +141,6 @@ const getFullUrl = (path) => {
               disabled={!postContent.title.trim() && selectedFiles.length === 0}
               onClick={handlePost}
               sx={{ 
-                borderRadius: 0, 
-                textTransform: 'none', 
-                fontWeight: 'bold', 
-                fontFamily: retroFont,
-                bgcolor: '#ffffff',
-                color: '#000000',
-                border: '2px solid #ffffff',
-                '&:hover': {
-                  bgcolor: '#000000',
-                  color: '#ffffff',
-                },
                 '&.Mui-disabled': {
                   bgcolor: '#333',
                   borderColor: '#888',
