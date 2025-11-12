@@ -19,7 +19,6 @@
   max-width: 80px;
   margin-bottom: 1.5rem;
   image-rendering: pixelated;
-  /* Invert the logo colors if it's dark */
   /* filter: invert(1); */
 }
 
@@ -31,7 +30,7 @@
   box-shadow: none; 
   border: 2px solid #ffffff; 
   width: 100%;
-  max-width: 400px;
+  max-width: 500px;
 }
 
 

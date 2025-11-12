@@ -6,23 +6,23 @@
   align-items: center;
   min-height: 100vh;
   width: 100vw;
-  background-color: #000000; /* Black background */
+  background-color: #000000; 
   text-align: center;
   position: absolute;
   top: 0;
   left: 0;
   padding: 1rem;
-  font-family: 'Courier New', Courier, monospace; /* Retro font */
-  color: #ffffff; /* White text */
+  font-family: 'Courier New', Courier, monospace; 
+  color: #ffffff; 
 }
 
 .create-profile-card {
-  background-color: #000000; /* Black card */
+  background-color: #000000; 
   padding: 2.5rem 3rem;
-  border-radius: 0; /* No rounded corners */
-  border: 2px solid #ffffff; /* Solid white border */
+  border-radius: 0; 
+  border: 2px solid #ffffff; 
   width: 100%;
-  max-width: 450px;
+  max-width: 500px;
   box-shadow: none;
 }
 
@@ -75,15 +75,15 @@
 .handle-status {
   font-size: 0.9rem;
   margin-top: 0.5rem;
-  height: 1em; /* Reserve space so layout doesn't jump */
+  height: 1em; 
 }
 
 .handle-status.available {
-  color: #00ff00; /* Classic green terminal color for 'available' */
+  color: #00ff00; 
 }
 
 .handle-status.unavailable {
-  color: #ff0000; /* Classic red terminal color for 'unavailable' */
+  color: #ff0000; 
 }
 
 .create-profile-form button {

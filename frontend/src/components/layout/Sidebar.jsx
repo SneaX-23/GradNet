@@ -57,7 +57,7 @@ function Sidebar() {
       <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
         <Box>
           <Toolbar />
-          <List>
+          <List disablePadding>
             <ListItem disablePadding>
               <ListItemButton component={NavLink} to="/home" end>
                 <ListItemIcon>

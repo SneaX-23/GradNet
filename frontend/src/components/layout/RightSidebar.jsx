@@ -17,9 +17,10 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import InboxIcon from '@mui/icons-material/Inbox';
-import ConversationList from '../messages/ConversationList.jsx'; 
-import { searchUsers } from '../../services/userService.jsx'; 
+import ConversationList from '../messages/ConversationList.jsx';
+import { searchUsers } from '../../services/userService.jsx';
 import { API_BASE_URL } from '../../config.js';
+import { useTheme } from '@mui/material/styles';
 
 const rightSidebarWidth = 320;
 
@@ -34,8 +35,8 @@ function RightSidebar() {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [searchError, setSearchError] = useState('');
-  
   const navigate = useNavigate();
+  const theme = useTheme(); 
 
   useEffect(() => {
     if (searchQuery.trim() === '') {
@@ -55,11 +56,10 @@ function RightSidebar() {
       } finally {
         setIsSearchLoading(false);
       }
-    }, 500); 
+    }, 500);
 
     return () => clearTimeout(debounceTimer);
   }, [searchQuery]);
-
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -70,7 +70,6 @@ function RightSidebar() {
     setSearchResults([]);
     navigate(`/profile/${handle}`);
   };
-
 
   const handleSelectConversation = (conversation) => {
     navigate('/messages');
@@ -85,13 +84,18 @@ function RightSidebar() {
         right: 0,
         top: 64,
         height: 'calc(100vh - 64px)',
-        borderLeft: '2px solid #ffffff', 
+        borderLeft: `2px solid ${theme.palette.divider}`, 
         display: 'flex',
         flexDirection: 'column',
+        backgroundColor: theme.palette.background.default, 
       }}
     >
-
-      <Box sx={{ p: 2, borderBottom: '2px solid #333' }}>
+      <Box
+        sx={{
+          p: 2,
+          borderBottom: `2px solid ${theme.palette.divider}`, 
+        }}
+      >
         <TextField
           fullWidth
           size="small"
@@ -102,9 +106,12 @@ function RightSidebar() {
             startAdornment: (
               <InputAdornment position="start">
                 {isSearchLoading ? (
-                  <CircularProgress size={20} sx={{ color: '#ffffff' }} />
+                  <CircularProgress
+                    size={20}
+                    sx={{ color: theme.palette.text.primary }}
+                  />
                 ) : (
-                  <SearchIcon sx={{ color: '#ffffff' }} />
+                  <SearchIcon sx={{ color: theme.palette.text.primary }} />
                 )}
               </InputAdornment>
             ),
@@ -112,38 +119,55 @@ function RightSidebar() {
         />
       </Box>
 
+      {/* 📜 Search or Inbox */}
       <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
         {searchQuery.trim().length > 0 ? (
-          
           <Paper
             elevation={0}
             sx={{
               p: 0,
               border: 'none',
+              backgroundColor: 'transparent',
             }}
           >
-            {searchError && <Typography sx={{p: 2, color: 'red'}}>{searchError}</Typography>}
-            
+            {searchError && (
+              <Typography sx={{ p: 2, color: 'red' }}>{searchError}</Typography>
+            )}
+
             <List disablePadding>
               {searchResults.length > 0 ? (
                 searchResults.map((user) => (
                   <ListItem key={user.id} disablePadding>
                     <ListItemButton onClick={() => handleUserClick(user.handle)}>
                       <ListItemAvatar>
-                        <Avatar src={getFullUrl(user.profile_picture_url)} sx={{border: '1px solid #fff'}} />
+                        <Avatar
+                          src={getFullUrl(user.profile_picture_url)}
+                          sx={{
+                            border: `1px solid ${theme.palette.divider}`, 
+                          }}
+                        />
                       </ListItemAvatar>
                       <ListItemText
                         primary={user.name}
                         secondary={`@${user.handle}`}
                         primaryTypographyProps={{ fontWeight: 'bold' }}
-                        secondaryTypographyProps={{ color: '#aaa' }}
+                        secondaryTypographyProps={{
+                          color: theme.palette.text.secondary,
+                        }}
                       />
                     </ListItemButton>
                   </ListItem>
                 ))
               ) : (
-                !isSearchLoading && !searchError && (
-                  <Typography sx={{ p: 2, color: '#aaa', textAlign: 'center' }}>
+                !isSearchLoading &&
+                !searchError && (
+                  <Typography
+                    sx={{
+                      p: 2,
+                      color: theme.palette.text.secondary,
+                      textAlign: 'center',
+                    }}
+                  >
                     No users found for "{searchQuery}"
                   </Typography>
                 )
@@ -157,20 +181,24 @@ function RightSidebar() {
               border: 'none',
               height: '100%',
               display: 'flex',
-              flexDirection: 'column'
+              flexDirection: 'column',
+              backgroundColor: 'transparent',
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, p: 2 }}>
-              <InboxIcon />
-              <Typography variant="h6" fontWeight="bold">
+              <InboxIcon sx={{ color: theme.palette.text.primary }} />
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                color={theme.palette.text.primary}
+              >
                 Inbox
               </Typography>
             </Box>
-            <Divider sx={{ borderColor: '#ffffff' }} />
-            
-  
+
+            <Divider sx={{ borderColor: theme.palette.divider }} /> 
+
             <ConversationList onSelectConversation={handleSelectConversation} />
-            
           </Paper>
         )}
       </Box>
