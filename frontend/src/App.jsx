@@ -1,8 +1,6 @@
 import './styles/App.css';
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { IconButton } from '@mui/material';
-import { Brightness4, Brightness7 } from '@mui/icons-material';
 
 import Login from './pages/LoginPage';
 import VerifyOtp from './pages/VerifyOtpPage';
@@ -19,7 +17,7 @@ import PostPage from './pages/PostPage';
 import DashboardPage from './pages/DashboardPage';
 import BookmarksPage from './pages/BookmarksPage';
 
-function App({ mode, toggleMode }) {
+function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
@@ -31,14 +29,6 @@ function App({ mode, toggleMode }) {
           borderRadius: '50%',
           backdropFilter: 'blur(6px)',
         }}>
-          <IconButton
-            onClick={toggleMode}
-            color="inherit"
-            size="large"
-            sx={{ transition: 'all 0.3s ease' }}
-          >
-            {mode === 'light' ? <Brightness4 /> : <Brightness7 />}
-          </IconButton>
         </div>
 
         <Routes>

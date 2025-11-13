@@ -14,6 +14,7 @@ import ImageModal from './ImageModal.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { addBookmark, deleteBookmark } from '../../services/bookmarksService.jsx'; 
 import { API_BASE_URL } from '../../config.js';
+import { theme } from '../../theme.js';
 
 const getFullUrl = (path) => {
   if (!path) return null;
@@ -172,10 +173,19 @@ export default function ShowPostsCard({ post, onDelete, onUpdate, onBookmarkTogg
     <>
       <Card
         sx={{
-          p: 2,
-          mb: 2,
-          width: '100%',
-          maxWidth: 700,
+          p: 3,
+          mb: 3,
+          width: "100%",
+          maxWidth: 750,
+          borderRadius: "4px",
+          backgroundColor: theme.palette.surfaceColor || theme.palette.background.paper,
+          border: `2px solid ${theme.palette.borderColor}`,
+          boxShadow: "0px 4px 12px rgba(0,0,0,0.25)",
+          transition: "border 0.2s ease, box-shadow 0.2s ease",
+          "&:hover": {
+            borderColor: theme.palette.primary.main,
+            boxShadow: "0px 0px 12px rgba(0,156,255,0.3)",
+          },
         }}
       >
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>

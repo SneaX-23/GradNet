@@ -1,235 +1,161 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme } from "@mui/material/styles";
+
 const retroFont = "'Courier New', Courier, monospace";
 
-const lightPalette = {
-  backgroundColor: '#e9f0f7',
-  textColor: '#1e3a5f',
-  secondaryTextColor: '#4a5568',
-  borderColor: '#a7c2da',
+const p = {
+  backgroundColor: "#1B1B1D",   
+  surfaceColor: "#2D2D31",      
+  textColor: "#FFFFFF",
+  secondaryTextColor: "#B3B3B3",
+  primaryBlue: "#009CFF",
+  borderColor: "#3A3A3C",
 };
 
-const darkPalette = {
-  backgroundColor: '#1e293b',     
-  textColor: '#f1f5f9',           
-  secondaryTextColor: '#94a3b8',  
-  borderColor: '#475569',         
-};
-
-const getCommonStyles = (palette) => ({
-  border: `2px solid ${palette.borderColor}`,
+const c = {
+  border: `2px solid ${p.borderColor}`,
   borderRadius: 0,
   fontFamily: retroFont,
-  textColor: palette.textColor,
-  bgColor: palette.backgroundColor,
-  borderColor: palette.borderColor,
-});
-
-export const getDesignTokens = (mode) => {
-  const palette = mode === 'dark' ? darkPalette : lightPalette;
-  const commonStyles = getCommonStyles(palette);
-
-  return createTheme({
-    palette: {
-      mode,
-      primary: {
-        main: commonStyles.textColor,
-        contrastText: commonStyles.bgColor,
-      },
-      background: {
-        default: commonStyles.bgColor,
-        paper: commonStyles.bgColor,
-      },
-      text: {
-        primary: commonStyles.textColor,
-        secondary: palette.secondaryTextColor,
-      },
-      divider: commonStyles.borderColor,
-    },
-    typography: {
-      fontFamily: commonStyles.fontFamily,
-      allVariants: { color: commonStyles.textColor },
-    },
-    components: {
-      MuiCssBaseline: {
-        styleOverrides: {
-          body: {
-            backgroundColor: commonStyles.bgColor,
-            color: commonStyles.textColor,
-            fontFamily: commonStyles.fontFamily,
-            imageRendering: 'pixelated',
-            transition: 'background-color 0.3s ease, color 0.3s ease',
-          },
-        },
-      },
-      MuiButton: {
-        styleOverrides: {
-          root: {
-            fontFamily: commonStyles.fontFamily,
-            borderRadius: commonStyles.borderRadius,
-            border: commonStyles.border,
-            textTransform: 'none',
-            color: commonStyles.textColor,
-            transition: 'all 0.2s ease-in-out',
-            '&:hover': {
-              backgroundColor: commonStyles.textColor,
-              color: commonStyles.bgColor,
-            },
-          },
-          contained: {
-            backgroundColor: commonStyles.textColor,
-            color: commonStyles.bgColor,
-            '&:hover': {
-              backgroundColor: commonStyles.borderColor,
-              color: commonStyles.textColor,
-            },
-          },
-        },
-      },
-      MuiCard: {
-        styleOverrides: {
-          root: {
-            backgroundColor: commonStyles.bgColor,
-            border: commonStyles.border,
-            borderRadius: commonStyles.borderRadius,
-            boxShadow: 'none',
-          },
-        },
-      },
-      MuiPaper: {
-        styleOverrides: {
-          root: {
-            backgroundColor: commonStyles.bgColor,
-            color: commonStyles.textColor,
-            borderRadius: commonStyles.borderRadius,
-            border: commonStyles.border, 
-          },
-        },
-      },
-      MuiDialog: {
-        styleOverrides: {
-          paper: {
-            border: commonStyles.border,
-            backgroundColor: commonStyles.bgColor,
-            boxShadow: 'none',
-          },
-        },
-      },
-      MuiAppBar: {
-        styleOverrides: {
-          root: {
-            backgroundColor: commonStyles.bgColor,
-            borderBottom: commonStyles.border,
-            boxShadow: 'none',
-          },
-        },
-      },
-      MuiDrawer: {
-        styleOverrides: {
-          paper: {
-            backgroundColor: commonStyles.bgColor,
-            borderRight: commonStyles.border, 
-          },
-        },
-      },
-      MuiDivider: {
-        styleOverrides: {
-          root: {
-            borderColor: commonStyles.borderColor,
-            opacity: 1,
-          },
-        },
-      },
-      MuiListItem: {
-        styleOverrides: {
-          root: {
-            border: commonStyles.border,
-            borderRadius: commonStyles.borderRadius,
-          },
-        },
-      },
-      MuiListItemButton: {
-        styleOverrides: {
-          root: {
-            fontFamily: commonStyles.fontFamily,
-            color: commonStyles.textColor,
-            '&:hover': {
-              backgroundColor:
-                mode === 'dark'
-                  ? 'rgba(255,255,255,0.1)'
-                  : 'rgba(30,58,95,0.1)',
-            },
-            '&.Mui-selected': {
-              backgroundColor: commonStyles.textColor,
-              color: commonStyles.bgColor,
-              '& .MuiListItemIcon-root': {
-                color: commonStyles.bgColor,
-              },
-            },
-          },
-        },
-      },
-      MuiIconButton: {
-        styleOverrides: {
-          root: {
-            color: commonStyles.textColor,
-            borderRadius: commonStyles.borderRadius,
-            '&:hover': {
-              backgroundColor:
-                mode === 'dark'
-                  ? 'rgba(255,255,255,0.1)'
-                  : 'rgba(30,58,95,0.1)',
-            },
-          },
-        },
-      },
-      MuiTabs: {
-        styleOverrides: {
-          root: {
-            color: commonStyles.textColor,
-          },
-          indicator: {
-            backgroundColor: commonStyles.borderColor,
-          },
-        },
-      },
-      MuiTab: {
-        styleOverrides: {
-          root: {
-            fontFamily: commonStyles.fontFamily,
-            textTransform: 'none',
-            fontWeight: 'bold',
-          },
-        },
-      },
-      MuiTextField: {
-        styleOverrides: {
-          root: {
-            '& label, & label.Mui-focused': {
-              color: commonStyles.textColor,
-              fontFamily: commonStyles.fontFamily,
-            },
-            '& .MuiInputBase-input': {
-              color: commonStyles.textColor,
-              fontFamily: commonStyles.fontFamily,
-            },
-            '& .MuiOutlinedInput-root': {
-              fontFamily: commonStyles.fontFamily,
-              color: commonStyles.textColor,
-              borderRadius: commonStyles.borderRadius,
-              '& fieldset': {
-                borderColor: commonStyles.borderColor,
-                borderWidth: '2px',
-              },
-              '&:hover fieldset': {
-                borderColor: commonStyles.textColor,
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: commonStyles.textColor,
-              },
-            },
-          },
-        },
-      },
-    },
-  });
+  textColor: p.textColor,
+  bgColor: p.backgroundColor,
+  borderColor: p.borderColor,
+  surfaceColor: p.surfaceColor,
 };
+
+export const theme = createTheme({
+  spacing: 8,
+
+  palette: {
+    mode: "dark",
+    primary: {
+      main: p.primaryBlue,
+      contrastText: "#FFFFFF",
+    },
+    background: {
+      default: p.backgroundColor,
+      paper: p.surfaceColor,
+    },
+    text: {
+      primary: p.textColor,
+      secondary: p.secondaryTextColor,
+    },
+    divider: p.borderColor,
+  },
+
+  typography: {
+    fontFamily: retroFont,
+    allVariants: {
+      color: p.textColor,
+      letterSpacing: "0.3px",
+    },
+    h1: { fontSize: "2.4rem", fontWeight: 700 },
+    h2: { fontSize: "2rem", fontWeight: 700 },
+    h3: { fontSize: "1.7rem", fontWeight: 600 },
+    h4: { fontSize: "1.4rem", fontWeight: 600 },
+    h5: { fontSize: "1.2rem", fontWeight: 600 },
+    h6: { fontSize: "1.05rem", fontWeight: 600 },
+    body1: { fontSize: "1rem", lineHeight: 1.6 },
+    body2: { fontSize: "0.92rem", lineHeight: 1.55 },
+    button: { fontWeight: 600, letterSpacing: "0.6px" },
+  },
+
+  shadows: Array(25)
+    .fill("none")
+    .map((_, i) =>
+      i === 1
+        ? "0px 2px 6px rgba(0,0,0,0.04)"
+        : i === 2
+        ? "0px 4px 10px rgba(0,0,0,0.06)"
+        : "none"
+    ),
+
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          backgroundColor: p.backgroundColor,
+          color: p.textColor,
+          fontFamily: retroFont,
+          transition: "background-color 0.3s ease, color 0.3s ease",
+        },
+      },
+    },
+
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundColor: p.surfaceColor,
+          border: c.border,
+          borderRadius: 0,
+          color: p.textColor,
+        },
+      },
+    },
+
+    MuiDrawer: {
+      styleOverrides: {
+        paper: {
+          backgroundColor: p.surfaceColor,
+          borderRight: c.border,   
+        },
+      },
+    },
+
+    MuiDivider: {
+      styleOverrides: {
+        root: { borderColor: p.borderColor, opacity: 1 },
+      },
+    },
+
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 0,
+          border: c.border,
+          "&:hover": {
+            backgroundColor: p.primaryBlue,
+            color: "#FFFFFF",
+          },
+        },
+        contained: {
+          backgroundColor: p.primaryBlue,
+          color: "#FFFFFF",
+          "&:hover": {
+            backgroundColor: "#007ACC",
+          },
+        },
+      },
+    },
+
+    MuiListItemButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 0,
+          "&.Mui-selected": {
+            backgroundColor: p.primaryBlue,
+            color: "#FFFFFF",
+          },
+          "&:hover": {
+            backgroundColor: "rgba(255,255,255,0.1)",
+          },
+        },
+      },
+    },
+
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          "& .MuiOutlinedInput-root": {
+            borderRadius: 0,
+            backgroundColor: "#2D2D31",
+            "& fieldset": {
+              borderColor: p.borderColor,
+              borderWidth: "2px",
+            },
+            "&:hover fieldset": { borderColor: p.primaryBlue },
+            "&.Mui-focused fieldset": { borderColor: p.primaryBlue },
+          },
+        },
+      },
+    },
+  },
+});

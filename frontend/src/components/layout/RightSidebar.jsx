@@ -84,10 +84,10 @@ function RightSidebar() {
         right: 0,
         top: 64,
         height: 'calc(100vh - 64px)',
-        borderLeft: `2px solid ${theme.palette.divider}`, 
+        borderLeft: `2px solid ${theme.palette.divider}`,
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: theme.palette.background.default, 
+        backgroundColor: theme.palette.background.paper,  
       }}
     >
       <Box
@@ -119,7 +119,6 @@ function RightSidebar() {
         />
       </Box>
 
-      {/* 📜 Search or Inbox */}
       <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
         {searchQuery.trim().length > 0 ? (
           <Paper
@@ -127,7 +126,7 @@ function RightSidebar() {
             sx={{
               p: 0,
               border: 'none',
-              backgroundColor: 'transparent',
+              backgroundColor: theme.palette.background.paper,
             }}
           >
             {searchError && (
