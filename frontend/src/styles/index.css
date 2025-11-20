@@ -1,15 +1,30 @@
 /*
-  Global Retro Terminal (Black & White) Theme
+  Global Neo-Brutalist Theme
 */
 :root {
-  font-family: 'Courier New', Courier, monospace;
+  --neo-bg: #FDF6E3;
+  --neo-green: #D4E4BC;
+  --neo-yellow: #FDE047;
+  --neo-orange: #FB923C;
+  --neo-purple: #C4B5FD;
+  --neo-blue: #93C5FD;
+  --neo-black: #18181b;
+  --neo-white: #FFFFFF;
+  
+  --neo-border: 2px solid var(--neo-black);
+  --neo-shadow: 4px 4px 0px 0px var(--neo-black);
+  --neo-shadow-hover: 6px 6px 0px 0px var(--neo-black);
+  
+  --font-sans: 'Space Grotesk', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+
+  font-family: var(--font-sans);
   line-height: 1.5;
   font-weight: 400;
 
-
-  color-scheme: dark;
-  color: #ffffff; 
-  background-color: #000000; 
+  color-scheme: light;
+  color: var(--neo-black);
+  background-color: var(--neo-bg);
 }
 
 body {
@@ -18,9 +33,8 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background-color: #000000;
+  background-color: var(--neo-bg);
 }
-
 
 #root {
   max-width: none;
@@ -29,8 +43,23 @@ body {
   width: 100%;
 }
 
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: var(--neo-bg);
+  border-left: 2px solid var(--neo-black);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--neo-green);
+  border: 2px solid var(--neo-black);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #bef264;
+}
 
-.card, .read-the-docs {
-  padding: 0;
+a {
   color: inherit;
+  text-decoration: none;
 }

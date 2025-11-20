@@ -17,6 +17,7 @@
     "express-session": "^1.18.2",
     "multer": "^2.0.2",
     "pg": "^8.16.3",
+    "resend": "^6.5.2",
     "socket.io": "^4.8.1"
   },
   "devDependencies": {
