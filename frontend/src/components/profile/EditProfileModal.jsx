@@ -4,6 +4,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import ImageCropper from '../profile/ImageCropper.jsx'; 
 import { API_BASE_URL } from '../../config.js';
+import { useTheme } from '@mui/material/styles';
+import { theme, colors, borderStyle, shadowHover, shadowStyle } from '../../theme';
 
 const getFullUrl = (path) => {
   if (!path) return null;
@@ -20,6 +22,7 @@ function EditProfileModal({ open, onClose, profileData, onSave }) {
     const [imageToCrop, setImageToCrop] = useState(null);
     const [cropAspect, setCropAspect] = useState(1);
     const [croppingType, setCroppingType] = useState(null);
+    const theme = useTheme()
 
     useEffect(() => {
         if (profileData) {
@@ -100,7 +103,8 @@ function EditProfileModal({ open, onClose, profileData, onSave }) {
                   maxWidth: 600,
                   maxHeight: '90vh',
                   overflowY: 'auto',
-                  bgcolor: 'black'
+                  bgcolor: theme.palette.background.default,
+                  border: borderStyle,
                 }}>
                     <form onSubmit={handleSubmit}>
                         <Box sx={{ display: 'flex', alignItems: 'center', p: 2, borderBottom: '1px solid #555' }}>
@@ -145,7 +149,7 @@ function EditProfileModal({ open, onClose, profileData, onSave }) {
                               sx={{ 
                                 width: 120, 
                                 height: 120, 
-                                border: '4px solid #000', 
+                                border: '2px solid #000', 
                                 position: 'absolute', 
                                 top: '140px', 
                                 left: '16px' 

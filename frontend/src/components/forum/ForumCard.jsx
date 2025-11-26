@@ -7,6 +7,8 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { useAuth } from '/src/context/AuthContext.jsx';
 import { addBookmark, deleteBookmark } from '/src/services/bookmarksService.jsx'; 
 import { API_BASE_URL } from '/src/config.js';
+import { useTheme } from '@mui/material/styles';
+import { theme, colors, borderStyle, shadowHover, shadowStyle } from '../../theme';
 
 const getFullUrl = (path) => {
   if (!path) return null;
@@ -20,7 +22,7 @@ export default function ForumCard({ forum, onDelete, onUpdate, onBookmarkToggle 
 
     const [isBookmarked, setIsBookmarked] = useState(forum.is_bookmarked);
     const [isBookmarkPending, setIsBookmarkPending] = useState(false);
-    
+    const theme = useTheme();
     const canModify = user?.role === 'admin' || user?.role === 'faculty';
 
     const handleMenuOpen = (event) => {
@@ -66,11 +68,21 @@ export default function ForumCard({ forum, onDelete, onUpdate, onBookmarkToggle 
                     display: 'flex',
                     p: 2,
                     mb: 2,
-                    width: '100%',
+                    mt: '4px', 
+                    ml: '4px', 
+                    width: "calc(100% - 4px)",
                     maxWidth: 700,
                     textDecoration: 'none',
-                    '&:hover': {
-                        backgroundColor: '#222222'
+                    transition: "all 0.1s ease", 
+                              
+                    "&:hover": {
+                        boxShadow: shadowHover, 
+                        transform: 'translate(-2px, -2px)' 
+                    },
+                              
+                    '&:active': {
+                        boxShadow: 'none',
+                        transform: 'translate(4px, 4px)',
                     }
                 }}
             >
@@ -111,7 +123,7 @@ export default function ForumCard({ forum, onDelete, onUpdate, onBookmarkToggle 
                                         <IconButton 
                                           size="small" 
                                           onClick={handleMenuOpen} 
-                                          sx={{ ml: 0, border: 'none', '&:hover': { backgroundColor: 'transparent' } }}
+                                          sx={{ ml: 0, border: 'none', '&:hover': { backgroundColor: colors.green } }}
                                         >
                                             <MoreVertIcon />
                                         </IconButton>

@@ -19,7 +19,7 @@ import ConversationList from '../messages/ConversationList';
 import { searchUsers } from '../../services/userService';
 import { API_BASE_URL } from '../../config';
 
-const rightSidebarWidth = 300;
+const rightSidebarWidth = 320;
 
 const NEO_BLACK = '#18181b';
 const NEO_WHITE = '#FFFFFF';
@@ -85,21 +85,21 @@ function RightSidebar() {
         flexShrink: 0,
         position: 'fixed',
         right: 0, 
-        top: '80px',
-        height: 'calc(100vh - 80px)',
+        top: '66px',
+        height: 'calc(100vh - 66px)',
         display: 'flex',
         flexDirection: 'column',
         gap: 4,
         overflowY: 'auto',
         fontFamily: '"Space Grotesk", sans-serif',
-        borderLeft: `3px solid ${NEO_BLACK}`, 
+        borderLeft: `2px solid ${NEO_BLACK}`, 
         pl: 3, 
         pr: 3,
         py: 3,
         backgroundColor: '#FDF6E3' 
       }}
     >
-      {/* Search Box - White box with hard border */}
+      {/* Search Box */}
       <Box 
         sx={{ 
             bgcolor: NEO_WHITE, 
@@ -139,14 +139,14 @@ function RightSidebar() {
       <Box sx={{ flexGrow: 1 }}>
         {searchQuery.trim().length > 0 ? (
           // Search Results
-          <Box sx={{ bgcolor: NEO_WHITE, border: `2px solid ${NEO_BLACK}`, boxShadow: `4px 4px 0px ${NEO_BLACK}` }}>
+          <Box sx={{ bgcolor: NEO_WHITE, border: `2px solid ${NEO_BLACK}`, boxShadow: `4px 4px 0px ${NEO_BLACK}`, }}>
             {searchError && (
               <Typography sx={{ p: 2, color: 'red', fontFamily: '"Space Mono", monospace' }}>{searchError}</Typography>
             )}
             <List disablePadding>
               {searchResults.length > 0 ? (
                 searchResults.map((user) => (
-                  <ListItem key={user.id} disablePadding divider sx={{ borderColor: NEO_BLACK, borderBottomWidth: '2px' }}>
+                  <ListItem key={user.id} disablePadding divider sx={{ borderColor: NEO_BLACK, borderBottomWidth: '2px', }}>
                     <ListItemButton onClick={() => handleUserClick(user.handle)}>
                       <ListItemAvatar>
                         <Avatar
@@ -205,16 +205,19 @@ function RightSidebar() {
                 sx={{ 
                     maxHeight: '400px',
                     overflowY: 'auto',
-                    
+                    '& > div': {
+                        borderRight: 'none !important'
+                    },
                     '& .MuiList-root': {
                         padding: 0,
+                        
                     },
                     '& .MuiListItem-root': {
                         display: 'block', 
                         marginBottom: '16px', 
                         border: `2px solid ${NEO_BLACK}`,
                         backgroundColor: NEO_WHITE,
-                        boxShadow: `4px 4px 0px ${NEO_BLACK}`,
+                        // boxShadow: `4px 4px 0px ${NEO_BLACK}`,
                         transition: 'transform 0.1s ease',
                         '&:hover': {
                             transform: 'translate(-2px, -2px)',
@@ -224,12 +227,14 @@ function RightSidebar() {
                         '&:active': {
                              transform: 'translate(2px, 2px)',
                              boxShadow: 'none',
-                        }
+                        },
+                        
                     },
                     
                     '& .MuiAvatar-root': {
                         borderRadius: '0px !important',
                         border: `2px solid ${NEO_BLACK}`,
+                        
                     },
                     
                     '& .MuiDivider-root': {

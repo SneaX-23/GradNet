@@ -14,6 +14,8 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { useParams } from 'react-router-dom';
 import RightSidebar from '../components/layout/RightSidebar.jsx';
 import { API_BASE_URL } from '../config.js';
+import { useTheme } from '@mui/material/styles';
+import { theme, colors, borderStyle, shadowHover, shadowStyle } from '../theme';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -41,17 +43,17 @@ const AboutContent = ({ profileData }) => {
 
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         {profileData.linkedin_url && (
-          <Link href={profileData.linkedin_url} target="_blank" rel="noopener noreferrer" sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', color: '#ffffff', '&:hover': {textDecoration: 'underline'} }}>
+          <Link href={profileData.linkedin_url} target="_blank" rel="noopener noreferrer" sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', color: theme.palette.text.primary, '&:hover': {textDecoration: 'underline'} }}>
             <LinkedInIcon /> <Typography variant="body2">LinkedIn</Typography>
           </Link>
         )}
         {profileData.github_url && (
-          <Link href={profileData.github_url} target="_blank" rel="noopener noreferrer" sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', color: '#ffffff', '&:hover': {textDecoration: 'underline'} }}>
+          <Link href={profileData.github_url} target="_blank" rel="noopener noreferrer" sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', color: theme.palette.text.primary, '&:hover': {textDecoration: 'underline'} }}>
             <GitHubIcon /> <Typography variant="body2">GitHub</Typography>
           </Link>
         )}
         {profileData.twitter_url && (
-          <Link href={profileData.twitter_url} target="_blank" rel="noopener noreferrer" sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', color: '#ffffff', '&:hover': {textDecoration: 'underline'} }}>
+          <Link href={profileData.twitter_url} target="_blank" rel="noopener noreferrer" sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', color: theme.palette.text.primary, '&:hover': {textDecoration: 'underline'} }}>
             <XIcon /> <Typography variant="body2">X / Twitter</Typography>
           </Link>
         )}
@@ -80,6 +82,7 @@ function UserProfilePage() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const { handle } = useParams();
+  const theme = useTheme();
 
   const loadProfile = async () => {
     try {
@@ -234,7 +237,9 @@ function UserProfilePage() {
                 maxWidth: '800px',
                 minWidth: '600px',
                 overflow: 'hidden',
-                border: '2px solid #ffffff', 
+                border: borderStyle,
+                boxShadow: shadowStyle,
+                bgcolor: theme.palette.secondary.light 
               }}
             >
               <Box sx={{ position: 'relative' }}>
@@ -258,7 +263,7 @@ function UserProfilePage() {
                     position: 'absolute',
                     top: '190px',
                     left: '16px',
-                    border: '4px solid #000000',
+                    border: '2px solid #000000',
                     fontSize: '4rem',
                     cursor: avatarUrl ? 'pointer' : 'default',
                     borderRadius: 0, 

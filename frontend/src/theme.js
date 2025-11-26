@@ -1,7 +1,7 @@
 import { createTheme } from "@mui/material/styles";
 
 
-const colors = {
+export const colors = {
   bg: '#FDF6E3',      // Cream
   green: '#D4E4BC',   // Sage/Mint
   yellow: '#FDE047',  // Bright Yellow
@@ -12,12 +12,12 @@ const colors = {
   white: '#FFFFFF'
 };
 
-// Shared Styles
-const borderStyle = `2px solid ${colors.black}`;
-const shadowStyle = `4px 4px 0px 0px ${colors.black}`;
-const shadowHover = `6px 6px 0px 0px ${colors.black}`;
-const fontSans = '"Space Grotesk", sans-serif';
-const fontMono = '"Space Mono", monospace';
+//shared styles
+export const borderStyle = `2px solid ${colors.black}`;
+export const shadowStyle = `4px 4px 0px 0px ${colors.black}`;
+export const shadowHover = `6px 6px 0px 0px ${colors.black}`;
+export const fontSans = '"Space Grotesk", sans-serif';
+export const fontMono = '"Space Mono", monospace';
 
 export const theme = createTheme({
   palette: {
@@ -42,7 +42,7 @@ export const theme = createTheme({
       secondary: '#4a4a4a',
     },
     divider: colors.black,
-    // Custom colors for use in sx prop
+    
     neo: {
         bg: colors.bg,
         green: colors.green,
@@ -53,7 +53,26 @@ export const theme = createTheme({
         black: colors.black
     }
   },
-
+  extend: {
+      fontFamily: {
+        sans: ['"Space Grotesk"', 'sans-serif'],
+        mono: ['"Space Mono"', 'monospace'],
+      },
+      colors: {
+        neo_bg: '#FDF6E3', // Cream
+        neo_green: '#D4E4BC', // Sage/Mint
+        neo_yellow: '#FDE047', // Bright Yellow
+        neo_orange: '#FB923C', // Orange
+        neo_purple: '#C4B5FD', // Soft Purple
+        neo_blue: '#93C5FD', // Soft Blue
+        neo_black: '#18181b', // Zinc 900
+      },
+      boxShadow: {
+        neo: '4px 4px 0px 0px rgba(24, 24, 27, 1)',
+        neo_sm: '2px 2px 0px 0px rgba(24, 24, 27, 1)',
+        neo_lg: '6px 6px 0px 0px rgba(24, 24, 27, 1)',
+      }
+    },
   typography: {
     fontFamily: fontSans,
     h1: { fontWeight: 700, letterSpacing: '-0.02em' },

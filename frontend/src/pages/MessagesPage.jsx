@@ -6,10 +6,13 @@ import RightSidebar from '/src/components/layout/RightSidebar.jsx';
 import ConversationList from '/src/components/messages/ConversationList.jsx';
 import ChatWindow from '/src/components/messages/ChatWindow.jsx';
 import NewMessageModal from '/src/components/messages/NewMessageModal.jsx';
+import { useTheme } from '@mui/material/styles';
+import { theme, colors, borderStyle, shadowHover, shadowStyle } from '../theme';
 
 function MessagesPage() {
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false); 
+  const theme = useTheme();
 
   const handleSelectUser = (user) => {
     const newConversation = {
@@ -69,7 +72,8 @@ function MessagesPage() {
               display: 'flex', 
               justifyContent: 'space-between', 
               alignItems: 'center',
-              borderBottom: '1px solid #555'
+              borderBottom: '1px solid #555',
+              borderRight: borderStyle
             }}>
                 <Typography variant="h6" fontWeight="bold">
                   Chats

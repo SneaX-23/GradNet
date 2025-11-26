@@ -23,6 +23,8 @@ import EditJobModal from './EditJobModal.jsx';
 import { useAuth } from '/src/context/AuthContext.jsx';
 import { addBookmark, deleteBookmark } from '/src/services/bookmarksService.jsx'; 
 import { API_BASE_URL } from '/src/config.js';
+import { useTheme } from '@mui/material/styles';
+import { theme, colors, borderStyle, shadowHover, shadowStyle } from '../../theme';
 
 const getFullUrl = (path) => {
   if (!path) return null;
@@ -39,6 +41,7 @@ export default function JobCard({ job, onDelete, onUpdate, onBookmarkToggle }) {
 
   const [isBookmarked, setIsBookmarked] = useState(job.is_bookmarked);
   const [isBookmarkPending, setIsBookmarkPending] = useState(false);
+  const theme = useTheme();
 
   const isOwner = user?.id === job.posted_by;
   const isAdmin = user?.role === 'admin';
@@ -101,6 +104,7 @@ export default function JobCard({ job, onDelete, onUpdate, onBookmarkToggle }) {
           mb: 2,
           width: '100%',
           maxWidth: 700,
+          bgcolor: colors.green
         }}
       >
         <Box sx={{ width: '100%' }}>
@@ -180,7 +184,7 @@ export default function JobCard({ job, onDelete, onUpdate, onBookmarkToggle }) {
                 <>
                   <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Apply here:</Typography>
                   <Typography paragraph sx={{ mb: 1.5 }}>
-                    <a href={job.external_link} style={{ color: '#ffffff' }}>{job.external_link}</a>
+                    <a href={job.external_link} style={{ color: colors.black }}>{job.external_link}</a>
                   </Typography>
                 </>
               )}
@@ -192,11 +196,14 @@ export default function JobCard({ job, onDelete, onUpdate, onBookmarkToggle }) {
                 onClick={handleExpandClick}
                 endIcon={<ExpandMoreIcon />}
                 sx={{
-                  border: '1px solid #ffffff',
+                  border: '1px solid #000000ff',
                   '& .MuiButton-endIcon': {
                     transform: !expanded ? 'rotate(0deg)' : 'rotate(180deg)',
                     transition: '0.3s'
-                  }
+                  },
+                  boxShadow: shadowStyle,
+                  bgcolor: theme.palette.primary.main,
+                  color: theme.palette.text.secondary,
                 }}
               >
                 {expanded ? 'Show less' : 'Show more'}

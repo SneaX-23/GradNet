@@ -32,18 +32,7 @@ function HomePage() {
     };
   }, []); 
 
-  const sendTestMessage = () => {
-    const recipientId = prompt("Enter the User ID of the recipient:");
-    const messageContent = prompt("Enter your message:");
-
-    if (recipientId && messageContent) {
-      socket.emit('private_message', {
-        content: messageContent,
-        to: recipientId,
-      });
-      console.log(`Sent message to ${recipientId}: ${messageContent}`);
-    }
-  };
+  
   
   useEffect(() => {
     const fetchInitialPosts = async () => {

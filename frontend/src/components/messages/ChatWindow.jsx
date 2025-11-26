@@ -5,6 +5,8 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { socket } from '../../socket.js';
 import { API_BASE_URL } from '../../config.js';
+import { useTheme } from '@mui/material/styles';
+import { theme, colors, borderStyle, shadowHover, shadowStyle } from '../../theme';
 
 const getFullUrl = (path) => {
   if (!path) return null;
@@ -18,6 +20,7 @@ function ChatWindow({ conversation }) {
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
+  const theme = useTheme();
 
   const scrollToBottom = () => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
 
@@ -89,8 +92,7 @@ function ChatWindow({ conversation }) {
           sx={{ 
             textAlign: 'center', 
             p: 4, 
-            border: '2px dashed #555', 
-            background: '#000000' 
+            border: borderStyle, 
           }}
         >
           <ChatBubbleOutlineIcon sx={{ fontSize: 48, color: '#555', mb: 1 }} />
@@ -110,6 +112,9 @@ function ChatWindow({ conversation }) {
       width: '100%',
       display: 'flex',
       flexDirection: 'column',
+      border: borderStyle,
+      borderLeft: '0px',
+      borderRight: '0px'
     }}>
       <Paper 
         elevation={0} 
@@ -121,10 +126,13 @@ function ChatWindow({ conversation }) {
           display: 'flex', 
           alignItems: 'center', 
           gap: 2, 
-          borderBottom: '2px solid #ffffff',
+          borderLeft: '0px solid #000000',
+          borderRight: '0px solid #000000',
+
+          // border: borderStyle,
         }}
       >
-        <Avatar src={getFullUrl(conversation.other_participant.profile_picture_url)} sx={{ border: '1px solid #ffffff' }} />
+        <Avatar src={getFullUrl(conversation.other_participant.profile_picture_url)} sx={{ border: '1px solid #141313ff' }} />
         <Box>
           <Typography variant="body1" fontWeight="bold">{conversation.other_participant.name}</Typography>
           <Typography variant="body2" sx={{ color: '#aaaaaa' }}>@{conversation.other_participant.handle}</Typography>
@@ -149,9 +157,9 @@ function ChatWindow({ conversation }) {
               mb: 1
             }}>
               <Box sx={{
-                border: msg.sender_id === user.id ? '1px solid #ffffff' : '1px dashed #555555',
+                border: msg.sender_id === user.id ? '1px solid #0b0b0bff' : '1px dashed #555555',
                 p: '8px 12px',
-                maxWidth: '70%'
+                maxWidth: '100%'
               }}>
                 <Typography variant="body1">{msg.content}</Typography>
               </Box>
@@ -169,7 +177,7 @@ function ChatWindow({ conversation }) {
           bottom: 0,
           zIndex: 10,
           p: 2, 
-          borderTop: '2px solid #ffffff', 
+          borderTop: borderStyle, 
           display: 'flex', 
           alignItems: 'center', 
         }}

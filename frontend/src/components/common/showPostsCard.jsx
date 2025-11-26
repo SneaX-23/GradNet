@@ -14,7 +14,8 @@ import ImageModal from './ImageModal.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { addBookmark, deleteBookmark } from '../../services/bookmarksService.jsx'; 
 import { API_BASE_URL } from '../../config.js';
-import { theme } from '../../theme.js';
+import { useTheme } from '@mui/material/styles';
+import { theme, colors, borderStyle, shadowHover, shadowStyle } from '../../theme';
 
 const getFullUrl = (path) => {
   if (!path) return null;
@@ -34,9 +35,9 @@ export default function ShowPostsCard({ post, onDelete, onUpdate, onBookmarkTogg
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
 
-  const [isBookmarked, setIsBookmarked] = useState(post.is_bookmarked);
+  const [isBookmarked, setIsBookmarked] = useState(post.is_bookmarked); 
   const [isBookmarkPending, setIsBookmarkPending] = useState(false);
-
+  const theme = useTheme();
 
   const handleOpenImage = (imageUrl) => {
     if (imageUrl) {
@@ -175,17 +176,24 @@ export default function ShowPostsCard({ post, onDelete, onUpdate, onBookmarkTogg
         sx={{
           p: 3,
           mb: 3,
-          width: "100%",
+          mt: '4px', 
+          ml: '4px', 
+          width: "calc(100% - 4px)",
           maxWidth: 750,
-          borderRadius: "4px",
-          backgroundColor: theme.palette.surfaceColor || theme.palette.background.paper,
-          border: `2px solid ${theme.palette.borderColor}`,
-          boxShadow: "0px 4px 12px rgba(0,0,0,0.25)",
-          transition: "border 0.2s ease, box-shadow 0.2s ease",
+          border: borderStyle,
+          boxShadow: shadowStyle,
+          transition: "all 0.1s ease", 
+          
           "&:hover": {
-            borderColor: theme.palette.primary.main,
-            boxShadow: "0px 0px 12px rgba(0,156,255,0.3)",
+            borderColor: colors.black,
+            boxShadow: shadowHover, 
+            transform: 'translate(-2px, -2px)' 
           },
+          
+          '&:active': {
+            boxShadow: 'none',
+            transform: 'translate(4px, 4px)',
+          }
         }}
       >
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
@@ -195,15 +203,31 @@ export default function ShowPostsCard({ post, onDelete, onUpdate, onBookmarkTogg
               sx={{ 
                 width: 40, 
                 height: 40,
-                border: '2px solid #ffffff', 
+                border: borderStyle, 
+                borderRadius: '0px'
               }}
             >
               {!avatarUrl && authorInitial}
             </Avatar>
             <Box>
-              <Typography variant="body1" fontWeight="bold">
+              <Box sx={{display: 'flex',gap: 2}}>
+              <Typography variant="body1" fontWeight="bold" >
                 {post.author_name || 'Unknown'}
               </Typography>
+              {post.role && (
+                <Typography sx={{
+                          // px: 1.5,            
+                          // py: 0.5,
+                          bgcolor: theme.extend.colors.neo_purple,
+                          border: '2px solid',
+                          borderColor: theme.extend.colors.neo_black,   
+                          fontFamily: theme.extend.fontFamily.mono, 
+                          fontWeight: 'bold'               
+                }}>
+                    {post.role}
+                </Typography>
+              )}
+              </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 {post.handle && (
                   <Link

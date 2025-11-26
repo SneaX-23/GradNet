@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Box, Typography, TextField, List, ListItem, ListItemButton, ListItemAvatar, Avatar, ListItemText, CircularProgress, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { API_BASE_URL } from '../../config';
+import { useTheme } from '@mui/material/styles';
+import { theme, colors, borderStyle, shadowHover, shadowStyle } from '../../theme';
 
 const getFullUrl = (path) => {
   if (!path) return null;
@@ -13,7 +15,7 @@ function NewMessageModal({ open, onClose, onSelectUser }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const theme = useTheme()
   useEffect(() => {
     if (!open) {
         setSearchQuery('');
@@ -65,9 +67,12 @@ function NewMessageModal({ open, onClose, onSelectUser }) {
         height: '70vh',
         display: 'flex',
         flexDirection: 'column',
+        bgcolor: colors.white,
+        border: borderStyle,
+        boxShadow: shadowStyle
       }}>
         <Box sx={{ display: 'flex', alignItems: 'center', p: 2, borderBottom: '1px solid #555' }}>
-            <IconButton onClick={onClose} sx={{ color: '#ffffff' }}><CloseIcon /></IconButton>
+            <IconButton onClick={onClose} sx={{ color: '#000000' }}><CloseIcon /></IconButton>
             <Typography variant="h6" sx={{ ml: 2 }}>New message</Typography>
         </Box>
         <Box sx={{ p: 2 }}>
@@ -80,22 +85,45 @@ function NewMessageModal({ open, onClose, onSelectUser }) {
                 onChange={(e) => setSearchQuery(e.target.value)}
             />
         </Box>
-        <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
+        <Box sx={{ flexGrow: 1, overflowY: 'auto' ,}}>
             {loading && <Box sx={{display: 'flex', justifyContent: 'center', p:2}}><CircularProgress size={24} sx={{ color: '#ffffff' }} /></Box>}
             <List>
-                {results.map((user) => (
-                    <ListItem key={user.id} disablePadding>
+                {results.map((user, index) => (
+                    <ListItem key={user.id} disablePadding 
+                    sx={{
+                            border: borderStyle,
+                            borderLeft: '0px',
+                            borderRight: '0px',
+                            backgroundColor: theme.palette.secondary.light,
+                            marginBottom: 0,
+                            
+                            marginTop: index === 0 ? 0 : '-2px',
+                            position: 'relative', 
+                            transition: 'all 0.1s ease',
+                            '&:hover': {
+                                backgroundColor: theme.palette.background.paper,
+                                boxShadow: `3px 3px 0px ${shadowHover}`,
+                                transform: 'translate(-2px, -2px)'
+                            },
+                            '&:active': {
+                                boxShadow: 'none',
+                                transform: 'translate(1px, 1px)'
+                            }
+                        
+                    }}>
                         <ListItemButton 
                           onClick={() => handleSelect(user)}
                         >
                             <ListItemAvatar>
-                                <Avatar src={getFullUrl(user.profile_picture_url)} sx={{ border: '1px solid #ffffff' }} />
+                                <Avatar src={getFullUrl(user.profile_picture_url)} sx={{ border: '1px solid #000000' }} />
                             </ListItemAvatar>
                             <ListItemText 
                               primary={user.name} 
                               secondary={`@${user.handle}`} 
-                              primaryTypographyProps={{ color: '#ffffff' }}
-                              secondaryTypographyProps={{ color: '#aaaaaa' }}
+                              primaryTypographyProps={{ color: '#000000' }}
+                              secondaryTypographyProps={{ color: '#000000' }}
+                              sx={{
+                              }}
                             />
                         </ListItemButton>
                     </ListItem>

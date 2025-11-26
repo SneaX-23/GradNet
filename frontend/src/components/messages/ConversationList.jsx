@@ -13,6 +13,8 @@ import {
 } from '@mui/material';
 import { socket } from '../../socket.js';
 import { API_BASE_URL } from '../../config.js';
+import { useTheme } from '@mui/material/styles';
+import { theme, colors, borderStyle, shadowHover, shadowStyle } from '../../theme';
 
 const getFullUrl = (path) => {
   if (!path) return null;
@@ -24,6 +26,7 @@ export default function ConversationList({ onSelectConversation }) {
   const [conversations, setConversations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const theme = useTheme();
 
   const fetchConversations = useCallback(async () => {
     try {
@@ -59,7 +62,7 @@ export default function ConversationList({ onSelectConversation }) {
   }, [fetchConversations]);
 
   return (
-    <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
+    <Box sx={{ flexGrow: 1, overflowY: 'auto', borderRight: borderStyle }}>
       {loading ? (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
           <CircularProgress size={24} sx={{ color: '#ffffff' }} />
@@ -69,10 +72,32 @@ export default function ConversationList({ onSelectConversation }) {
           No conversations yet.
         </Typography>
       ) : (
-        <List disablePadding>
-          {conversations.map((conv) => (
+        <List disablePadding >
+          {conversations.map((conv, index) => (
             <React.Fragment key={conv.id}>
-              <ListItem disablePadding>
+              <ListItem disablePadding 
+                sx={{
+                  border: borderStyle,
+                  borderLeft: '0px',
+                  borderRight: '0px',
+                  backgroundColor: theme.palette.secondary.light,
+                  marginBottom: 0,
+                                              
+                  marginTop: index === 0 ? 0 : '-2px',
+                  position: 'relative', 
+                  
+                  transition: 'all 0.1s ease',
+                  '&:hover': {
+                      backgroundColor: theme.palette.background.paper,
+                      boxShadow: `3px 3px 0px ${shadowHover}`,
+                      transform: 'translate(-2px, -2px)'
+                  },
+                  '&:active': {
+                      boxShadow: 'none',
+                      transform: 'translate(1px, 1px)'
+                  }
+                }}
+              >
                 <ListItemButton 
                   onClick={() => onSelectConversation(conv)}
                 >
@@ -80,7 +105,7 @@ export default function ConversationList({ onSelectConversation }) {
                     <Avatar 
                       src={getFullUrl(conv.other_participant?.profile_picture_url)} 
                       alt={conv.other_participant?.name}
-                      sx={{ border: '1px solid #ffffff' }}
+                      sx={{ border: borderStyle }}
                     >
                       {conv.other_participant?.name?.[0] || '?'}
                     </Avatar>

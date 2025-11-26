@@ -11,56 +11,61 @@ import { getTopics, getForumById } from "/src/services/ForumService.jsx";
 import { addBookmark, deleteBookmark } from "/src/services/bookmarksService.jsx";
 import { socket } from '/src/socket.js';
 import CreateTopicModal from '/src/components/forum/CreateTopicModal.jsx';
+import { useTheme } from '@mui/material/styles';
+import { theme, colors, borderStyle, shadowHover, shadowStyle } from '../theme';
 
 function TopicListItem({ topic, onBookmarkToggle }) {
-    const [isBookmarked, setIsBookmarked] = useState(topic.is_bookmarked);
-    const [isBookmarkPending, setIsBookmarkPending] = useState(false);
+    const theme = useTheme();
+    // const [isBookmarked, setIsBookmarked] = useState(topic.is_bookmarked);
+    // const [isBookmarkPending, setIsBookmarkPending] = useState(false);
 
-    const handleBookmarkClick = async (e) => {
-        e.preventDefault(); 
-        e.stopPropagation(); 
-        setIsBookmarkPending(true);
-        try {
-            if (isBookmarked) {
-                await deleteBookmark(topic.id, 'forum_topic');
-                setIsBookmarked(false);
-            } else {
-                await addBookmark(topic.id, 'forum_topic');
-                setIsBookmarked(true);
-            }
-            if (onBookmarkToggle) {
-                onBookmarkToggle(topic.id, 'forum_topic');
-            }
-        } catch (err) {
-            console.error("Failed to update bookmark:", err);
-        } finally {
-            setIsBookmarkPending(false);
-        }
-    };
+    // const handleBookmarkClick = async (e) => {
+    //     e.preventDefault(); 
+    //     e.stopPropagation(); 
+    //     setIsBookmarkPending(true);
+    //     try {
+    //         if (isBookmarked) {
+    //             await deleteBookmark(topic.id, 'forum_topic');
+    //             setIsBookmarked(false);
+    //         } else {
+    //             await addBookmark(topic.id, 'forum_topic');
+    //             setIsBookmarked(true);
+    //         }
+    //         if (onBookmarkToggle) {
+    //             onBookmarkToggle(topic.id, 'forum_topic');
+    //         }
+    //     } catch (err) {
+    //         console.error("Failed to update bookmark:", err);
+    //     } finally {
+    //         setIsBookmarkPending(false);
+    //     }
+    // };
 
     return (
         <ListItem 
             key={topic.id} 
             disablePadding 
-            sx={{ mb: 1 }}
-            secondaryAction={
-                <IconButton 
-                    edge="end" 
-                    aria-label="bookmark" 
-                    onClick={handleBookmarkClick}
-                    disabled={isBookmarkPending}
-                    sx={{ border: 'none', '&:hover': { backgroundColor: 'transparent', color: '#ffffff' } }}
-                >
-                    {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
-                </IconButton>
-            }
+            sx={{ 
+                mb: 1,
+                mt: '4px', 
+                ml: '4px', 
+                width: "calc(100% - 4px)",
+                bgcolor: colors.green,
+                border: borderStyle,
+                boxShadow: shadowStyle,
+                '&:hover': {
+                    
+                    boxShadow: shadowHover,
+                    transform: 'translate(-2px, -2px)',
+                },
+            }}
         >
             <ListItemButton component={Link} to={`/topic/${topic.id}`}>
                 <ListItemText
                     primary={topic.title}
                     secondary={`By ${topic.author_name} • ${topic.post_count} posts`}
                     primaryTypographyProps={{ fontWeight: 'bold' }}
-                    secondaryTypographyProps={{ color: '#aaaaaa' }}
+                    secondaryTypographyProps={{ color: colors.black }}
                 />
             </ListItemButton>
         </ListItem>
@@ -133,9 +138,9 @@ function TopicPage() {
         }
     };
 
-    const handleBookmarkToggle = (topicId, type) => {
-        console.log(`Bookmark toggled for ${type} ${topicId}`);
-    };
+    // const handleBookmarkToggle = (topicId, type) => {
+    //     console.log(`Bookmark toggled for ${type} ${topicId}`);
+    // };
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -143,7 +148,7 @@ function TopicPage() {
             <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
                 <Toolbar>
                     <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 'bold' }}>
-                        {forumInfo ? forumInfo.name : 'Forum Topics'}
+                        GradNet
                     </Typography>
                 </Toolbar>
             </AppBar>
@@ -207,7 +212,8 @@ function TopicPage() {
                              <TopicListItem 
                                 key={topic.id} 
                                 topic={topic} 
-                                onBookmarkToggle={handleBookmarkToggle} 
+                                // onBookmarkToggle={handleBookmarkToggle} 
+                                
                              />
                         ))}
                     </List>

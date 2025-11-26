@@ -14,13 +14,15 @@ import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
 import DashboardIcon from '@mui/icons-material/Dashboard'; 
 import BookmarkIcon from '@mui/icons-material/Bookmark'; 
 import { API_BASE_URL } from '/src/config.js';
+import { useTheme } from '@mui/material/styles';
+import { theme, colors, borderStyle, shadowHover, shadowStyle } from '../../theme';
 
 const drawerWidth = 240;
 
 function Sidebar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  
+  const theme = useTheme(); 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
@@ -42,6 +44,37 @@ function Sidebar() {
     ? (user.profile_image_url.startsWith('http') ? user.profile_image_url : `${API_BASE_URL}${user.profile_image_url}`)
     : null;
 
+  
+  const sidebarItemStyle = {
+    mb: 1.5, 
+    border: borderStyle,
+    boxShadow: 'none',
+    borderRadius: 0,
+    bgcolor: colors.white,
+    transition: 'all 0.1s ease',
+    color: colors.black,
+    '&:hover': {
+      bgcolor: colors.white,
+      boxShadow: shadowHover,
+      transform: 'translate(-2px, -2px)',
+    },
+    
+    '&.active': {
+      bgcolor: colors.orange,
+      boxShadow: shadowStyle, 
+      '&:hover': {
+        bgcolor: colors.orange, 
+      }
+    }
+  };
+
+  const textStyle = {
+    primaryTypographyProps: { 
+      fontFamily: theme.extend.fontFamily.mono.join(','), 
+      fontWeight: 'bold' 
+    }
+  };
+
   return (
     <Drawer
       variant="permanent"
@@ -51,81 +84,83 @@ function Sidebar() {
         [`& .MuiDrawer-paper`]: { 
             width: drawerWidth, 
             boxSizing: 'border-box',
+            backgroundColor: colors.bg, 
+            borderRight: borderStyle,
          },
       }}
     >
-      <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', p: 2 }}>
         <Box>
-          <Toolbar />
+          <Toolbar sx={{ minHeight: '64px !important' }} /> 
           <List disablePadding>
-            <ListItem disablePadding>
-              <ListItemButton component={NavLink} to="/home" end>
-                <ListItemIcon>
+            <ListItem disablePadding sx={{ display: 'block' }}>
+              <ListItemButton component={NavLink} to="/home" end sx={sidebarItemStyle}>
+                <ListItemIcon sx={{ color: colors.black, minWidth: 40 }}>
                   <HomeOutlinedIcon />
                 </ListItemIcon>
-                <ListItemText primary="Home" />
+                <ListItemText primary="Home" {...textStyle} />
               </ListItemButton>
             </ListItem>
             
             {user && (user.role === 'admin' || user.role === 'faculty') && (
-              <ListItem disablePadding>
-                <ListItemButton component={NavLink} to="/dashboard">
-                  <ListItemIcon>
+              <ListItem disablePadding sx={{ display: 'block' }}>
+                <ListItemButton component={NavLink} to="/dashboard" sx={sidebarItemStyle}>
+                  <ListItemIcon sx={{ color: colors.black, minWidth: 40 }}>
                     <DashboardIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Dashboard" />
+                  <ListItemText primary="Dashboard" {...textStyle} />
                 </ListItemButton>
               </ListItem>
             )}
 
-            <ListItem disablePadding>
-              <ListItemButton component={NavLink} to="/jobs">
-                <ListItemIcon>
+            <ListItem disablePadding sx={{ display: 'block' }}>
+              <ListItemButton component={NavLink} to="/jobs" sx={sidebarItemStyle}>
+                <ListItemIcon sx={{ color: colors.black, minWidth: 40 }}>
                   <WorkOutlineOutlinedIcon />
                 </ListItemIcon>
-                <ListItemText primary="Jobs" />
+                <ListItemText primary="Jobs" {...textStyle} />
               </ListItemButton>
             </ListItem>
 
-            <ListItem disablePadding>
-              <ListItemButton component={NavLink} to="/messages">
-                <ListItemIcon>
+            <ListItem disablePadding sx={{ display: 'block' }}>
+              <ListItemButton component={NavLink} to="/messages" sx={sidebarItemStyle}>
+                <ListItemIcon sx={{ color: colors.black, minWidth: 40 }}>
                   <MailOutlineTwoToneIcon />
                 </ListItemIcon>
-              <ListItemText primary="Messages" />
+              <ListItemText primary="Messages" {...textStyle} />
             </ListItemButton>
             </ListItem>
 
-            <ListItem disablePadding>
-              <ListItemButton component={NavLink} to="/forums">
-                <ListItemIcon>
+            <ListItem disablePadding sx={{ display: 'block' }}>
+              <ListItemButton component={NavLink} to="/forums" sx={sidebarItemStyle}>
+                <ListItemIcon sx={{ color: colors.black, minWidth: 40 }}>
                   <ForumTwoToneIcon />
                 </ListItemIcon>
-                <ListItemText primary="Forums" />
+                <ListItemText primary="Forums" {...textStyle} />
               </ListItemButton>
             </ListItem>
 
-            <ListItem disablePadding>
-              <ListItemButton component={NavLink} to="/bookmarks">
-                <ListItemIcon>
+            <ListItem disablePadding sx={{ display: 'block' }}>
+              <ListItemButton component={NavLink} to="/bookmarks" sx={sidebarItemStyle}>
+                <ListItemIcon sx={{ color: colors.black, minWidth: 40 }}>
                   <BookmarkIcon />
                 </ListItemIcon>
-                <ListItemText primary="Bookmarks" />
+                <ListItemText primary="Bookmarks" {...textStyle} />
               </ListItemButton>
             </ListItem>
 
-            <ListItem disablePadding>
-              <ListItemButton component={NavLink} to="/profile">
-                <ListItemIcon>
+            <ListItem disablePadding sx={{ display: 'block' }}>
+              <ListItemButton component={NavLink} to="/profile" sx={sidebarItemStyle}>
+                <ListItemIcon sx={{ color: colors.black, minWidth: 40 }}>
                   <PersonOutlineOutlinedIcon />
                 </ListItemIcon>
-                <ListItemText primary="Profile" />
+                <ListItemText primary="Profile" {...textStyle} />
               </ListItemButton>
             </ListItem>
           </List>
         </Box>
 
-        <Box sx={{ marginTop: 'auto', p: 1 }}>
+        <Box sx={{ marginTop: 'auto' }}>
           <Box
             onClick={handleClick}
             sx={{
@@ -134,19 +169,34 @@ function Sidebar() {
               gap: 1.5,
               p: 1.5,
               cursor: 'pointer',
-              border: '2px dashed #333333', 
+              bgcolor: colors.white,
+              border: borderStyle,
+              boxShadow: shadowStyle,
+              transition: 'all 0.1s ease',
               '&:hover': {
-                backgroundColor: '#333333', 
-                borderColor: '#ffffff',
+                boxShadow: shadowHover,
+                transform: 'translate(-2px, -2px)',
               }
             }}
           >
-            <Avatar src={avatarUrl} sx={{ border: '2px solid #ffffff' }}> 
+            <Avatar 
+                src={avatarUrl} 
+                sx={{ 
+                    border: borderStyle, 
+                    borderRadius: 0, 
+                    width: 32,
+                    height: 32
+                }}
+            > 
                {!avatarUrl && (user?.name ? user.name.charAt(0).toUpperCase() : 'U')}
             </Avatar>
             <Box sx={{ overflow: 'hidden' }}>
-              <Typography variant="body1" fontWeight="bold" noWrap>{user?.name}</Typography>
-              <Typography variant="body2" noWrap sx={{ color: '#aaaaaa' }} >@{user?.handle}</Typography>
+              <Typography variant="body2" fontWeight="bold" noWrap sx={{ fontFamily: theme.extend.fontFamily.mono.join(',') }}>
+                {user?.name}
+              </Typography>
+              <Typography variant="caption" noWrap sx={{ color: '#666', fontFamily: theme.extend.fontFamily.mono.join(',') }} >
+                @{user?.handle}
+              </Typography>
             </Box>
           </Box>
           
@@ -158,16 +208,19 @@ function Sidebar() {
             transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             sx={{
               '& .MuiPaper-root': { 
-                width: drawerWidth - 16, 
+                width: drawerWidth - 32, 
                 mb: 1,
+                border: borderStyle,
+                boxShadow: shadowStyle,
+                borderRadius: 0,
               }
             }}
           >
-            <MenuItem onClick={handleLogout}>
+            <MenuItem onClick={handleLogout} sx={{ fontFamily: theme.extend.fontFamily.mono.join(',') }}>
               <ListItemIcon>
                 <LogoutIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText>Logout @{user?.handle}</ListItemText>
+              <ListItemText primary={`Logout @${user?.handle}`} primaryTypographyProps={{ fontFamily: 'inherit' }} />
             </MenuItem>
           </Menu>
         </Box>
