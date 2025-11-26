@@ -1,16 +1,30 @@
 /*
-  Global Retro Terminal (Black & White) Theme
+  Global Neo-Brutalist Theme
 */
 :root {
-  /* Set the retro font as the default for the entire app */
-  font-family: 'Courier New', Courier, monospace;
+  --neo-bg: #FDF6E3;
+  --neo-green: #D4E4BC;
+  --neo-yellow: #FDE047;
+  --neo-orange: #FB923C;
+  --neo-purple: #C4B5FD;
+  --neo-blue: #93C5FD;
+  --neo-black: #18181b;
+  --neo-white: #FFFFFF;
+  
+  --neo-border: 2px solid var(--neo-black);
+  --neo-shadow: 4px 4px 0px 0px var(--neo-black);
+  --neo-shadow-hover: 6px 6px 0px 0px var(--neo-black);
+  
+  --font-sans: 'Space Grotesk', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+
+  font-family: var(--font-sans);
   line-height: 1.5;
   font-weight: 400;
 
-  /* Set the default color scheme */
-  color-scheme: dark;
-  color: #ffffff; /* Default text is white */
-  background-color: #000000; /* Default background is black */
+  color-scheme: light;
+  color: var(--neo-black);
+  background-color: var(--neo-bg);
 }
 
 body {
@@ -19,10 +33,9 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background-color: #000000;
+  background-color: var(--neo-bg);
 }
 
-/* Remove default browser padding/margin from MUI */
 #root {
   max-width: none;
   margin: 0;
@@ -30,8 +43,23 @@ body {
   width: 100%;
 }
 
-/* Remove default styles from App.css if they exist */
-.card, .read-the-docs {
-  padding: 0;
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: var(--neo-bg);
+  border-left: 2px solid var(--neo-black);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--neo-green);
+  border: 2px solid var(--neo-black);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #bef264;
+}
+
+a {
   color: inherit;
+  text-decoration: none;
 }

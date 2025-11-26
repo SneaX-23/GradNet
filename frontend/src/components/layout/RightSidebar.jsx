@@ -5,24 +5,26 @@ import {
   TextField,
   InputAdornment,
   Typography,
-  Paper,
-  Divider,
   List,
   ListItem,
   ListItemButton,
   ListItemAvatar,
   Avatar,
   ListItemText,
-  CircularProgress
+  CircularProgress,
+  Chip
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import InboxIcon from '@mui/icons-material/Inbox';
-import ConversationList from '../messages/ConversationList'; 
-import { searchUsers } from '../../services/userService'; 
+import ConversationList from '../messages/ConversationList';
+import { searchUsers } from '../../services/userService';
 import { API_BASE_URL } from '../../config';
 
 const rightSidebarWidth = 320;
-const retroFont = "'Courier New', Courier, monospace";
+
+const NEO_BLACK = '#18181b';
+const NEO_WHITE = '#FFFFFF';
+const NEO_BLUE = '#93C5FD';
+const NEO_BLUE_HOVER = '#60A5FA';
 
 const getFullUrl = (path) => {
   if (!path) return null;
@@ -35,8 +37,9 @@ function RightSidebar() {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [searchError, setSearchError] = useState('');
-  
   const navigate = useNavigate();
+
+  const trendingTopics = ['#TechSummit', '#Hackathon', '#FinalsWeek', '#CampusLife', '#Internships'];
 
   useEffect(() => {
     if (searchQuery.trim() === '') {
@@ -56,11 +59,10 @@ function RightSidebar() {
       } finally {
         setIsSearchLoading(false);
       }
-    }, 500); 
+    }, 500);
 
     return () => clearTimeout(debounceTimer);
   }, [searchQuery]);
-
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -72,7 +74,6 @@ function RightSidebar() {
     navigate(`/profile/${handle}`);
   };
 
-
   const handleSelectConversation = (conversation) => {
     navigate('/messages');
   };
@@ -83,131 +84,205 @@ function RightSidebar() {
         width: rightSidebarWidth,
         flexShrink: 0,
         position: 'fixed',
-        right: 0,
-        top: 64,
-        height: 'calc(100vh - 64px)',
-        borderLeft: '2px solid #ffffff', 
-        bgcolor: '#000000', 
-        color: '#ffffff', 
-        fontFamily: retroFont,
+        right: 0, 
+        top: '66px',
+        height: 'calc(100vh - 66px)',
         display: 'flex',
         flexDirection: 'column',
+        gap: 4,
+        overflowY: 'auto',
+        fontFamily: '"Space Grotesk", sans-serif',
+        borderLeft: `2px solid ${NEO_BLACK}`, 
+        pl: 3, 
+        pr: 3,
+        py: 3,
+        backgroundColor: '#FDF6E3' 
       }}
     >
-
-      <Box sx={{ p: 2, borderBottom: '2px solid #333' }}>
+      {/* Search Box */}
+      <Box 
+        sx={{ 
+            bgcolor: NEO_WHITE, 
+            border: `2px solid ${NEO_BLACK}`,
+            boxShadow: `4px 4px 0px ${NEO_BLACK}`,
+            borderRadius: 0,
+        }}
+      >
         <TextField
           fullWidth
-          size="small"
-          placeholder="Search GradNet"
+          placeholder="Search GradNet..."
           value={searchQuery}
           onChange={handleSearchChange}
+          variant="standard"
           InputProps={{
+            disableUnderline: true,
+            sx: { 
+                p: 1.5, 
+                fontFamily: '"Space Mono", monospace',
+                fontSize: '0.9rem',
+                fontWeight: 600
+            },
             startAdornment: (
-              <InputAdornment position="start">
+              <InputAdornment position="start" sx={{ pl: 1 }}>
                 {isSearchLoading ? (
-                  <CircularProgress size={20} sx={{ color: '#ffffff' }} />
+                  <CircularProgress size={20} sx={{ color: NEO_BLACK }} />
                 ) : (
-                  <SearchIcon sx={{ color: '#ffffff' }} />
+                  <SearchIcon sx={{ color: NEO_BLACK, fontWeight: 'bold' }} />
                 )}
               </InputAdornment>
             ),
           }}
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              fontFamily: retroFont,
-              color: '#ffffff',
-              backgroundColor: '#000000',
-              borderRadius: 0, 
-              '& fieldset': {
-                borderColor: '#ffffff', 
-                borderWidth: '2px',
-              },
-              '&:hover fieldset': {
-                borderColor: '#ffffff',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: '#ffffff',
-                outline: '2px dashed #ffffff',
-                outlineOffset: '2px',
-              },
-            },
-            '& .MuiInputBase-input': {
-              color: '#ffffff', 
-            },
-          }}
         />
       </Box>
 
-      <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
+      {/* Main Content Area */}
+      <Box sx={{ flexGrow: 1 }}>
         {searchQuery.trim().length > 0 ? (
-          
-          <Paper
-            elevation={0}
-            sx={{
-              p: 0,
-              border: 'none',
-              borderRadius: 0,
-              bgcolor: '#000000',
-              color: '#ffffff',
-              fontFamily: retroFont,
-            }}
-          >
-            {searchError && <Typography sx={{p: 2, color: 'red', fontFamily: retroFont}}>{searchError}</Typography>}
-            
+          // Search Results
+          <Box sx={{ bgcolor: NEO_WHITE, border: `2px solid ${NEO_BLACK}`, boxShadow: `4px 4px 0px ${NEO_BLACK}`, }}>
+            {searchError && (
+              <Typography sx={{ p: 2, color: 'red', fontFamily: '"Space Mono", monospace' }}>{searchError}</Typography>
+            )}
             <List disablePadding>
               {searchResults.length > 0 ? (
                 searchResults.map((user) => (
-                  <ListItem key={user.id} disablePadding>
-                    <ListItemButton onClick={() => handleUserClick(user.handle)} sx={{'&:hover': {bgcolor: '#333'}}}>
+                  <ListItem key={user.id} disablePadding divider sx={{ borderColor: NEO_BLACK, borderBottomWidth: '2px', }}>
+                    <ListItemButton onClick={() => handleUserClick(user.handle)}>
                       <ListItemAvatar>
-                        <Avatar src={getFullUrl(user.profile_picture_url)} sx={{border: '1px solid #fff'}} />
+                        <Avatar
+                          src={getFullUrl(user.profile_picture_url)}
+                          sx={{ border: `2px solid ${NEO_BLACK}`, borderRadius: 0 }}
+                        />
                       </ListItemAvatar>
                       <ListItemText
                         primary={user.name}
                         secondary={`@${user.handle}`}
-                        primaryTypographyProps={{ fontFamily: retroFont, color: '#fff', fontWeight: 'bold' }}
-                        secondaryTypographyProps={{ fontFamily: retroFont, color: '#aaa' }}
+                        primaryTypographyProps={{ fontWeight: 'bold', fontFamily: '"Space Grotesk", sans-serif' }}
+                        secondaryTypographyProps={{ fontFamily: '"Space Mono", monospace', fontSize: '0.8rem' }}
                       />
                     </ListItemButton>
                   </ListItem>
                 ))
               ) : (
                 !isSearchLoading && !searchError && (
-                  <Typography sx={{ p: 2, fontFamily: retroFont, color: '#aaa', textAlign: 'center' }}>
-                    No users found for "{searchQuery}"
+                  <Typography sx={{ p: 2, color: '#666', textAlign: 'center', fontFamily: '"Space Mono", monospace' }}>
+                    No users found.
                   </Typography>
                 )
               )}
             </List>
-          </Paper>
+          </Box>
         ) : (
-          // --- INBOX SECTION ---
-          <Paper
-            elevation={0}
-            sx={{
-              border: 'none',
-              borderRadius: 0, 
-              bgcolor: '#000000',
-              color: '#ffffff',
-              fontFamily: retroFont,
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column'
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, p: 2 }}>
-              <InboxIcon sx={{ color: '#ffffff' }} />
-              <Typography variant="h6" fontWeight="bold" sx={{ fontFamily: retroFont, color: '#ffffff' }}>
-                Inbox
-              </Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            
+            {/* Inbox Section */}
+            <Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box sx={{ width: 14, height: 14, bgcolor: '#FDE047', border: `2px solid ${NEO_BLACK}` }} />
+                    <Typography variant="h6" fontWeight="900" sx={{ fontFamily: '"Space Grotesk", sans-serif' }}>
+                      Inbox
+                    </Typography>
+                </Box>
+                <Typography 
+                    variant="caption" 
+                    onClick={() => navigate('/messages')}
+                    sx={{ 
+                        textDecoration: 'underline', 
+                        cursor: 'pointer', 
+                        fontWeight: 'bold', 
+                        fontFamily: '"Space Mono", monospace', 
+                        fontSize: '0.75rem',
+                        '&:hover': { color: '#666'} 
+                    }}
+                >
+                    View All
+                </Typography>
+              </Box>
+              
+              {/* Inbox Container */}
+              <Box 
+                sx={{ 
+                    maxHeight: '400px',
+                    overflowY: 'auto',
+                    '& > div': {
+                        borderRight: 'none !important'
+                    },
+                    '& .MuiList-root': {
+                        padding: 0,
+                        
+                    },
+                    '& .MuiListItem-root': {
+                        display: 'block', 
+                        marginBottom: '16px', 
+                        border: `2px solid ${NEO_BLACK}`,
+                        backgroundColor: NEO_WHITE,
+                        // boxShadow: `4px 4px 0px ${NEO_BLACK}`,
+                        transition: 'transform 0.1s ease',
+                        '&:hover': {
+                            transform: 'translate(-2px, -2px)',
+                            boxShadow: `6px 6px 0px ${NEO_BLACK}`,
+                            backgroundColor: '#f0f0f0',
+                        },
+                        '&:active': {
+                             transform: 'translate(2px, 2px)',
+                             boxShadow: 'none',
+                        },
+                        
+                    },
+                    
+                    '& .MuiAvatar-root': {
+                        borderRadius: '0px !important',
+                        border: `2px solid ${NEO_BLACK}`,
+                        
+                    },
+                    
+                    '& .MuiDivider-root': {
+                        display: 'none' 
+                    }
+                }}
+              >
+                <ConversationList onSelectConversation={handleSelectConversation} />
+              </Box>
             </Box>
-            <Divider sx={{ borderColor: '#ffffff' }} />
-            
-  
-            <ConversationList onSelectConversation={handleSelectConversation} />
-            
-          </Paper>
+
+            {/* Trending Tags Section */}
+            <Box>
+                <Typography variant="h6" fontWeight="900" sx={{ fontFamily: '"Space Grotesk", sans-serif', mb: 1.5 }}>
+                  Trending
+                </Typography>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>
+                    {trendingTopics.map(topic => (
+                        <Chip 
+                            key={topic}
+                            label={topic}
+                            onClick={() => {}}
+                            sx={{
+                                borderRadius: 0,
+                                border: `2px solid ${NEO_BLACK}`,
+                                backgroundColor: NEO_BLUE,
+                                color: NEO_BLACK,
+                                fontWeight: 'bold',
+                                fontFamily: '"Space Mono", monospace',
+                                boxShadow: `2px 2px 0px ${NEO_BLACK}`,
+                                cursor: 'pointer',
+                                transition: 'all 0.1s ease',
+                                '&:hover': {
+                                    backgroundColor: NEO_BLUE_HOVER,
+                                    boxShadow: `3px 3px 0px ${NEO_BLACK}`,
+                                    transform: 'translate(-2px, -2px)'
+                                },
+                                '&:active': {
+                                    boxShadow: 'none',
+                                    transform: 'translate(1px, 1px)'
+                                }
+                            }}
+                        />
+                    ))}
+                </Box>
+            </Box>
+
+          </Box>
         )}
       </Box>
     </Box>

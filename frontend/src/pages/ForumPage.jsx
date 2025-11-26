@@ -1,16 +1,14 @@
 import { useState, useEffect } from "react";
-import { useAuth } from '../context/AuthContext.jsx';
+import { useAuth } from '/src/context/AuthContext.jsx';
 import { Box, Typography, CssBaseline, AppBar, Toolbar, CircularProgress, Fab } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import Sidebar from '../components/layout/Sidebar.jsx';
-import RightSidebar from '../components/layout/RightSidebar';
+import Sidebar from '/src/components/layout/Sidebar.jsx';
+import RightSidebar from '/src/components/layout/RightSidebar.jsx';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { getForums } from "../services/ForumService.jsx";
-import ForumCard from "../components/forum/ForumCard.jsx";
-import CreateForumModal from "../components/forum/CreateForumModal.jsx";
-import { socket } from '../socket.js';
-
-const retroFont = "'Courier New', Courier, monospace";
+import { getForums } from "/src/services/ForumService.jsx";
+import ForumCard from "/src/components/forum/ForumCard.jsx";
+import CreateForumModal from "/src/components/forum/CreateForumModal.jsx";
+import { socket } from '/src/socket.js';
 
 function ForumPage() {
     const { user } = useAuth();
@@ -64,19 +62,16 @@ function ForumPage() {
     };
 
     return (
-        <Box sx={{ display: 'flex', bgcolor: '#000000' }}>
+        <Box sx={{ display: 'flex' }}>
             <CssBaseline />
             <AppBar 
               position="fixed" 
               sx={{ 
                 zIndex: (theme) => theme.zIndex.drawer + 1,
-                backgroundColor: '#000000',
-                borderBottom: '2px solid #ffffff',
-                boxShadow: 'none',
               }}
             >
                 <Toolbar>
-                    <Typography variant="h6" noWrap component="div" sx={{ fontFamily: retroFont, fontWeight: 'bold', color: '#ffffff' }}>
+                    <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 'bold' }}>
                         GradNet - Forums
                     </Typography>
                 </Toolbar>
@@ -94,7 +89,6 @@ function ForumPage() {
                 display: 'flex', 
                 flexDirection: 'column', 
                 alignItems: 'center',
-                bgcolor: '#000000',
                 minHeight: 'calc(100vh - 64px)'
               }}
             >
@@ -108,14 +102,6 @@ function ForumPage() {
                         bottom: 24,
                         right: 344, 
                         zIndex: 1000,
-                        borderRadius: 0,
-                        bgcolor: '#ffffff',
-                        color: '#000000',
-                        border: '2px solid #ffffff',
-                        '&:hover': {
-                          bgcolor: '#000000',
-                          color: '#ffffff',
-                        }
                       }}
                     >
                       <AddIcon />
@@ -134,7 +120,7 @@ function ForumPage() {
                     hasMore={hasMore}
                     loader={<CircularProgress sx={{ my: 2, color: '#ffffff' }} />}
                     endMessage={
-                        <p style={{ textAlign: 'center', marginTop: '20px', fontFamily: retroFont, color: '#ffffff' }}>
+                        <p style={{ textAlign: 'center', marginTop: '20px' }}>
                             <b>END OF LIST</b>
                         </p>
                     }

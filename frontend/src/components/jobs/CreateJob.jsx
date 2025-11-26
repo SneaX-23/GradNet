@@ -12,60 +12,6 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const retroFont = "'Courier New', Courier, monospace";
-
-const retroTextFieldStyles = {
-  '& label': {
-    color: '#ffffff',
-    fontFamily: retroFont,
-    position: 'relative',
-    transform: 'none',
-    marginBottom: '4px',
-  },
-  '& label.Mui-focused': {
-    color: '#ffffff',
-  },
-  '& .MuiInputLabel-shrink': {
-    transform: 'none',
-    position: 'relative',
-  },
-  '& .MuiInputBase-root': {
-    color: '#ffffff',
-    fontFamily: retroFont,
-    border: '2px solid #ffffff',
-    borderRadius: 0,
-    backgroundColor: '#000000',
-    marginTop: 0,
-  },
-  '& .MuiOutlinedInput-root': {
-    '& fieldset': {
-      border: 'none', 
-    },
-    '&:hover fieldset': {
-      border: 'none',
-    },
-    '&.Mui-focused fieldset': {
-      border: 'none',
-    },
-  },
-  '& .MuiInputBase-input': {
-    color: '#ffffff',
-  },
-  '& .MuiSvgIcon-root': {
-    color: '#ffffff',
-  }
-};
-
-
-const retroFormControlStyles = {
-  ...retroTextFieldStyles,
-  '& .MuiInputLabel-root': { 
-    color: '#ffffff',
-    fontFamily: retroFont,
-  }
-};
-
-
 function CreateJob({ onJobPosted }) {
   const [formData, setFormData] = useState({
     title: '',
@@ -125,16 +71,6 @@ function CreateJob({ onJobPosted }) {
           bottom: 24,
           right: 24,
           zIndex: 1000,
-          borderRadius: 0,
-          bgcolor: '#ffffff',
-          color: '#000000',
-          border: '2px solid #ffffff',
-          fontFamily: retroFont,
-          fontWeight: 'bold',
-          '&:hover': {
-            bgcolor: '#000000',
-            color: '#ffffff',
-          }
         }}
       >
         <AddIcon sx={{ mr: isDesktop ? 1 : 0 }} />
@@ -148,26 +84,17 @@ function CreateJob({ onJobPosted }) {
         fullWidth
         TransitionComponent={Transition}
         keepMounted
-        PaperProps={{
-          sx: {
-            bgcolor: '#000000',
-            color: '#ffffff',
-            border: '2px solid #ffffff',
-            borderRadius: 0,
-            fontFamily: retroFont,
-          }
-        }}
       >
-        <DialogTitle sx={{ fontFamily: retroFont, fontWeight: 'bold' }}>Create a Job Post</DialogTitle>
-        <DialogContent dividers sx={{ borderColor: '#ffffff' }}>
-          <Card elevation={0} sx={{ boxShadow: 'none', p: 1, width: '100%', maxWidth: 700, mx: 'auto', bgcolor: '#000000' }}>
+        <DialogTitle>Create a Job Post</DialogTitle>
+        <DialogContent dividers>
+          <Card elevation={0} sx={{ boxShadow: 'none', p: 1, width: '100%', maxWidth: 700, mx: 'auto'}}>
             <form onSubmit={handleSubmit}>
               <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
-                <TextField name="title" label="Job Title" value={formData.title} onChange={handleChange} required sx={retroTextFieldStyles} InputLabelProps={{ shrink: true }} />
-                <TextField name="company" label="Company" value={formData.company} onChange={handleChange} required sx={retroTextFieldStyles} InputLabelProps={{ shrink: true }} />
-                <TextField name="location" label="Location" value={formData.location} onChange={handleChange} required sx={retroTextFieldStyles} InputLabelProps={{ shrink: true }} />
+                <TextField name="title" label="Job Title" value={formData.title} onChange={handleChange} required  InputLabelProps={{ shrink: true }} />
+                <TextField name="company" label="Company" value={formData.company} onChange={handleChange} required  InputLabelProps={{ shrink: true }} />
+                <TextField name="location" label="Location" value={formData.location} onChange={handleChange} required  InputLabelProps={{ shrink: true }} />
 
-                <FormControl sx={retroFormControlStyles} fullWidth>
+                <FormControl fullWidth>
                   <InputLabel shrink>Job Type</InputLabel>
                   <Select name="job_type" value={formData.job_type} label="Job Type" onChange={handleChange}>
                     <MenuItem value="Full-time">Full-time</MenuItem>
@@ -177,7 +104,7 @@ function CreateJob({ onJobPosted }) {
                   </Select>
                 </FormControl>
 
-                <FormControl sx={retroFormControlStyles} fullWidth>
+                <FormControl  fullWidth>
                   <InputLabel shrink>Work Location</InputLabel>
                   <Select name="work_location" value={formData.work_location} label="Work Location" onChange={handleChange}>
                     <MenuItem value="On-site">On-site</MenuItem>
@@ -191,7 +118,6 @@ function CreateJob({ onJobPosted }) {
                   label="Salary Range"
                   value={formData.salary_range}
                   onChange={handleChange}
-                  sx={retroTextFieldStyles}
                   InputLabelProps={{ shrink: true }}
                 />
 
@@ -203,7 +129,7 @@ function CreateJob({ onJobPosted }) {
                   required
                   multiline
                   rows={4}
-                  sx={{ ...retroTextFieldStyles, gridColumn: 'span 2' }}
+                  sx={{ gridColumn: 'span 2' }}
                   InputLabelProps={{ shrink: true }}
                 />
                 <TextField
@@ -213,7 +139,7 @@ function CreateJob({ onJobPosted }) {
                   onChange={handleChange}
                   multiline
                   rows={3}
-                  sx={{ ...retroTextFieldStyles, gridColumn: 'span 2' }}
+                  sx={{ gridColumn: 'span 2' }}
                   InputLabelProps={{ shrink: true }}
                 />
 
@@ -224,19 +150,17 @@ function CreateJob({ onJobPosted }) {
                   value={formData.application_deadline}
                   onChange={handleChange}
                   InputLabelProps={{ shrink: true }}
-                  sx={retroTextFieldStyles}
                 />
                 <TextField
                   name="external_link"
                   label="External Application Link"
                   value={formData.external_link}
                   onChange={handleChange}
-                  sx={retroTextFieldStyles}
                   InputLabelProps={{ shrink: true }}
                 />
               </Box>
               {error && (
-                <Typography color="error" sx={{ mt: 2, fontFamily: retroFont }}>
+                <Typography color="error" sx={{ mt: 2}}>
                   {error}
                 </Typography>
               )}
@@ -246,21 +170,12 @@ function CreateJob({ onJobPosted }) {
         <DialogActions sx={{ pr: 3, pb: 2 }}>
           <Button 
             onClick={() => setOpen(false)} 
-            sx={{ fontFamily: retroFont, color: '#ffffff', borderColor: '#ffffff', borderRadius: 0, '&:hover': { bgcolor: '#333' }}}
           >
             Cancel
           </Button>
           <Button 
             variant="contained" 
             onClick={handleSubmit}
-            sx={{ 
-              fontFamily: retroFont, 
-              bgcolor: '#ffffff', 
-              color: '#000000', 
-              borderRadius: 0, 
-              border: '2px solid #ffffff',
-              '&:hover': { bgcolor: '#000000', color: '#ffffff' }
-            }}
           >
             Post Job
           </Button>

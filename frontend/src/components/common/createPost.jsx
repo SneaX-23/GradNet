@@ -1,24 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Avatar, TextField, Button, IconButton, Card, Typography, Grid } from '@mui/material';
+import { Box, Avatar, Button, IconButton, Grid, InputBase } from '@mui/material';
 import ImageIcon from '@mui/icons-material/Image';
+import LinkIcon from '@mui/icons-material/Link';
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
+import SendIcon from '@mui/icons-material/Send';
 import ArticleIcon from '@mui/icons-material/Article';
-import { useAuth } from '../../context/AuthContext';
-import AddIcon from '@mui/icons-material/Add';
-import { API_BASE_URL } from '../../config';
-;
-const retroFont = "'Courier New', Courier, monospace";
+import CloseIcon from '@mui/icons-material/Close';
+import { useAuth } from '/src/context/AuthContext.jsx';
+import { API_BASE_URL } from '/src/config.js';
 
-function CreatePost() {
-  const [postContent, setPostContent] = useState({ title: '', description: '' });
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  const [previewUrl, setPreviewUrl] = useState(null);
-  const { user } = useAuth();
+// Neo-Brutalist Colors
+const NEO_BLACK = '#18181b';
+const NEO_CREAM = '#FDF6E3';
+const NEO_WHITE = '#FFFFFF';
+const NEO_YELLOW = '#FDE047';
+const NEO_YELLOW_HOVER = '#FCD34D';
 
 const getFullUrl = (path) => {
   if (!path) return null;
   if (path.startsWith('http')) return path;
   return `${API_BASE_URL}${path}`;
 };
+
+function CreatePost() {
+  const [postContent, setPostContent] = useState({ title: '', description: '' });
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [previews, setPreviews] = useState([]);
+  const { user } = useAuth();
 
   const avatarUrl = getFullUrl(user?.profile_image_url);
 
@@ -29,13 +37,24 @@ const getFullUrl = (path) => {
     }
   };
 
+  
   useEffect(() => {
+    const newPreviews = selectedFiles.map(file => ({
+      url: URL.createObjectURL(file),
+      type: file.type,
+      name: file.name
+    }));
+    setPreviews(newPreviews);
+
+    
     return () => {
-      if (previewUrl) {
-        URL.revokeObjectURL(previewUrl);
-      }
+      newPreviews.forEach(preview => URL.revokeObjectURL(preview.url));
     };
-  }, [previewUrl]);
+  }, [selectedFiles]);
+
+  const removeFile = (indexToRemove) => {
+    setSelectedFiles(prevFiles => prevFiles.filter((_, index) => index !== indexToRemove));
+  };
 
   const handlePost = async () => {
     const formData = new FormData();
@@ -54,13 +73,13 @@ const getFullUrl = (path) => {
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || 'Upload failed');
       console.log('Post successful:', data);
+      
+      // Reset form
+      setPostContent({ title: '', description: '' });
+      setSelectedFiles([]);
     } catch (error) {
       console.error("Upload failed:", error);
     }
-
-    setPostContent({ title: '', description: '' });
-    setSelectedFiles([]);
-    setPreviewUrl(null);
   };
 
   const handleInputChange = (e) => {
@@ -68,113 +87,185 @@ const getFullUrl = (path) => {
     setPostContent(prevState => ({ ...prevState, [name]: value }));
   };
 
-  const renderPreview = (file) => {
-    const previewUrl = URL.createObjectURL(file);
-    if (file.type.startsWith('image/')) return <img src={previewUrl} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />;
-    if (file.type.startsWith('video/')) return <video src={previewUrl} controls style={{ width: '100%', height: '100%' }} />;
-
-    if (file.type === 'application/pdf') return <Box sx={{p:1}}><ArticleIcon /> PDF</Box>;
-    return <Box sx={{p:1}}><ArticleIcon /> File</Box>;
+  const renderPreviewItem = (preview, index) => {
+    return (
+      <Box 
+        key={index} 
+        sx={{ 
+          position: 'relative', 
+          height: '80px', 
+          width: '80px', 
+          border: `2px solid ${NEO_BLACK}`,
+          bgcolor: NEO_WHITE,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'hidden'
+        }}
+      >
+        {preview.type.startsWith('image/') ? (
+          <img src={preview.url} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        ) : (
+           <ArticleIcon />
+        )}
+        <IconButton 
+            size="small" 
+            onClick={() => removeFile(index)}
+            sx={{
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                bgcolor: 'rgba(255,255,255,0.8)',
+                p: 0.5,
+                '&:hover': { bgcolor: '#fff' }
+            }}
+        >
+            <CloseIcon fontSize="small" />
+        </IconButton>
+      </Box>
+    );
   };
 
- return (
-    <Card sx={{ 
+  return (
+    <Box sx={{ 
       p: 2, 
-      mb: 3, 
+      mb: 4, 
       width: '100%', 
-      maxWidth: 600, 
-      boxShadow: 'none', 
-      border: '2px solid #ffffff',
-      borderRadius: 0, 
-      bgcolor: '#000000', 
-      color: '#ffffff', 
+      maxWidth: 750, 
+      backgroundColor: NEO_CREAM,
+      border: `2px solid ${NEO_BLACK}`,
+      boxShadow: `4px 4px 0px ${NEO_BLACK}`,
+      display: 'flex',
+      gap: 2,
+      fontFamily: '"Space Grotesk", sans-serif'
     }}>
-      <Box sx={{ display: 'flex', gap: 2 }}>
+      {/* Avatar Section */}
+      <Box>
         <Avatar 
           src={avatarUrl} 
           sx={{ 
-            bgcolor: '#000000', 
-            border: '2px solid #ffffff',
-            color: '#ffffff',
-            imageRendering: 'pixelated',
+            width: 48, 
+            height: 48,
+            border: `2px solid ${NEO_BLACK}`,
+            borderRadius: '0px', 
+            backgroundColor: '#D4E4BC',
+            color: NEO_BLACK,
+            fontWeight: 'bold'
           }}
         >
           {!avatarUrl && (user?.name ? user.name.charAt(0).toUpperCase() : 'U')}
         </Avatar>
-        <Box sx={{ width: '100%' }}>
-          <TextField
-            fullWidth
-            variant="standard"
-            placeholder="Title"
-            name="title"
-            value={postContent.title}
-            onChange={handleInputChange}
-            InputProps={{ 
-              disableUnderline: true, 
-              sx: { fontFamily: retroFont, color: '#ffffff', border: '1px dashed #333', padding: '8px', mb: 1 } 
-            }}
-          />
-          <TextField
-            fullWidth
-            multiline
-            minRows={2}
-            variant="standard"
-            placeholder="What's happening?"
-            name="description"
-            value={postContent.description}
-            onChange={handleInputChange}
-            InputProps={{ 
-              disableUnderline: true, 
-              sx: { fontFamily: retroFont, color: '#ffffff', border: '1px dashed #333', padding: '8px' } 
-            }}
-          />
-
-          {selectedFiles.length > 0 && (
-            <Grid container spacing={1} sx={{ mt: 2 }}>
-              {selectedFiles.map((file, index) => (
-                <Grid item xs={6} key={index} sx={{ height: '150px', borderRadius: 0, overflow: 'hidden', border: '1px solid #333' }}>
-                  {renderPreview(file)}
-                </Grid>
-              ))}
-            </Grid>
-          )}
-
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
-            <Box>
-              <IconButton size="small" component="label" sx={{ color: '#ffffff' }}>
-                <ImageIcon />
-                <input type="file" hidden onChange={handleFileChange} multiple />
-              </IconButton>
-            </Box>
-            <Button
-              variant="contained"
-              disabled={!postContent.title.trim() && selectedFiles.length === 0}
-              onClick={handlePost}
-              sx={{ 
-                borderRadius: 0, 
-                textTransform: 'none', 
-                fontWeight: 'bold', 
-                fontFamily: retroFont,
-                bgcolor: '#ffffff',
-                color: '#000000',
-                border: '2px solid #ffffff',
-                '&:hover': {
-                  bgcolor: '#000000',
-                  color: '#ffffff',
-                },
-                '&.Mui-disabled': {
-                  bgcolor: '#333',
-                  borderColor: '#888',
-                  color: '#888'
-                }
-              }}
-            >
-              <AddIcon />
-            </Button>
-          </Box>
-        </Box>
       </Box>
-    </Card>
+
+      {/* Content Section */}
+      <Box sx={{ flexGrow: 1 }}>
+        
+        {/* Input Container - White Box */}
+        <Box sx={{ 
+            backgroundColor: NEO_WHITE,
+            border: `2px solid ${NEO_BLACK}`,
+            p: 2,
+            mb: 2
+        }}>
+            <InputBase
+                fullWidth
+                name="title"
+                placeholder="Title"
+                value={postContent.title}
+                onChange={handleInputChange}
+                sx={{ 
+                    fontSize: '1.1rem', 
+                    fontWeight: 'bold', 
+                    mb: 1, 
+                    fontFamily: '"Space Mono", monospace' 
+                }}
+            />
+            <InputBase
+                fullWidth
+                multiline
+                minRows={2}
+                name="description"
+                placeholder="What's happening on campus?"
+                value={postContent.description}
+                onChange={handleInputChange}
+                sx={{ 
+                    fontSize: '1rem', 
+                    fontFamily: '"Space Mono", monospace' 
+                }}
+            />
+
+            {/* File Previews */}
+            {previews.length > 0 && (
+                <Box sx={{ display: 'flex', gap: 1, mt: 2, flexWrap: 'wrap' }}>
+                    {previews.map(renderPreviewItem)}
+                </Box>
+            )}
+        </Box>
+
+        {/* Actions Row */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            
+            {/* Icons Group */}
+            <Box sx={{ display: 'flex', gap: 1 }}>
+                <IconButton 
+                    component="label" 
+                    sx={{ 
+                        color: NEO_BLACK, 
+                        '&:hover': { backgroundColor: 'rgba(0,0,0,0.05)' } 
+                    }}
+                >
+                    <ImageIcon />
+                    <input type="file" hidden onChange={handleFileChange} multiple accept="image/*,application/pdf" />
+                </IconButton>
+                
+                <IconButton sx={{ color: NEO_BLACK }}>
+                    <LinkIcon />
+                </IconButton>
+                
+                <IconButton sx={{ color: NEO_BLACK }}>
+                    <SentimentSatisfiedAltIcon />
+                </IconButton>
+            </Box>
+
+            {/* Post Button */}
+            <Button
+                variant="contained"
+                onClick={handlePost}
+                disabled={!postContent.title.trim() && !postContent.description.trim() && selectedFiles.length === 0}
+                sx={{
+                    backgroundColor: NEO_YELLOW,
+                    color: NEO_BLACK,
+                    border: `2px solid ${NEO_BLACK}`,
+                    borderRadius: 0,
+                    boxShadow: `3px 3px 0px ${NEO_BLACK}`,
+                    fontWeight: 'bold',
+                    fontFamily: '"Space Mono", monospace',
+                    textTransform: 'none',
+                    px: 3,
+                    '&:hover': {
+                        backgroundColor: NEO_YELLOW_HOVER,
+                        boxShadow: `4px 4px 0px ${NEO_BLACK}`,
+                        transform: 'translate(-1px, -1px)'
+                    },
+                    '&:active': {
+                        boxShadow: 'none',
+                        transform: 'translate(2px, 2px)'
+                    },
+                    '&.Mui-disabled': {
+                        backgroundColor: '#e0e0e0',
+                        color: '#a0a0a0',
+                        border: `2px solid #a0a0a0`,
+                        boxShadow: 'none'
+                    }
+                }}
+            >
+                <SendIcon sx={{ fontSize: 18, mr: 1 }} />
+                Post
+            </Button>
+        </Box>
+
+      </Box>
+    </Box>
   );
 }
 

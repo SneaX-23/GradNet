@@ -106,7 +106,6 @@ function CreateProfilePage() {
         }
     }
 
-    // Show a full-page loader
     if (loading) return (
         <div className="create-profile-container">
             <p>Loading your details...</p>
@@ -148,6 +147,9 @@ function CreateProfilePage() {
                             required
                         />
                         <p className={handleStatusClass}>{handleStatusText}</p>
+                        <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '8px', fontStyle: 'italic' }}>
+                            ⚠ <strong>Note:</strong> This handle will serve as your permanent identity on the platform. Please choose a professional and appropriate handle as it <strong>cannot be changed later</strong>.
+                        </p>
                     </div>
                     {error && <p className="error-message">{error}</p>}
                     <button type="submit" disabled={!isHandleAvailable || isCheckingHandle}>

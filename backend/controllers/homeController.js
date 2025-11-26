@@ -35,6 +35,7 @@ export class HomeController{
             const userId = req.session.userId;
             const files = req.files;
 
+            
             if (!title && !description) {
                 return res.status(400).json({ success: false, message: "Post content is required." });
             }

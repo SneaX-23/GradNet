@@ -2,49 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Box, Typography, TextField, List, ListItem, ListItemButton, ListItemAvatar, Avatar, ListItemText, CircularProgress, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { API_BASE_URL } from '../../config';
-
-const retroFont = "'Courier New', Courier, monospace";
-
-const modalStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: '100%',
-  maxWidth: 500,
-  bgcolor: '#000000',
-  color: '#ffffff',
-  border: '2px solid #ffffff',
-  borderRadius: 0,
-  boxShadow: 'none',
-  height: '70vh',
-  display: 'flex',
-  flexDirection: 'column',
-  fontFamily: retroFont,
-};
-
-const retroTextFieldStyles = {
-  '& label.Mui-focused': {
-    color: '#ffffff',
-  },
-  '& .MuiOutlinedInput-root': {
-    fontFamily: retroFont,
-    color: '#ffffff',
-    backgroundColor: '#000000',
-    borderRadius: 0,
-    '& fieldset': {
-      borderColor: '#ffffff',
-      borderWidth: '2px',
-    },
-    '&:hover fieldset': {
-      borderColor: '#ffffff',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: '#ffffff',
-    },
-  },
-};
-
+import { useTheme } from '@mui/material/styles';
+import { theme, colors, borderStyle, shadowHover, shadowStyle } from '../../theme';
 
 const getFullUrl = (path) => {
   if (!path) return null;
@@ -56,7 +15,7 @@ function NewMessageModal({ open, onClose, onSelectUser }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const theme = useTheme()
   useEffect(() => {
     if (!open) {
         setSearchQuery('');
@@ -98,10 +57,23 @@ function NewMessageModal({ open, onClose, onSelectUser }) {
 
   return (
     <Modal open={open} onClose={onClose}>
-      <Box sx={modalStyle}>
+      <Box sx={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '100%',
+        maxWidth: 500,
+        height: '70vh',
+        display: 'flex',
+        flexDirection: 'column',
+        bgcolor: colors.white,
+        border: borderStyle,
+        boxShadow: shadowStyle
+      }}>
         <Box sx={{ display: 'flex', alignItems: 'center', p: 2, borderBottom: '1px solid #555' }}>
-            <IconButton onClick={onClose} sx={{ color: '#ffffff' }}><CloseIcon /></IconButton>
-            <Typography variant="h6" sx={{ ml: 2, fontFamily: retroFont }}>New message</Typography>
+            <IconButton onClick={onClose} sx={{ color: '#000000' }}><CloseIcon /></IconButton>
+            <Typography variant="h6" sx={{ ml: 2 }}>New message</Typography>
         </Box>
         <Box sx={{ p: 2 }}>
             <TextField
@@ -111,30 +83,47 @@ function NewMessageModal({ open, onClose, onSelectUser }) {
                 placeholder="Search for people"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                sx={retroTextFieldStyles}
             />
         </Box>
-        <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
+        <Box sx={{ flexGrow: 1, overflowY: 'auto' ,}}>
             {loading && <Box sx={{display: 'flex', justifyContent: 'center', p:2}}><CircularProgress size={24} sx={{ color: '#ffffff' }} /></Box>}
             <List>
-                {results.map((user) => (
-                    <ListItem key={user.id} disablePadding>
+                {results.map((user, index) => (
+                    <ListItem key={user.id} disablePadding 
+                    sx={{
+                            border: borderStyle,
+                            borderLeft: '0px',
+                            borderRight: '0px',
+                            backgroundColor: theme.palette.secondary.light,
+                            marginBottom: 0,
+                            
+                            marginTop: index === 0 ? 0 : '-2px',
+                            position: 'relative', 
+                            transition: 'all 0.1s ease',
+                            '&:hover': {
+                                backgroundColor: theme.palette.background.paper,
+                                boxShadow: `3px 3px 0px ${shadowHover}`,
+                                transform: 'translate(-2px, -2px)'
+                            },
+                            '&:active': {
+                                boxShadow: 'none',
+                                transform: 'translate(1px, 1px)'
+                            }
+                        
+                    }}>
                         <ListItemButton 
                           onClick={() => handleSelect(user)}
-                          sx={{
-                            '&:hover': {
-                              backgroundColor: '#333333'
-                            }
-                          }}
                         >
                             <ListItemAvatar>
-                                <Avatar src={getFullUrl(user.profile_picture_url)} sx={{ border: '1px solid #ffffff' }} />
+                                <Avatar src={getFullUrl(user.profile_picture_url)} sx={{ border: '1px solid #000000' }} />
                             </ListItemAvatar>
                             <ListItemText 
                               primary={user.name} 
                               secondary={`@${user.handle}`} 
-                              primaryTypographyProps={{ fontFamily: retroFont, color: '#ffffff' }}
-                              secondaryTypographyProps={{ fontFamily: retroFont, color: '#aaaaaa' }}
+                              primaryTypographyProps={{ color: '#000000' }}
+                              secondaryTypographyProps={{ color: '#000000' }}
+                              sx={{
+                              }}
                             />
                         </ListItemButton>
                     </ListItem>
