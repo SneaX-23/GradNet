@@ -46,9 +46,10 @@ export class HomeController{
                 mimeType: file.mimetype
             })) : [];
 
-            const newPost = await Home.createWithFiles(postData, fileData);
-
-            res.status(201).json({ success: true, message: "Post created successfully", post: newPost });
+            const newPostRaw = await Home.createWithFiles(postData, fileData);
+            
+            const fullPost = await Home.findById(newPostRaw.id, userId);
+            res.status(201).json({ success: true, message: "Post created successfully", post: fullPost });
 
         } catch (error) {
             console.error("Error creating post:", error);

@@ -47,6 +47,13 @@ export class ProfileController{
             const textData = req.body;
             const files = req.files;
 
+            if (textData.position) {
+                const userRole = req.session.user.role; 
+                if (userRole !== 'admin' && userRole !== 'faculty') {
+                    delete textData.position; 
+                    
+                }
+            }
             const profileDataToUpdate = { ...textData };
 
             if (files) {

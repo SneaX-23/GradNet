@@ -156,7 +156,7 @@ static async verifyOtp(req, res) {
             };
             delete req.session.email; 
 
-            res.status(201).json({ success: true, message: 'User created successfully.', user: newUser });
+            res.status(201).json({ success: true, message: 'User created successfully.', user: req.session.user });
         }catch(error){
             console.error("Error creating handle, ", error)
             res.status(500).json({success: false, message: 'Error creating user'})

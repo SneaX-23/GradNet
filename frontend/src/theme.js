@@ -12,7 +12,7 @@ export const colors = {
   white: '#FFFFFF'
 };
 
-//shared styles
+//shared styles 001
 export const borderStyle = `2px solid ${colors.black}`;
 export const shadowStyle = `4px 4px 0px 0px ${colors.black}`;
 export const shadowHover = `6px 6px 0px 0px ${colors.black}`;

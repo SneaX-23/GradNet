@@ -51,6 +51,9 @@ function HomePage() {
     fetchInitialPosts();
   }, []);
 
+  const handlePostCreated = (newPost) => {
+    setPosts((prevPosts) => [newPost, ...prevPosts]);
+  };
   const fetchMoreData = async () => {
     const nextPage = page + 1;
     try {

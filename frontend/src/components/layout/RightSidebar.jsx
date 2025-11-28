@@ -213,6 +213,9 @@ function RightSidebar() {
                         
                     },
                     '& .MuiListItem-root': {
+                        mt: '4px', 
+                        ml: '4px', 
+                        width: "calc(100% - 4px)",
                         display: 'block', 
                         marginBottom: '16px', 
                         border: `2px solid ${NEO_BLACK}`,

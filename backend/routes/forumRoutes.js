@@ -14,4 +14,5 @@ router.post('/:forumId/topics', ForumController.createTopic);
 router.get('/topics/:topicId/posts', ForumController.getPosts);
 router.post('/topics/:topicId/posts', ForumController.createPost);
 
+router.delete('/:forumId', ForumController.deleteForum);
 export default router;

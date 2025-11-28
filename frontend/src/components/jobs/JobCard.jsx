@@ -31,6 +31,13 @@ const getFullUrl = (path) => {
   if (path.startsWith('http')) return path;
   return `${API_BASE_URL}${path}`;
 };
+const ensureAbsoluteUrl = (url) => {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  return `https://${url}`;
+};
 
 export default function JobCard({ job, onDelete, onUpdate, onBookmarkToggle }) { 
   const { user } = useAuth();
@@ -184,7 +191,14 @@ export default function JobCard({ job, onDelete, onUpdate, onBookmarkToggle }) {
                 <>
                   <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Apply here:</Typography>
                   <Typography paragraph sx={{ mb: 1.5 }}>
-                    <a href={job.external_link} style={{ color: colors.black }}>{job.external_link}</a>
+                    <a 
+                      href={ensureAbsoluteUrl(job.external_link)} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      style={{ color: '#0000EE', wordBreak: 'break-all' }} 
+                    >
+                      {job.external_link}
+                    </a>
                   </Typography>
                 </>
               )}

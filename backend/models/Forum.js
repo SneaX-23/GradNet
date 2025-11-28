@@ -79,4 +79,14 @@ export default class Forum {
             throw new Error(`Error creating forum category: ${error.message}`);
         }
     }
+
+    static async delete(id) {
+        try {
+            const query = 'UPDATE forum_categories SET is_active = false WHERE id = $1 RETURNING *';
+            const result = await db.query(query, [id]);
+            return result.rows[0];
+        } catch (error) {
+            throw new Error(`Error deleting forum: ${error.message}`);
+        }
+    }
 }

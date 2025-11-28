@@ -274,9 +274,31 @@ function UserProfilePage() {
               </Box>
   
               <Box sx={{ p: '12px 16px', mt: '60px' }}>
-                <Typography variant="h5" component="div" fontWeight="bold">
-                  {profileData.name}
-                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                   <Typography variant="h5" component="div" fontWeight="bold">
+                       {profileData.name}
+                    </Typography>
+                    {profileData.position && (
+                      <Typography
+                        variant="caption"
+                        sx={{
+                        px: 1,
+                        py: 0.25,
+                        bgcolor: theme.palette.neo.purple || '#C4B5FD', 
+                        border: '2px solid #18181b',      
+                        borderRadius: 0,                  
+                        fontWeight: 'bold',
+                        fontFamily: '"Space Mono", monospace',
+                        color: '#18181b',
+                        boxShadow: '2px 2px 0px 0px #18181b', 
+                        lineHeight: 1.2,
+                        transform: 'translateY(-2px)'     
+                      }}
+                      >
+                        {profileData.position}
+                     </Typography>
+                    )}
+                </Box>
                 <Typography>
                   @{profileData.handle}
                 </Typography>

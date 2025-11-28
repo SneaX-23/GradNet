@@ -77,3 +77,15 @@ export const createForum = async (forumData) => {
     }
     return data;
 };
+
+export const deleteForum = async (forumId) => {
+    const response = await fetch(`${API_BASE_URL}/api/forum/${forumId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+    });
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.message || 'Failed to delete forum.');
+    }
+    return data;
+};

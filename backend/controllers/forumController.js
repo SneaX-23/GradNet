@@ -30,6 +30,7 @@ export default class ForumController {
         }
     }
 
+    // Get by id
     static async getForumById(req, res) {
         try {
             const { forumId } = req.params;
@@ -138,6 +139,7 @@ export default class ForumController {
         }
     }
 
+    // Create
     static async createForum(req, res) {
         try {
             const { role } = req.session.user;
@@ -161,6 +163,29 @@ export default class ForumController {
         } catch (error) {
             console.error("Error creating forum: ", error);
             res.status(500).json({ success: false, message: 'Failed to create forum category' });
+        }
+    }
+
+    // Delete
+    static async deleteForum(req, res) {
+        try {
+            const { forumId } = req.params;
+            const { role } = req.session.user;
+
+            if (role !== 'admin' && role !== 'faculty') {
+                return res.status(403).json({ success: false, message: 'Unauthorized to delete forums.' });
+            }
+
+            const deletedForum = await Forum.delete(forumId);
+            
+            if (!deletedForum) {
+                return res.status(404).json({ success: false, message: 'Forum not found.' });
+            }
+
+            res.json({ success: true, message: 'Forum deleted successfully.' });
+        } catch (error) {
+            console.error("Error deleting forum:", error);
+            res.status(500).json({ success: false, message: 'Failed to delete forum.' });
         }
     }
 }

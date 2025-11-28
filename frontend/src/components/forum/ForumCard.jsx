@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Card, Typography, Avatar, IconButton, Menu, MenuItem } from '@mui/material';
+import { 
+    Box, Card, Typography, Avatar, IconButton, Menu, MenuItem, 
+    Dialog, DialogTitle, DialogContent, DialogActions, Button 
+} from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'; 
 import BookmarkIcon from '@mui/icons-material/Bookmark'; 
@@ -24,7 +27,7 @@ export default function ForumCard({ forum, onDelete, onUpdate, onBookmarkToggle 
     const [isBookmarkPending, setIsBookmarkPending] = useState(false);
     const theme = useTheme();
     const canModify = user?.role === 'admin' || user?.role === 'faculty';
-
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const handleMenuOpen = (event) => {
         event.preventDefault(); 
         event.stopPropagation(); 
@@ -33,6 +36,16 @@ export default function ForumCard({ forum, onDelete, onUpdate, onBookmarkToggle 
 
     const handleMenuClose = () => setAnchorEl(null);
 
+    const handleDeleteClick = () => {
+        handleMenuClose();
+        setDeleteDialogOpen(true);
+    };
+    const handleDeleteConfirm = () => {
+        if (onDelete) {
+            onDelete(forum.id);
+        }
+        setDeleteDialogOpen(false);
+    };
 
     const handleBookmarkClick = async (e) => {
         e.preventDefault(); 
@@ -144,10 +157,25 @@ export default function ForumCard({ forum, onDelete, onUpdate, onBookmarkToggle 
               onClose={handleMenuClose}
             >
                 <MenuItem>Edit</MenuItem>
-                <MenuItem sx={{ color: '#ff0000' }}>
+                <MenuItem 
+                    sx={{ color: '#ff0000' }} 
+                    onClick={handleDeleteClick}
+                >
                     Delete
                 </MenuItem>
             </Menu>
+            <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
+                <DialogTitle>Delete Forum</DialogTitle>
+                <DialogContent>
+                    <Typography>Are you sure you want to delete this forum?</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+                    <Button onClick={handleDeleteConfirm} color="error" variant="contained">
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 }

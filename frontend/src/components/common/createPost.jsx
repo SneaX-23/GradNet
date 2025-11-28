@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Avatar, Button, IconButton, Grid, InputBase } from '@mui/material';
+import { Box, Avatar, Button, IconButton, InputBase } from '@mui/material';
 import ImageIcon from '@mui/icons-material/Image';
 import LinkIcon from '@mui/icons-material/Link';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import SendIcon from '@mui/icons-material/Send';
 import ArticleIcon from '@mui/icons-material/Article';
 import CloseIcon from '@mui/icons-material/Close';
+import EmojiPicker from 'emoji-picker-react'; // 1. Import EmojiPicker
 import { useAuth } from '/src/context/AuthContext.jsx';
 import { API_BASE_URL } from '/src/config.js';
 
@@ -22,10 +23,11 @@ const getFullUrl = (path) => {
   return `${API_BASE_URL}${path}`;
 };
 
-function CreatePost() {
+function CreatePost({ onPostCreated }) {
   const [postContent, setPostContent] = useState({ title: '', description: '' });
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [previews, setPreviews] = useState([]);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false); // 2. State for picker visibility
   const { user } = useAuth();
 
   const avatarUrl = getFullUrl(user?.profile_image_url);
@@ -37,7 +39,6 @@ function CreatePost() {
     }
   };
 
-  
   useEffect(() => {
     const newPreviews = selectedFiles.map(file => ({
       url: URL.createObjectURL(file),
@@ -45,8 +46,6 @@ function CreatePost() {
       name: file.name
     }));
     setPreviews(newPreviews);
-
-    
     return () => {
       newPreviews.forEach(preview => URL.revokeObjectURL(preview.url));
     };
@@ -54,6 +53,13 @@ function CreatePost() {
 
   const removeFile = (indexToRemove) => {
     setSelectedFiles(prevFiles => prevFiles.filter((_, index) => index !== indexToRemove));
+  };
+
+  const onEmojiClick = (emojiData) => {
+    setPostContent(prev => ({
+      ...prev,
+      description: prev.description + emojiData.emoji
+    }));
   };
 
   const handlePost = async () => {
@@ -72,11 +78,11 @@ function CreatePost() {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || 'Upload failed');
-      console.log('Post successful:', data);
       
-      // Reset form
+      
       setPostContent({ title: '', description: '' });
       setSelectedFiles([]);
+      setShowEmojiPicker(false); 
     } catch (error) {
       console.error("Upload failed:", error);
     }
@@ -127,145 +133,145 @@ function CreatePost() {
   };
 
   return (
-    <Box sx={{ 
-      p: 2, 
-      mb: 4, 
-      width: '100%', 
-      maxWidth: 750, 
-      backgroundColor: NEO_CREAM,
-      border: `2px solid ${NEO_BLACK}`,
-      boxShadow: `4px 4px 0px ${NEO_BLACK}`,
-      display: 'flex',
-      gap: 2,
-      fontFamily: '"Space Grotesk", sans-serif'
-    }}>
-      {/* Avatar Section */}
-      <Box>
-        <Avatar 
-          src={avatarUrl} 
-          sx={{ 
-            width: 48, 
-            height: 48,
-            border: `2px solid ${NEO_BLACK}`,
-            borderRadius: '0px', 
-            backgroundColor: '#D4E4BC',
-            color: NEO_BLACK,
-            fontWeight: 'bold'
-          }}
-        >
-          {!avatarUrl && (user?.name ? user.name.charAt(0).toUpperCase() : 'U')}
-        </Avatar>
+    <>
+      <Box sx={{ 
+        p: 2, 
+        mb: showEmojiPicker ? 2 : 4,
+        width: '100%', 
+        maxWidth: 750, 
+        backgroundColor: NEO_CREAM,
+        border: `2px solid ${NEO_BLACK}`,
+        boxShadow: `4px 4px 0px ${NEO_BLACK}`,
+        display: 'flex',
+        gap: 2,
+        fontFamily: '"Space Grotesk", sans-serif'
+      }}>
+        {/* Avatar Section */}
+        <Box>
+          <Avatar 
+            src={avatarUrl} 
+            sx={{ 
+              width: 48, 
+              height: 48,
+              border: `2px solid ${NEO_BLACK}`,
+              borderRadius: '0px', 
+              backgroundColor: '#D4E4BC',
+              color: NEO_BLACK,
+              fontWeight: 'bold'
+            }}
+          >
+            {!avatarUrl && (user?.name ? user.name.charAt(0).toUpperCase() : 'U')}
+          </Avatar>
+        </Box>
+
+        {/* Content Section */}
+        <Box sx={{ flexGrow: 1 }}>
+          <Box sx={{ 
+              backgroundColor: NEO_WHITE,
+              border: `2px solid ${NEO_BLACK}`,
+              p: 2,
+              mb: 2
+          }}>
+              <InputBase
+                  fullWidth
+                  name="title"
+                  placeholder="Title"
+                  value={postContent.title}
+                  onChange={handleInputChange}
+                  sx={{ fontSize: '1.1rem', fontWeight: 'bold', mb: 1, fontFamily: '"Space Mono", monospace' }}
+              />
+              <InputBase
+                  fullWidth
+                  multiline
+                  minRows={2}
+                  name="description"
+                  placeholder="What's happening on campus?"
+                  value={postContent.description}
+                  onChange={handleInputChange}
+                  sx={{ fontSize: '1rem', fontFamily: '"Space Mono", monospace' }}
+              />
+              {previews.length > 0 && (
+                  <Box sx={{ display: 'flex', gap: 1, mt: 2, flexWrap: 'wrap' }}>
+                      {previews.map(renderPreviewItem)}
+                  </Box>
+              )}
+          </Box>
+
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                  <IconButton component="label" sx={{ color: NEO_BLACK, '&:hover': { backgroundColor: 'rgba(0,0,0,0.05)' } }}>
+                      <ImageIcon />
+                      <input type="file" hidden onChange={handleFileChange} multiple accept="image/*,application/pdf" />
+                  </IconButton>
+                  
+                  <IconButton sx={{ color: NEO_BLACK }}>
+                      <LinkIcon />
+                  </IconButton>
+                  
+                 
+                  <IconButton 
+                    sx={{ color: showEmojiPicker ? NEO_YELLOW_HOVER : NEO_BLACK }} 
+                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                  >
+                      <SentimentSatisfiedAltIcon />
+                  </IconButton>
+              </Box>
+
+              <Button
+                  variant="contained"
+                  onClick={handlePost}
+                  disabled={!postContent.title.trim() && !postContent.description.trim() && selectedFiles.length === 0}
+                  sx={{
+                      backgroundColor: NEO_YELLOW,
+                      color: NEO_BLACK,
+                      border: `2px solid ${NEO_BLACK}`,
+                      borderRadius: 0,
+                      boxShadow: `3px 3px 0px ${NEO_BLACK}`,
+                      fontWeight: 'bold',
+                      fontFamily: '"Space Mono", monospace',
+                      textTransform: 'none',
+                      px: 3,
+                      '&:hover': {
+                          backgroundColor: NEO_YELLOW_HOVER,
+                          boxShadow: `4px 4px 0px ${NEO_BLACK}`,
+                          transform: 'translate(-1px, -1px)'
+                      },
+                      '&:active': {
+                          boxShadow: 'none',
+                          transform: 'translate(2px, 2px)'
+                      },
+                      '&.Mui-disabled': {
+                          backgroundColor: '#e0e0e0',
+                          color: '#a0a0a0',
+                          border: `2px solid #a0a0a0`,
+                          boxShadow: 'none'
+                      }
+                  }}
+              >
+                  <SendIcon sx={{ fontSize: 18, mr: 1 }} />
+                  Post
+              </Button>
+          </Box>
+        </Box>
       </Box>
 
-      {/* Content Section */}
-      <Box sx={{ flexGrow: 1 }}>
-        
-        {/* Input Container - White Box */}
+      {showEmojiPicker && (
         <Box sx={{ 
-            backgroundColor: NEO_WHITE,
-            border: `2px solid ${NEO_BLACK}`,
-            p: 2,
-            mb: 2
+            width: '100%', 
+            maxWidth: 750, 
+            mb: 4, 
+            border: `2px solid ${NEO_BLACK}`, 
+            boxShadow: `4px 4px 0px ${NEO_BLACK}`, 
         }}>
-            <InputBase
-                fullWidth
-                name="title"
-                placeholder="Title"
-                value={postContent.title}
-                onChange={handleInputChange}
-                sx={{ 
-                    fontSize: '1.1rem', 
-                    fontWeight: 'bold', 
-                    mb: 1, 
-                    fontFamily: '"Space Mono", monospace' 
-                }}
+            <EmojiPicker 
+                onEmojiClick={onEmojiClick}
+                width="100%" 
+                height={350}
+                previewConfig={{ showPreview: false }} 
             />
-            <InputBase
-                fullWidth
-                multiline
-                minRows={2}
-                name="description"
-                placeholder="What's happening on campus?"
-                value={postContent.description}
-                onChange={handleInputChange}
-                sx={{ 
-                    fontSize: '1rem', 
-                    fontFamily: '"Space Mono", monospace' 
-                }}
-            />
-
-            {/* File Previews */}
-            {previews.length > 0 && (
-                <Box sx={{ display: 'flex', gap: 1, mt: 2, flexWrap: 'wrap' }}>
-                    {previews.map(renderPreviewItem)}
-                </Box>
-            )}
         </Box>
-
-        {/* Actions Row */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            
-            {/* Icons Group */}
-            <Box sx={{ display: 'flex', gap: 1 }}>
-                <IconButton 
-                    component="label" 
-                    sx={{ 
-                        color: NEO_BLACK, 
-                        '&:hover': { backgroundColor: 'rgba(0,0,0,0.05)' } 
-                    }}
-                >
-                    <ImageIcon />
-                    <input type="file" hidden onChange={handleFileChange} multiple accept="image/*,application/pdf" />
-                </IconButton>
-                
-                <IconButton sx={{ color: NEO_BLACK }}>
-                    <LinkIcon />
-                </IconButton>
-                
-                <IconButton sx={{ color: NEO_BLACK }}>
-                    <SentimentSatisfiedAltIcon />
-                </IconButton>
-            </Box>
-
-            {/* Post Button */}
-            <Button
-                variant="contained"
-                onClick={handlePost}
-                disabled={!postContent.title.trim() && !postContent.description.trim() && selectedFiles.length === 0}
-                sx={{
-                    backgroundColor: NEO_YELLOW,
-                    color: NEO_BLACK,
-                    border: `2px solid ${NEO_BLACK}`,
-                    borderRadius: 0,
-                    boxShadow: `3px 3px 0px ${NEO_BLACK}`,
-                    fontWeight: 'bold',
-                    fontFamily: '"Space Mono", monospace',
-                    textTransform: 'none',
-                    px: 3,
-                    '&:hover': {
-                        backgroundColor: NEO_YELLOW_HOVER,
-                        boxShadow: `4px 4px 0px ${NEO_BLACK}`,
-                        transform: 'translate(-1px, -1px)'
-                    },
-                    '&:active': {
-                        boxShadow: 'none',
-                        transform: 'translate(2px, 2px)'
-                    },
-                    '&.Mui-disabled': {
-                        backgroundColor: '#e0e0e0',
-                        color: '#a0a0a0',
-                        border: `2px solid #a0a0a0`,
-                        boxShadow: 'none'
-                    }
-                }}
-            >
-                <SendIcon sx={{ fontSize: 18, mr: 1 }} />
-                Post
-            </Button>
-        </Box>
-
-      </Box>
-    </Box>
+      )}
+    </>
   );
 }
 

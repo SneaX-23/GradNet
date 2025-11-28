@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/pages/CreateProfilePage.css'; 
 import { API_BASE_URL } from '../config';
-
+import { useAuth } from '../context/AuthContext';
 function CreateProfilePage() {
+    const {login} = useAuth();
     const [prefilledData, setPrefilledData] = useState(null);
     const [handle, setHandle] = useState('');
     const [loading, setLoading] = useState(true);
@@ -86,7 +87,8 @@ function CreateProfilePage() {
             });
             const result = await response.json();
             if (!response.ok) throw new Error(result.message);
-            return navigate('/home');
+            login(result.user);
+            return navigate(`/home`);
         } catch (err) {
             setError(err.message); 
         }

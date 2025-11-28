@@ -5,7 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Sidebar from '/src/components/layout/Sidebar.jsx';
 import RightSidebar from '/src/components/layout/RightSidebar.jsx';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { getForums } from "/src/services/ForumService.jsx";
+import { getForums, deleteForum } from "/src/services/ForumService.jsx";
 import ForumCard from "/src/components/forum/ForumCard.jsx";
 import CreateForumModal from "/src/components/forum/CreateForumModal.jsx";
 import { socket } from '/src/socket.js';
@@ -58,6 +58,16 @@ function ForumPage() {
         } catch (err) {
             setError(err.message);
             setHasMore(false);
+        }
+    };
+
+    const handleDeleteForum = async (forumId) => {
+
+        try {
+            await deleteForum(forumId);
+            setForums(prevForums => prevForums.filter(f => f.id !== forumId));
+        } catch (err) {
+            setError(err.message);
         }
     };
 
@@ -130,6 +140,7 @@ function ForumPage() {
                         <ForumCard
                             key={`${forum.id}-${index}`}
                             forum={forum}
+                            onDelete={handleDeleteForum}
                         />
                     ))}
                 </InfiniteScroll>

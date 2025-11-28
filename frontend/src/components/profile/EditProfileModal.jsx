@@ -28,6 +28,7 @@ function EditProfileModal({ open, onClose, profileData, onSave }) {
         if (profileData) {
             setFormData({
                 name: profileData.name || '',
+                position: profileData.position || '',
                 bio: profileData.bio || '',
                 linkedin_url: profileData.linkedin_url || '',
                 github_url: profileData.github_url || '',
@@ -174,6 +175,19 @@ function EditProfileModal({ open, onClose, profileData, onSave }) {
 
                         <Box sx={{ p: 2, mt: '80px' }}>
                             <TextField name="name" label="Name" value={formData.name || ''} onChange={handleChange} fullWidth margin="normal" variant="standard" InputLabelProps={{ shrink: true }} />
+                            {(profileData.role === 'admin' || profileData.role === 'faculty') && (
+                                <TextField 
+                                    name="position" 
+                                    label="Position / Title" 
+                                    value={formData.position || ''} 
+                                    onChange={handleChange} 
+                                    fullWidth 
+                                    margin="normal" 
+                                    variant="standard" 
+                                    InputLabelProps={{ shrink: true }}
+                                    placeholder="e.g. HOD Computer Science"
+                                />
+                            )}
                             <TextField name="bio" label="Bio" value={formData.bio || ''} onChange={handleChange} fullWidth multiline rows={3} margin="normal" variant="standard" InputLabelProps={{ shrink: true }} />
                             <TextField name="linkedin_url" label="LinkedIn URL" value={formData.linkedin_url || ''} onChange={handleChange} fullWidth margin="normal" variant="standard" InputLabelProps={{ shrink: true }} />
                             <TextField name="github_url" label="GitHub URL" value={formData.github_url || ''} onChange={handleChange} fullWidth margin="normal" variant="standard" InputLabelProps={{ shrink: true }} />

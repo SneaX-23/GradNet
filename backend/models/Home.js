@@ -15,6 +15,7 @@ export class Home {
                     u.name AS author_name,
                     u.handle,
                     u.role,
+                    u.position,
                     u.profile_picture_url,
                     (
                         SELECT json_agg(json_build_object('file_url', ef.file_url, 'file_mime_type', ef.file_mime_type))

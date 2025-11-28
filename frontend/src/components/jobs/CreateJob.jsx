@@ -69,7 +69,7 @@ function CreateJob({ onJobPosted }) {
         sx={{
           position: 'fixed',
           bottom: 24,
-          right: 24,
+          right: 344,
           zIndex: 1000,
         }}
       >

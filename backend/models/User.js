@@ -89,7 +89,7 @@ export class User{
         }
     }
     static async updateProfile(userId, profileData) {
-        const { name, bio, linkedin_url, github_url, twitter_url, profile_picture_url, profile_banner_url } = profileData;
+        const { name, bio, linkedin_url, github_url, twitter_url, profile_picture_url, profile_banner_url, position } = profileData;
     
         const fields = [];
         const values = [];
@@ -102,7 +102,7 @@ export class User{
         if (twitter_url !== undefined) { fields.push(`twitter_url = $${queryIndex++}`); values.push(twitter_url); }
         if (profile_picture_url !== undefined) { fields.push(`profile_picture_url = $${queryIndex++}`); values.push(profile_picture_url); }
         if (profile_banner_url !== undefined) { fields.push(`profile_banner_url = $${queryIndex++}`); values.push(profile_banner_url); }
-    
+        if (position !== undefined) { fields.push(`position = $${queryIndex++}`); values.push(position); }
         if (fields.length === 0) {
             return this.findByUserId(userId); 
         }

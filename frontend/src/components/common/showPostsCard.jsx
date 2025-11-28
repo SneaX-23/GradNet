@@ -214,17 +214,21 @@ export default function ShowPostsCard({ post, onDelete, onUpdate, onBookmarkTogg
               <Typography variant="body1" fontWeight="bold" >
                 {post.author_name || 'Unknown'}
               </Typography>
-              {post.role && (
-                <Typography sx={{
-                          // px: 1.5,            
-                          // py: 0.5,
-                          bgcolor: theme.extend.colors.neo_purple,
-                          border: '2px solid',
-                          borderColor: theme.extend.colors.neo_black,   
-                          fontFamily: theme.extend.fontFamily.mono, 
-                          fontWeight: 'bold'               
+              {post.position && (
+                <Typography variant="caption" sx={{
+                          px: 1,
+                        py: 0.25,
+                        bgcolor: theme.palette.neo.purple || '#C4B5FD', 
+                        border: '2px solid #18181b',      
+                        borderRadius: 0,                  
+                        fontWeight: 'bold',
+                        fontFamily: '"Space Mono", monospace',
+                        color: '#18181b',
+                        boxShadow: '2px 2px 0px 0px #18181b', 
+                        lineHeight: 1.2,
+                        transform: 'translateY(-2px)'              
                 }}>
-                    {post.role}
+                    {post.position}
                 </Typography>
               )}
               </Box>
