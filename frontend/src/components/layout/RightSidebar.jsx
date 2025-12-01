@@ -12,14 +12,17 @@ import {
   Avatar,
   ListItemText,
   CircularProgress,
-  Chip
+  Chip,
+  Drawer,
+  IconButton
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import CloseIcon from '@mui/icons-material/Close';
 import ConversationList from '../messages/ConversationList';
 import { searchUsers } from '../../services/userService';
 import { API_BASE_URL } from '../../config';
 
-const rightSidebarWidth = 320;
+export const rightSidebarWidth = 320;
 
 const NEO_BLACK = '#18181b';
 const NEO_WHITE = '#FFFFFF';
@@ -32,7 +35,7 @@ const getFullUrl = (path) => {
   return `${API_BASE_URL}${path}`;
 };
 
-function RightSidebar() {
+function RightSidebar({ mobileOpen, onClose, window }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
@@ -71,28 +74,27 @@ function RightSidebar() {
   const handleUserClick = (handle) => {
     setSearchQuery('');
     setSearchResults([]);
+    if(onClose) onClose();
     navigate(`/profile/${handle}`);
   };
 
   const handleSelectConversation = (conversation) => {
+    if(onClose) onClose();
     navigate('/messages');
   };
 
-  return (
+  const container = window !== undefined ? () => window().document.body : undefined;
+
+  const content = (
     <Box
       sx={{
         width: rightSidebarWidth,
-        flexShrink: 0,
-        position: 'fixed',
-        right: 0, 
-        top: '66px',
-        height: 'calc(100vh - 66px)',
+        height: '100%',
         display: 'flex',
         flexDirection: 'column',
         gap: 4,
         overflowY: 'auto',
         fontFamily: '"Space Grotesk", sans-serif',
-        borderLeft: `2px solid ${NEO_BLACK}`, 
         pl: 3, 
         pr: 3,
         py: 3,
@@ -174,7 +176,6 @@ function RightSidebar() {
           </Box>
         ) : (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-            
             {/* Inbox Section */}
             <Box>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
@@ -186,7 +187,7 @@ function RightSidebar() {
                 </Box>
                 <Typography 
                     variant="caption" 
-                    onClick={() => navigate('/messages')}
+                    onClick={() => { if(onClose) onClose(); navigate('/messages'); }}
                     sx={{ 
                         textDecoration: 'underline', 
                         cursor: 'pointer', 
@@ -199,18 +200,12 @@ function RightSidebar() {
                     View All
                 </Typography>
               </Box>
-              
-              {/* Inbox Container */}
               <Box 
                 sx={{ 
                     maxHeight: '400px',
                     overflowY: 'auto',
                     '& > div': {
                         borderRight: 'none !important'
-                    },
-                    '& .MuiList-root': {
-                        padding: 0,
-                        
                     },
                     '& .MuiListItem-root': {
                         mt: '4px', 
@@ -220,7 +215,6 @@ function RightSidebar() {
                         marginBottom: '16px', 
                         border: `2px solid ${NEO_BLACK}`,
                         backgroundColor: NEO_WHITE,
-                        // boxShadow: `4px 4px 0px ${NEO_BLACK}`,
                         transition: 'transform 0.1s ease',
                         '&:hover': {
                             transform: 'translate(-2px, -2px)',
@@ -231,21 +225,17 @@ function RightSidebar() {
                              transform: 'translate(2px, 2px)',
                              boxShadow: 'none',
                         },
-                        
                     },
-                    
                     '& .MuiAvatar-root': {
                         borderRadius: '0px !important',
                         border: `2px solid ${NEO_BLACK}`,
-                        
                     },
-                    
                     '& .MuiDivider-root': {
                         display: 'none' 
                     }
                 }}
               >
-                <ConversationList onSelectConversation={handleSelectConversation} />
+                <ConversationList onSelectConversation={handleSelectConversation} showBorder={false} />
               </Box>
             </Box>
 
@@ -284,9 +274,56 @@ function RightSidebar() {
                     ))}
                 </Box>
             </Box>
-
           </Box>
         )}
+      </Box>
+    </Box>
+  );
+
+  return (
+    <Box
+      component="nav"
+      sx={{ width: { lg: rightSidebarWidth }, flexShrink: { lg: 0 } }}
+    >
+      {/* Mobile Right Drawer */}
+      <Drawer
+        container={container}
+        variant="temporary"
+        anchor="right"
+        open={mobileOpen}
+        onClose={onClose}
+        ModalProps={{ keepMounted: true }}
+        sx={{
+          display: { xs: 'block', lg: 'none' },
+          '& .MuiDrawer-paper': { 
+            boxSizing: 'border-box', 
+            width: rightSidebarWidth,
+            backgroundColor: '#FDF6E3',
+            borderLeft: `2px solid ${NEO_BLACK}`, 
+          },
+        }}
+      >
+        <Box sx={{display: 'flex', justifyContent: 'flex-end', p: 1}}>
+            <IconButton onClick={onClose}><CloseIcon/></IconButton>
+        </Box>
+        {content}
+      </Drawer>
+
+      {/* Desktop Persistent Sidebar */}
+      <Box
+        sx={{
+          display: { xs: 'none', lg: 'block' },
+          width: rightSidebarWidth,
+          position: 'fixed',
+          right: 0,
+          top: '64px',
+          height: 'calc(100vh - 64px)',
+          borderLeft: `2px solid ${NEO_BLACK}`,
+          backgroundColor: '#FDF6E3',
+          overflowY: 'auto'
+        }}
+      >
+        {content}
       </Box>
     </Box>
   );

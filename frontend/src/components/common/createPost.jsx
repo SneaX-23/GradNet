@@ -6,7 +6,7 @@ import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt
 import SendIcon from '@mui/icons-material/Send';
 import ArticleIcon from '@mui/icons-material/Article';
 import CloseIcon from '@mui/icons-material/Close';
-import EmojiPicker from 'emoji-picker-react'; // 1. Import EmojiPicker
+import EmojiPicker from 'emoji-picker-react'; 
 import { useAuth } from '/src/context/AuthContext.jsx';
 import { API_BASE_URL } from '/src/config.js';
 
@@ -27,7 +27,7 @@ function CreatePost({ onPostCreated }) {
   const [postContent, setPostContent] = useState({ title: '', description: '' });
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [previews, setPreviews] = useState([]);
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false); // 2. State for picker visibility
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false); 
   const { user } = useAuth();
 
   const avatarUrl = getFullUrl(user?.profile_image_url);
@@ -204,9 +204,9 @@ function CreatePost({ onPostCreated }) {
                       <input type="file" hidden onChange={handleFileChange} multiple accept="image/*,application/pdf" />
                   </IconButton>
                   
-                  <IconButton sx={{ color: NEO_BLACK }}>
+                  {/* <IconButton sx={{ color: NEO_BLACK }}>
                       <LinkIcon />
-                  </IconButton>
+                  </IconButton> */}
                   
                  
                   <IconButton 

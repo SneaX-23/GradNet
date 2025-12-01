@@ -109,9 +109,23 @@ export default function JobCard({ job, onDelete, onUpdate, onBookmarkToggle }) {
           display: 'flex',
           p: 2,
           mb: 2,
-          width: '100%',
+          mt: '4px', 
+          ml: '4px', 
+          width: "calc(100% - 4px)", 
           maxWidth: 700,
-          bgcolor: colors.green
+          bgcolor: colors.green,
+          border: borderStyle,
+          boxShadow: shadowStyle,
+          transition: "all 0.1s ease",
+          "&:hover": {
+            borderColor: colors.black,
+            boxShadow: shadowHover, 
+            transform: 'translate(-2px, -2px)' 
+          },
+          '&:active': {
+            boxShadow: 'none',
+            transform: 'translate(4px, 4px)',
+          }
         }}
       >
         <Box sx={{ width: '100%' }}>
@@ -124,12 +138,12 @@ export default function JobCard({ job, onDelete, onUpdate, onBookmarkToggle }) {
                 <Typography variant="body1" sx={{ mt: 0.5 }}>
                   {job.company}
                 </Typography>
-                <Typography variant="body2" sx={{ mt: 0.5, color: '#aaaaaa' }}>
+                <Typography variant="body2" sx={{ mt: 0.5, color: '#444' }}>
                   {job.location} ({job.work_location})
                 </Typography>
               </Box>
 
-              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', ml: 2 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', ml: 2, minWidth: '80px' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
                   <Avatar
                     src={avatarUrl || ''}
@@ -138,18 +152,9 @@ export default function JobCard({ job, onDelete, onUpdate, onBookmarkToggle }) {
                   >
                     {!avatarUrl && authorInitial}
                   </Avatar>
-                  <Box sx={{ textAlign: 'right' }}>
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                      {job.author_name || 'Unknown'}
-                    </Typography>
-                    {job.handle && (
-                      <Typography variant="caption" sx={{ color: '#aaaaaa' }}>
-                        @{job.handle}
-                      </Typography>
-                    )}
-                  </Box>
+                  
                   <Box sx={{ display: 'flex', alignItems: 'center' }}> 
-                    <IconButton size="small" onClick={handleBookmarkClick} disabled={isBookmarkPending} sx={{ ml: 1, border: 'none', '&:hover': { backgroundColor: 'transparent' } }}>
+                    <IconButton size="small" onClick={handleBookmarkClick} disabled={isBookmarkPending} sx={{ border: 'none', '&:hover': { backgroundColor: 'transparent' } }}>
                         {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
                     </IconButton>
                     {canModify && (
@@ -159,7 +164,7 @@ export default function JobCard({ job, onDelete, onUpdate, onBookmarkToggle }) {
                     )}
                   </Box>
                 </Box>
-                <Typography variant="caption" sx={{ color: '#aaaaaa' }}>
+                <Typography variant="caption" sx={{ color: '#444' }}>
                   {new Date(job.updated_at).toLocaleDateString()}
                 </Typography>
               </Box>
@@ -173,10 +178,10 @@ export default function JobCard({ job, onDelete, onUpdate, onBookmarkToggle }) {
               <Typography paragraph sx={{ mb: 1.5 }}>{job.salary_range || 'Not specified'}</Typography>
 
               <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Description:</Typography>
-              <Typography paragraph sx={{ mb: 1.5 }}>{job.description}</Typography>
+              <Typography paragraph sx={{ mb: 1.5, whiteSpace: 'pre-wrap' }}>{job.description}</Typography>
 
               <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Requirements:</Typography>
-              <Typography paragraph sx={{ mb: 1.5 }}>{job.requirements || 'Not specified'}</Typography>
+              <Typography paragraph sx={{ mb: 1.5, whiteSpace: 'pre-wrap' }}>{job.requirements || 'Not specified'}</Typography>
 
               {job.application_deadline && (
                 <>
@@ -208,16 +213,21 @@ export default function JobCard({ job, onDelete, onUpdate, onBookmarkToggle }) {
               <Button
                 size="small"
                 onClick={handleExpandClick}
-                endIcon={<ExpandMoreIcon />}
+                endIcon={<ExpandMoreIcon sx={{ transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: '0.3s' }} />}
                 sx={{
-                  border: '1px solid #000000ff',
-                  '& .MuiButton-endIcon': {
-                    transform: !expanded ? 'rotate(0deg)' : 'rotate(180deg)',
-                    transition: '0.3s'
-                  },
+                  border: borderStyle,
                   boxShadow: shadowStyle,
                   bgcolor: theme.palette.primary.main,
-                  color: theme.palette.text.secondary,
+                  color: theme.palette.text.primary,
+                  '&:hover': {
+                    bgcolor: theme.palette.primary.dark,
+                    transform: 'translate(-2px, -2px)',
+                    boxShadow: shadowHover
+                  },
+                  '&:active': {
+                    boxShadow: 'none',
+                    transform: 'translate(2px, 2px)'
+                  }
                 }}
               >
                 {expanded ? 'Show less' : 'Show more'}

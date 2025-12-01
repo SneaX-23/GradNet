@@ -23,6 +23,8 @@ const getFullUrl = (path) => {
   return `${API_BASE_URL}${path}`;
 };
 
+const CHAR_LIMIT = 280; 
+
 export default function ShowPostsCard({ post, onDelete, onUpdate, onBookmarkToggle }) { 
   const { user } = useAuth();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -37,6 +39,7 @@ export default function ShowPostsCard({ post, onDelete, onUpdate, onBookmarkTogg
 
   const [isBookmarked, setIsBookmarked] = useState(post.is_bookmarked); 
   const [isBookmarkPending, setIsBookmarkPending] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const theme = useTheme();
 
   const handleOpenImage = (imageUrl) => {
@@ -47,8 +50,6 @@ export default function ShowPostsCard({ post, onDelete, onUpdate, onBookmarkTogg
   };
   const handleCloseImage = () => setImageModalOpen(false);
  
-
-
   const isOwner = user?.id === post.posted_by;
   const isAdmin = user?.role === 'admin';
   const canModify = isOwner || isAdmin;
@@ -103,9 +104,10 @@ export default function ShowPostsCard({ post, onDelete, onUpdate, onBookmarkTogg
     }
   };
 
-
   const authorInitial = post.author_name ? post.author_name.charAt(0).toUpperCase() : '?';
   const avatarUrl = getFullUrl(post.profile_picture_url);
+
+  const isLongText = post.description && post.description.length > CHAR_LIMIT;
 
   const renderMedia = () => {
     if (!post.files || post.files.length === 0) return null;
@@ -178,7 +180,7 @@ export default function ShowPostsCard({ post, onDelete, onUpdate, onBookmarkTogg
           mb: 3,
           mt: '4px', 
           ml: '4px', 
-          width: "calc(100% - 4px)",
+          width: { xs: '100%', sm: "calc(100% - 4px)" },
           maxWidth: 750,
           border: borderStyle,
           boxShadow: shadowStyle,
@@ -266,9 +268,41 @@ export default function ShowPostsCard({ post, onDelete, onUpdate, onBookmarkTogg
           </Typography>
         )}
         {post.description && (
-          <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
-            {post.description}
-          </Typography>
+          <Box>
+            <Typography 
+              variant="body1" 
+              sx={{ 
+                whiteSpace: 'pre-wrap',
+                ...(!isExpanded && isLongText && {
+                    display: '-webkit-box',
+                    WebkitLineClamp: 7,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                })
+              }}
+            >
+              {post.description}
+            </Typography>
+            
+            {/* Show More Button */}
+            {isLongText && !isExpanded && (
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 0.5 }}>
+                    <Typography 
+                        variant="body2" 
+                        onClick={(e) => { e.stopPropagation(); setIsExpanded(true); }}
+                        sx={{ 
+                            color: '#1d9bf0',
+                            cursor: 'pointer', 
+                            fontWeight: 'bold',
+                            '&:hover': { textDecoration: 'underline' }
+                        }}
+                    >
+                        Show more
+                    </Typography>
+                </Box>
+            )}
+          </Box>
         )}
 
         {renderMedia()}

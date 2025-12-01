@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
 import { useAuth } from '/src/context/AuthContext.jsx';
-import { Box, Typography, CssBaseline, AppBar, Toolbar, CircularProgress, Fab } from '@mui/material';
+import { Typography, CircularProgress, Fab } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import Sidebar from '/src/components/layout/Sidebar.jsx';
-import RightSidebar from '/src/components/layout/RightSidebar.jsx';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { getForums, deleteForum } from "/src/services/ForumService.jsx";
 import ForumCard from "/src/components/forum/ForumCard.jsx";
 import CreateForumModal from "/src/components/forum/CreateForumModal.jsx";
 import { socket } from '/src/socket.js';
+import Layout from '../components/layout/Layout.jsx';
 
 function ForumPage() {
     const { user } = useAuth();
@@ -62,7 +61,6 @@ function ForumPage() {
     };
 
     const handleDeleteForum = async (forumId) => {
-
         try {
             await deleteForum(forumId);
             setForums(prevForums => prevForums.filter(f => f.id !== forumId));
@@ -72,80 +70,52 @@ function ForumPage() {
     };
 
     return (
-        <Box sx={{ display: 'flex' }}>
-            <CssBaseline />
-            <AppBar 
-              position="fixed" 
-              sx={{ 
-                zIndex: (theme) => theme.zIndex.drawer + 1,
-              }}
-            >
-                <Toolbar>
-                    <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 'bold' }}>
-                        GradNet - Forums
-                    </Typography>
-                </Toolbar>
-            </AppBar>
-            <Sidebar />
-            <RightSidebar />
-            
-            <Box 
-              component="main" 
-              sx={{ 
-                flexGrow: 1, 
-                p: 3, 
-                marginTop: '64px', 
-                marginRight: '320px', 
-                display: 'flex', 
-                flexDirection: 'column', 
-                alignItems: 'center',
-                minHeight: 'calc(100vh - 64px)'
-              }}
-            >
-                
-                 {user && (user.role === 'admin' || user.role === 'faculty') && (
-                    <Fab
-                      aria-label="create forum"
-                      onClick={() => setCreateModalOpen(true)}
-                      sx={{
-                        position: 'fixed',
-                        bottom: 24,
-                        right: 344, 
-                        zIndex: 1000,
-                      }}
-                    >
-                      <AddIcon />
-                    </Fab>
-                )}
-
-                <CreateForumModal
-                    open={isCreateModalOpen}
-                    onClose={() => setCreateModalOpen(false)}
-                    onForumCreated={fetchInitialForums}
-                />
-
-                <InfiniteScroll
-                    dataLength={forums.length}
-                    next={fetchMoreForums}
-                    hasMore={hasMore}
-                    loader={<CircularProgress sx={{ my: 2, color: '#ffffff' }} />}
-                    endMessage={
-                        <p style={{ textAlign: 'center', marginTop: '20px' }}>
-                            <b>END OF LIST</b>
-                        </p>
-                    }
-                    style={{width: '100%', maxWidth: '800px'}}
+        <Layout title="GradNet - Forums">
+             {user && (user.role === 'admin' || user.role === 'faculty') && (
+                <Fab
+                  color="primary"
+                  aria-label="create forum"
+                  onClick={() => setCreateModalOpen(true)}
+                  sx={{
+                    position: 'fixed',
+                    bottom: 24,
+                    right: { xs: 24, lg: 344 }, 
+                    zIndex: 1000,
+                  }}
                 >
-                    {forums.map((forum, index) => (
-                        <ForumCard
-                            key={`${forum.id}-${index}`}
-                            forum={forum}
-                            onDelete={handleDeleteForum}
-                        />
-                    ))}
-                </InfiniteScroll>
-            </Box>
-        </Box>
+                  <AddIcon />
+                </Fab>
+            )}
+
+            <CreateForumModal
+                open={isCreateModalOpen}
+                onClose={() => setCreateModalOpen(false)}
+                onForumCreated={fetchInitialForums}
+            />
+            
+            {error && <Typography color="error" sx={{ mb: 2 }}>{error}</Typography>}
+
+            <InfiniteScroll
+                dataLength={forums.length}
+                next={fetchMoreForums}
+                hasMore={hasMore}
+                loader={<CircularProgress sx={{ my: 2, color: '#000000' }} />}
+                endMessage={
+                    <p style={{ textAlign: 'center', marginTop: '20px' }}>
+                        <b>End of list</b>
+                    </p>
+                }
+                style={{width: '100%', maxWidth: '800px'}}
+            >
+                {forums.map((forum, index) => (
+                    <ForumCard
+                        key={`${forum.id}-${index}`}
+                        forum={forum}
+                        onDelete={handleDeleteForum}
+                    />
+                ))}
+            </InfiniteScroll>
+        </Layout>
     );
 }
 

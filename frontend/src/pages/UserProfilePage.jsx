@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from '../components/layout/Sidebar.jsx';
 import {
   Box, Typography, Avatar, CircularProgress, Alert,
-  AppBar, Toolbar, Tabs, Tab, Link, CssBaseline, Modal
+  Tabs, Tab, Link, Modal
 } from '@mui/material';
 import { fetchUserProfileByHandle } from '../services/profileService.jsx';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
@@ -12,10 +11,10 @@ import { showUserPosts } from "../services/showPostsService.jsx";
 import ShowPostsCard from '../components/common/showPostsCard.jsx';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useParams } from 'react-router-dom';
-import RightSidebar from '../components/layout/RightSidebar.jsx';
 import { API_BASE_URL } from '../config.js';
 import { useTheme } from '@mui/material/styles';
 import { theme, colors, borderStyle, shadowHover, shadowStyle } from '../theme';
+import Layout from '../components/layout/Layout.jsx';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -179,11 +178,8 @@ function UserProfilePage() {
   const bannerUrl = getFullUrl(profileData?.profile_banner_url);
   const avatarUrl = getFullUrl(profileData?.profile_picture_url);
 
- 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-      <CssBaseline />
-  
+    <Layout title={`GradNet`}>
       <Modal open={imageModalOpen} onClose={handleCloseImage}>
         <Box 
           sx={{
@@ -203,166 +199,143 @@ function UserProfilePage() {
         </Box>
       </Modal>
   
-      <AppBar 
-        position="fixed" 
-        sx={{ 
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-        }}
-      >
-        <Toolbar>
-          <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 'bold' }}>GradNet</Typography>
-        </Toolbar>
-      </AppBar>
-      <Sidebar />
-      <RightSidebar />
-      <Box
-        component="main"
-          sx={{
-              flexGrow: 1,
-              marginTop: '64px',
-              marginRight: '320px',
-              display: 'flex',
-              justifyContent: 'center',
-              p: 3,
-          }}
-      >
-        {loading && <Box sx={{p:3}}><CircularProgress sx={{color: '#fff'}} /></Box>}
-        {error && <Box sx={{p:3}}><Alert severity="error" sx={{bgcolor: '#333', color: 'red'}}>{error}</Alert></Box>}
-  
-        {profileData && (
-          <>
-            <Box
-              sx={{
-                width: '100%',
-                maxWidth: '800px',
-                minWidth: '600px',
-                overflow: 'hidden',
-                border: borderStyle,
-                boxShadow: shadowStyle,
-                bgcolor: theme.palette.secondary.light 
-              }}
-            >
-              <Box sx={{ position: 'relative' }}>
-                <Box
-                  onClick={() => handleOpenImage(bannerUrl)}
-                  sx={{
-                    height: '260px',
-                    borderBottom: '2px solid #ffffff',
-                    backgroundImage: bannerUrl ? `url(${bannerUrl})` : 'none',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    cursor: bannerUrl ? 'pointer' : 'default',
-                  }}
-                />
-                <Avatar
-                  onClick={() => handleOpenImage(avatarUrl)}
-                  src={avatarUrl}
-                  sx={{
-                    width: 135,
-                    height: 135,
-                    position: 'absolute',
-                    top: '190px',
-                    left: '16px',
-                    border: '2px solid #000000',
-                    fontSize: '4rem',
-                    cursor: avatarUrl ? 'pointer' : 'default',
-                    borderRadius: 0, 
-                  }}
-                >
-                  {profileData.name ? profileData.name.charAt(0).toUpperCase() : 'U'}
-                </Avatar>
-              </Box>
-  
-              <Box sx={{ p: '12px 16px', mt: '60px' }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                   <Typography variant="h5" component="div" fontWeight="bold">
-                       {profileData.name}
-                    </Typography>
-                    {profileData.position && (
-                      <Typography
-                        variant="caption"
-                        sx={{
-                        px: 1,
-                        py: 0.25,
-                        bgcolor: theme.palette.neo.purple || '#C4B5FD', 
-                        border: '2px solid #18181b',      
-                        borderRadius: 0,                  
-                        fontWeight: 'bold',
-                        fontFamily: '"Space Mono", monospace',
-                        color: '#18181b',
-                        boxShadow: '2px 2px 0px 0px #18181b', 
-                        lineHeight: 1.2,
-                        transform: 'translateY(-2px)'     
-                      }}
-                      >
-                        {profileData.position}
-                     </Typography>
-                    )}
-                </Box>
-                <Typography>
-                  @{profileData.handle}
-                </Typography>
-              </Box>
-  
-              {(profileData.role === 'admin' || profileData.role === 'faculty') ? (
-                <>
-                  <Box sx={{ borderBottom: 1, borderColor: '#ffffff' }}>
-                    <Tabs 
-                      value={tabValue} 
-                      onChange={handleTabChange} 
-                      variant="fullWidth" 
-                      textColor="inherit"
-                    >
-                      <Tab label="About" id="profile-tab-0" />
-                      <Tab label="Posts" id="profile-tab-1" />
-                    </Tabs>
-                  </Box>
-  
-                  <TabPanel value={tabValue} index={0}>
-                    <AboutContent profileData={profileData} />
-                  </TabPanel>
-                  <TabPanel value={tabValue} index={1}>
-                    <InfiniteScroll
-                      dataLength={posts.length}
-                      next={fetchMoreData}
-                      hasMore={hasMore}
-                      loader={<CircularProgress sx={{ my: 2, color: '#ffffff' }} />}
-                      endMessage={
-                        <p style={{ textAlign: 'center', marginTop: '20px' }}>
-                          <b>You have seen it all!</b>
-                        </p>
-                      }
-                    >
-                      {posts.map((post, index) => {
-                        const postWithAuthor = {
-                          ...post,
-                          author_name: profileData.name,
-                          handle: profileData.handle,
-                          profile_picture_url: profileData.profile_picture_url
-                        };
-                        return (
-                          <ShowPostsCard
-                            key={`${post.id}-${index}`}
-                            post={postWithAuthor}
-                            onDelete={handleDeletePost}
-                            onUpdate={handleUpdatePost}
-                          />
-                        )
-                      })}
-                    </InfiniteScroll>
-                  </TabPanel>
-                </>
-              ) : (
-                <Box sx={{ p: 3, borderTop: '1px solid #555' }}>
-                  <AboutContent profileData={profileData} />
-                </Box>
-              )}
+      {loading && <Box sx={{p:3}}><CircularProgress sx={{color: '#000'}} /></Box>}
+      {error && <Box sx={{p:3}}><Alert severity="error" sx={{bgcolor: '#333', color: 'red'}}>{error}</Alert></Box>}
+
+      {profileData && (
+        <>
+          <Box
+            sx={{
+              width: '100%',
+              maxWidth: '800px',
+              minWidth: '300px',
+              overflow: 'hidden',
+              border: borderStyle,
+              boxShadow: shadowStyle,
+              bgcolor: theme.palette.secondary.light 
+            }}
+          >
+            <Box sx={{ position: 'relative' }}>
+              <Box
+                onClick={() => handleOpenImage(bannerUrl)}
+                sx={{
+                  height: { xs: '150px', sm: '200px', md: '260px' },
+                  borderBottom: '2px solid #ffffff',
+                  backgroundImage: bannerUrl ? `url(${bannerUrl})` : 'none',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  cursor: bannerUrl ? 'pointer' : 'default',
+                  bgcolor: '#ccc'
+                }}
+              />
+              <Avatar
+                onClick={() => handleOpenImage(avatarUrl)}
+                src={avatarUrl}
+                sx={{
+                  width: { xs: 80, sm: 100, md: 135 },
+                  height: { xs: 80, sm: 100, md: 135 },
+                  position: 'absolute',
+                  top: { xs: '110px', sm: '150px', md: '190px' },
+                  left: '16px',
+                  border: '2px solid #000000',
+                  fontSize: '4rem',
+                  cursor: avatarUrl ? 'pointer' : 'default',
+                  borderRadius: 0, 
+                }}
+              >
+                {profileData.name ? profileData.name.charAt(0).toUpperCase() : 'U'}
+              </Avatar>
             </Box>
-          </>
-        )}
-      </Box>
-    </Box>
+
+            <Box sx={{ p: '12px 16px', mt: { xs: '30px', sm: '40px', md: '60px' } }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap' }}>
+                  <Typography variant="h5" component="div" fontWeight="bold">
+                      {profileData.name}
+                  </Typography>
+                  {profileData.position && (
+                    <Typography
+                      variant="caption"
+                      sx={{
+                      px: 1,
+                      py: 0.25,
+                      bgcolor: theme.palette.neo.purple || '#C4B5FD', 
+                      border: '2px solid #18181b',      
+                      borderRadius: 0,                  
+                      fontWeight: 'bold',
+                      fontFamily: '"Space Mono", monospace',
+                      color: '#18181b',
+                      boxShadow: '2px 2px 0px 0px #18181b', 
+                      lineHeight: 1.2,
+                      transform: 'translateY(-2px)'     
+                    }}
+                    >
+                      {profileData.position}
+                    </Typography>
+                  )}
+              </Box>
+              <Typography>
+                @{profileData.handle}
+              </Typography>
+            </Box>
+
+            {(profileData.role === 'admin' || profileData.role === 'faculty') ? (
+              <>
+                <Box sx={{ borderBottom: 1, borderColor: '#ffffff' }}>
+                  <Tabs 
+                    value={tabValue} 
+                    onChange={handleTabChange} 
+                    variant="fullWidth" 
+                    textColor="inherit"
+                  >
+                    <Tab label="About" id="profile-tab-0" />
+                    <Tab label="Posts" id="profile-tab-1" />
+                  </Tabs>
+                </Box>
+
+                <TabPanel value={tabValue} index={0}>
+                  <AboutContent profileData={profileData} />
+                </TabPanel>
+                <TabPanel value={tabValue} index={1}>
+                  <InfiniteScroll
+                    dataLength={posts.length}
+                    next={fetchMoreData}
+                    hasMore={hasMore}
+                    loader={<CircularProgress sx={{ my: 2, color: '#000' }} />}
+                    endMessage={
+                      <p style={{ textAlign: 'center', marginTop: '20px' }}>
+                        <b>You have seen it all!</b>
+                      </p>
+                    }
+                  >
+                    {posts.map((post, index) => {
+                      const postWithAuthor = {
+                        ...post,
+                        author_name: profileData.name,
+                        handle: profileData.handle,
+                        profile_picture_url: profileData.profile_picture_url
+                      };
+                      return (
+                        <ShowPostsCard
+                          key={`${post.id}-${index}`}
+                          post={postWithAuthor}
+                          onDelete={handleDeletePost}
+                          onUpdate={handleUpdatePost}
+                        />
+                      )
+                    })}
+                  </InfiniteScroll>
+                </TabPanel>
+              </>
+            ) : (
+              <Box sx={{ p: 3, borderTop: '1px solid #555' }}>
+                <AboutContent profileData={profileData} />
+              </Box>
+            )}
+          </Box>
+        </>
+      )}
+    </Layout>
   );
 }
   
-  export default UserProfilePage;
+export default UserProfilePage;

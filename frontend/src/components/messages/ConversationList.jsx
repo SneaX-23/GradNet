@@ -22,7 +22,7 @@ const getFullUrl = (path) => {
   return `${API_BASE_URL}${path}`;
 };
 
-export default function ConversationList({ onSelectConversation }) {
+export default function ConversationList({ onSelectConversation, showBorder = true}) {
   const [conversations, setConversations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');

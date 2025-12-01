@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '/src/context/AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
-import Sidebar from '/src/components/layout/Sidebar.jsx';
-import { Box, Typography, CssBaseline, AppBar, Toolbar, CircularProgress } from '@mui/material';
+import { Typography, CircularProgress } from '@mui/material';
 import { getJobs } from "/src/services/JobService.jsx";
 import JobCard from '/src/components/jobs/JobCard.jsx';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CreateJob from '/src/components/jobs/CreateJob.jsx';
-import RightSidebar from '/src/components/layout/RightSidebar.jsx';
 import { API_BASE_URL } from '/src/config.js';
+import Layout from '../components/layout/Layout.jsx';
 
 function JobsPage() {
   const { user } = useAuth();
@@ -84,45 +83,16 @@ function JobsPage() {
   }
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar 
-        position="fixed" 
-        sx={{ 
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-        }}
-      >
-        <Toolbar>
-          <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 'bold' }}>
-            GradNet - Jobs
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Sidebar />
-      <RightSidebar />
-      
-      <Box 
-        component="main" 
-        sx={{ 
-          flexGrow: 1, 
-          p: 3, 
-          marginTop: '64px', 
-          marginRight: '320px', 
-          display: 'flex', 
-          flexDirection: 'column', 
-          alignItems: 'center',
-          minHeight: 'calc(100vh - 64px)',
-        }}
-      >
-        
+    <Layout title="GradNet - Jobs">
         {user && (user.role === 'admin' || user.role === 'faculty') && <CreateJob onJobPosted={fetchInitialJobs} />}
 
         {error && <Typography color="error">{error}</Typography>}
+        
         <InfiniteScroll
           dataLength={jobs.length}
           next={fetchMoreData}
           hasMore={hasMore}
-          loader={<CircularProgress sx={{ my: 2, color: '#ffffff' }} />}
+          loader={<CircularProgress sx={{ my: 2, color: '#000000' }} />}
           endMessage={
             <p style={{ textAlign: 'center', marginTop: '20px' }}>
               <b>You have seen all job postings!</b>
@@ -139,8 +109,7 @@ function JobsPage() {
             />
           ))}
         </InfiniteScroll>
-      </Box>
-    </Box>
+    </Layout>
   );
 }
 

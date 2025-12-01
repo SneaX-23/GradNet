@@ -10,6 +10,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import CreatePost from '../components/common/createPost.jsx'
 import RightSidebar from '../components/layout/RightSidebar.jsx'
 import { API_BASE_URL } from '../config.js';
+import Layout from '../components/layout/Layout.jsx';
  
 function HomePage() {
   const { user } = useAuth();
@@ -100,36 +101,12 @@ function HomePage() {
   }
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar 
-        position="fixed" 
-        sx={{ 
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-        }}
-      >
-        <Toolbar>
-          <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 'bold' }}>
-            GradNet
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Sidebar />
-      <RightSidebar />
-
-      <Box component="main" sx={{ 
-        flexGrow: 1, 
-        p: 3, 
-        marginTop: '64px', 
-        marginRight: '320px', 
-        display: 'flex', 
-        flexDirection: 'column', 
-        alignItems: 'center',
-      }}>
+    <Layout title="GradNet">
         
         {user && (user.role === 'admin' || user.role === 'faculty') && <CreatePost />}
 
         {error && <Typography color="error">{error}</Typography>}
+        
         <InfiniteScroll
           dataLength={posts.length}
           next={fetchMoreData}
@@ -140,18 +117,18 @@ function HomePage() {
               <b>You have seen it all!</b>
             </p>
           }
+          style={{ width: '100%', maxWidth: '750px', overflow: 'visible' }} 
         >
           {posts.map((post, index) => (
             <ShowPostsCard
-             key={`${post.id}-${index}`}
+              key={`${post.id}-${index}`}
               post={post}
               onDelete={handleDeletePost}
               onUpdate={handleUpdatePost}
             />
           ))}
         </InfiniteScroll>
-      </Box>
-    </Box>
+    </Layout>
   );
 }
 

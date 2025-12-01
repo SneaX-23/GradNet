@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, 
-  Toolbar, Box, Avatar, Typography, Menu, MenuItem 
+  Toolbar, Box, Avatar, Typography, Menu, MenuItem, useMediaQuery 
 } from '@mui/material';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -17,14 +17,17 @@ import { API_BASE_URL } from '/src/config.js';
 import { useTheme } from '@mui/material/styles';
 import { theme, colors, borderStyle, shadowHover, shadowStyle } from '../../theme';
 
-const drawerWidth = 240;
+export const drawerWidth = 240;
 
-function Sidebar() {
+function Sidebar({ mobileOpen, onClose, window }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const theme = useTheme(); 
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+  const openMenu = Boolean(anchorEl);
+
+  const container = window !== undefined ? () => window().document.body : undefined;
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -44,7 +47,6 @@ function Sidebar() {
     ? (user.profile_image_url.startsWith('http') ? user.profile_image_url : `${API_BASE_URL}${user.profile_image_url}`)
     : null;
 
-  
   const sidebarItemStyle = {
     mb: 1.5, 
     border: borderStyle,
@@ -58,7 +60,6 @@ function Sidebar() {
       boxShadow: shadowHover,
       transform: 'translate(-2px, -2px)',
     },
-    
     '&.active': {
       bgcolor: colors.orange,
       boxShadow: shadowStyle, 
@@ -75,26 +76,13 @@ function Sidebar() {
     }
   };
 
-  return (
-    <Drawer
-      variant="permanent"
-      sx={{
-        width: drawerWidth,
-        flexShrink: 0,
-        [`& .MuiDrawer-paper`]: { 
-            width: drawerWidth, 
-            boxSizing: 'border-box',
-            backgroundColor: colors.bg, 
-            borderRight: borderStyle,
-         },
-      }}
-    >
-      <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', p: 2 }}>
+  const drawerContent = (
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', p: 2 }}>
         <Box>
           <Toolbar sx={{ minHeight: '64px !important' }} /> 
           <List disablePadding>
             <ListItem disablePadding sx={{ display: 'block' }}>
-              <ListItemButton component={NavLink} to="/home" end sx={sidebarItemStyle}>
+              <ListItemButton component={NavLink} to="/home" end sx={sidebarItemStyle} onClick={onClose}>
                 <ListItemIcon sx={{ color: colors.black, minWidth: 40 }}>
                   <HomeOutlinedIcon />
                 </ListItemIcon>
@@ -104,7 +92,7 @@ function Sidebar() {
             
             {user && (user.role === 'admin' || user.role === 'faculty') && (
               <ListItem disablePadding sx={{ display: 'block' }}>
-                <ListItemButton component={NavLink} to="/dashboard" sx={sidebarItemStyle}>
+                <ListItemButton component={NavLink} to="/dashboard" sx={sidebarItemStyle} onClick={onClose}>
                   <ListItemIcon sx={{ color: colors.black, minWidth: 40 }}>
                     <DashboardIcon />
                   </ListItemIcon>
@@ -114,7 +102,7 @@ function Sidebar() {
             )}
 
             <ListItem disablePadding sx={{ display: 'block' }}>
-              <ListItemButton component={NavLink} to="/jobs" sx={sidebarItemStyle}>
+              <ListItemButton component={NavLink} to="/jobs" sx={sidebarItemStyle} onClick={onClose}>
                 <ListItemIcon sx={{ color: colors.black, minWidth: 40 }}>
                   <WorkOutlineOutlinedIcon />
                 </ListItemIcon>
@@ -123,7 +111,7 @@ function Sidebar() {
             </ListItem>
 
             <ListItem disablePadding sx={{ display: 'block' }}>
-              <ListItemButton component={NavLink} to="/messages" sx={sidebarItemStyle}>
+              <ListItemButton component={NavLink} to="/messages" sx={sidebarItemStyle} onClick={onClose}>
                 <ListItemIcon sx={{ color: colors.black, minWidth: 40 }}>
                   <MailOutlineTwoToneIcon />
                 </ListItemIcon>
@@ -132,7 +120,7 @@ function Sidebar() {
             </ListItem>
 
             <ListItem disablePadding sx={{ display: 'block' }}>
-              <ListItemButton component={NavLink} to="/forums" sx={sidebarItemStyle}>
+              <ListItemButton component={NavLink} to="/forums" sx={sidebarItemStyle} onClick={onClose}>
                 <ListItemIcon sx={{ color: colors.black, minWidth: 40 }}>
                   <ForumTwoToneIcon />
                 </ListItemIcon>
@@ -141,7 +129,7 @@ function Sidebar() {
             </ListItem>
 
             <ListItem disablePadding sx={{ display: 'block' }}>
-              <ListItemButton component={NavLink} to="/bookmarks" sx={sidebarItemStyle}>
+              <ListItemButton component={NavLink} to="/bookmarks" sx={sidebarItemStyle} onClick={onClose}>
                 <ListItemIcon sx={{ color: colors.black, minWidth: 40 }}>
                   <BookmarkIcon />
                 </ListItemIcon>
@@ -150,7 +138,7 @@ function Sidebar() {
             </ListItem>
 
             <ListItem disablePadding sx={{ display: 'block' }}>
-              <ListItemButton component={NavLink} to="/profile" sx={sidebarItemStyle}>
+              <ListItemButton component={NavLink} to="/profile" sx={sidebarItemStyle} onClick={onClose}>
                 <ListItemIcon sx={{ color: colors.black, minWidth: 40 }}>
                   <PersonOutlineOutlinedIcon />
                 </ListItemIcon>
@@ -202,7 +190,7 @@ function Sidebar() {
           
           <Menu
             anchorEl={anchorEl}
-            open={open}
+            open={openMenu}
             onClose={handleClose}
             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
@@ -225,7 +213,53 @@ function Sidebar() {
           </Menu>
         </Box>
       </Box>
-    </Drawer>
+  );
+
+  return (
+    <Box
+      component="nav"
+      sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
+      aria-label="mailbox folders"
+    >
+      {/* Mobile Drawer */}
+      <Drawer
+        container={container}
+        variant="temporary"
+        open={mobileOpen}
+        onClose={onClose}
+        ModalProps={{
+          keepMounted: true, // Better open performance on mobile.
+        }}
+        sx={{
+          display: { xs: 'block', md: 'none' },
+          '& .MuiDrawer-paper': { 
+            boxSizing: 'border-box', 
+            width: drawerWidth,
+            backgroundColor: colors.bg, 
+            borderRight: borderStyle, 
+          },
+        }}
+      >
+        {drawerContent}
+      </Drawer>
+      
+      {/* Desktop Drawer */}
+      <Drawer
+        variant="permanent"
+        sx={{
+          display: { xs: 'none', md: 'block' },
+          '& .MuiDrawer-paper': { 
+            boxSizing: 'border-box', 
+            width: drawerWidth,
+            backgroundColor: colors.bg, 
+            borderRight: borderStyle,
+          },
+        }}
+        open
+      >
+        {drawerContent}
+      </Drawer>
+    </Box>
   );
 }
 

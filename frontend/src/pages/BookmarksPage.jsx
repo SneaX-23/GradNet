@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '/src/context/AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
-import Sidebar from '/src/components/layout/Sidebar.jsx';
-import { Box, Typography, CssBaseline, AppBar, Toolbar, CircularProgress, Alert } from '@mui/material';
+import { Box, Typography, CircularProgress, Alert } from '@mui/material';
 import { getBookmarks } from "/src/services/bookmarksService.jsx";
 import InfiniteScroll from 'react-infinite-scroll-component';
-import RightSidebar from '/src/components/layout/RightSidebar.jsx';
 import ShowPostsCard from '/src/components/common/showPostsCard.jsx';
 import JobCard from '/src/components/jobs/JobCard.jsx';
 import ForumCard from '/src/components/forum/ForumCard.jsx';
+import Layout from '../components/layout/Layout.jsx';
 
 function BookmarksPage() {
   const { user } = useAuth();
@@ -96,37 +95,7 @@ function BookmarksPage() {
   if (!user) return null;
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar 
-        position="fixed" 
-        sx={{ 
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-        }}
-      >
-        <Toolbar>
-          <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 'bold' }}>
-            Bookmarks
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Sidebar />
-      <RightSidebar />
-      
-      <Box 
-        component="main" 
-        sx={{ 
-          flexGrow: 1, 
-          p: 3, 
-          marginTop: '64px', 
-          marginRight: '320px', 
-          display: 'flex', 
-          flexDirection: 'column', 
-          alignItems: 'center',
-          minHeight: 'calc(100vh - 64px)', 
-        }}
-      >
-        
+    <Layout title="Bookmarks">
         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
         
         <InfiniteScroll
@@ -141,18 +110,17 @@ function BookmarksPage() {
                 </p>
             ) : null
           }
-          style={{width: '100%', maxWidth: '800px'}}
+          style={{ width: '100%', maxWidth: '800px' }}
         >
           {bookmarks.length > 0 ? (
             bookmarks.map(renderBookmark)
           ) : (
-            !error && <Typography sx={{ textAlign: 'center', marginTop: '20px' }}>
+            !error && <Typography sx={{ textAlign: 'center', marginTop: '20px', color: '#aaaaaa' }}>
                 No bookmarks yet.
             </Typography>
           )}
         </InfiniteScroll>
-      </Box>
-    </Box>
+    </Layout>
   );
 }
 
