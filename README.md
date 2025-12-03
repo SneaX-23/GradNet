@@ -91,7 +91,7 @@ It features real-time interactions, job sharing, rich alumni profiles, and priva
 ---
 
 ## 📁 **Project Structure**
-
+```bash
 GradNet/
 ├── backend/
 │ ├── config/
@@ -115,7 +115,7 @@ GradNet/
 │
 ├── uploads/
 └── package.json
-
+```
 
 
 
