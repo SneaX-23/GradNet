@@ -6,6 +6,8 @@ import { dirname } from "path";
 import dotenv from "dotenv"
 import cors from 'cors';
 import { Server } from "socket.io";
+import passport from 'passport';
+import './config/passport.js';
 
 import { requireAuth } from "./middleware/authMiddleware.js";
 import authRoutes from "./routes/authRoutes.js";
@@ -75,6 +77,10 @@ const sessionMiddleware = session({
 });
 
 app.use(sessionMiddleware);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 io.use((socket, next) => {
   sessionMiddleware(socket.request, {}, () => {
     // console.log("--- Socket.IO Middleware Check ---");
