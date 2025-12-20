@@ -253,7 +253,6 @@ function RightSidebar({ mobileOpen, onClose, window }) {
                             label={topic}
                             onClick={() => {}}
                             sx={{
-                                borderRadius: 0,
                                 border: `2px solid ${NEO_BLACK}`,
                                 backgroundColor: NEO_BLUE,
                                 color: NEO_BLACK,

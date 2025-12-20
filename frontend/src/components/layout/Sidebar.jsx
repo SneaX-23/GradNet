@@ -51,7 +51,6 @@ function Sidebar({ mobileOpen, onClose, window }) {
     mb: 1.5, 
     border: borderStyle,
     boxShadow: 'none',
-    borderRadius: 0,
     bgcolor: colors.white,
     borderRadius: "10px",
     transition: 'all 0.1s ease',
