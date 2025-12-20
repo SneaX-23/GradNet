@@ -183,12 +183,12 @@ export default function ShowPostsCard({ post, onDelete, onUpdate, onBookmarkTogg
           width: { xs: '100%', sm: "calc(100% - 4px)" },
           maxWidth: 750,
           border: borderStyle,
-          boxShadow: shadowStyle,
+          boxShadow: 'none',
           transition: "all 0.1s ease", 
           
           "&:hover": {
             borderColor: colors.black,
-            boxShadow: shadowHover, 
+            // boxShadow: shadowHover, 
             transform: 'translate(-2px, -2px)' 
           },
           
@@ -226,7 +226,7 @@ export default function ShowPostsCard({ post, onDelete, onUpdate, onBookmarkTogg
                         fontWeight: 'bold',
                         fontFamily: '"Space Mono", monospace',
                         color: '#18181b',
-                        boxShadow: '2px 2px 0px 0px #18181b', 
+                        boxShadow: 'none', 
                         lineHeight: 1.2,
                         transform: 'translateY(-2px)'              
                 }}>

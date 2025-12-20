@@ -17,7 +17,7 @@ import { API_BASE_URL } from '/src/config.js';
 import { useTheme } from '@mui/material/styles';
 import { theme, colors, borderStyle, shadowHover, shadowStyle } from '../../theme';
 
-export const drawerWidth = 240;
+export const drawerWidth = 300;
 
 function Sidebar({ mobileOpen, onClose, window }) {
   const { user, logout } = useAuth();
@@ -53,6 +53,7 @@ function Sidebar({ mobileOpen, onClose, window }) {
     boxShadow: 'none',
     borderRadius: 0,
     bgcolor: colors.white,
+    borderRadius: "10px",
     transition: 'all 0.1s ease',
     color: colors.black,
     '&:hover': {
@@ -160,6 +161,7 @@ function Sidebar({ mobileOpen, onClose, window }) {
               bgcolor: colors.white,
               border: borderStyle,
               boxShadow: shadowStyle,
+              borderRadius: "10px",
               transition: 'all 0.1s ease',
               '&:hover': {
                 boxShadow: shadowHover,

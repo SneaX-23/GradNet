@@ -210,7 +210,7 @@ function ProfilePage() {
               maxWidth: '800px', 
               minWidth: '300px', 
               border: borderStyle,
-              boxShadow: shadowStyle,
+              boxShadow: "none",
               overflow: 'hidden',
               bgcolor: theme.palette.secondary.light
             }}
@@ -254,7 +254,8 @@ function ProfilePage() {
                     fontWeight: 'bold',
                     color: colors.black,
                     bgcolor: theme.palette.primary.main,
-                    mt: { xs: 4, sm: 0 }
+                    mt: { xs: 4, sm: 0 },
+                    boxShadow: "none"
                   }}
                 >
                   Edit profile
@@ -279,7 +280,7 @@ function ProfilePage() {
                       fontWeight: 'bold',
                       fontFamily: '"Space Mono", monospace',
                       color: '#18181b',
-                      boxShadow: '2px 2px 0px 0px #18181b', 
+                      boxShadow: 'none', 
                       lineHeight: 1.2,
                       transform: 'translateY(-2px)'     
                     }}

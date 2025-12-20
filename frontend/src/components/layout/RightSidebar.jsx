@@ -22,7 +22,7 @@ import ConversationList from '../messages/ConversationList';
 import { searchUsers } from '../../services/userService';
 import { API_BASE_URL } from '../../config';
 
-export const rightSidebarWidth = 320;
+export const rightSidebarWidth = 350;
 
 const NEO_BLACK = '#18181b';
 const NEO_WHITE = '#FFFFFF';
@@ -92,8 +92,9 @@ function RightSidebar({ mobileOpen, onClose, window }) {
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
+        overflow: "hidden",
         gap: 4,
-        overflowY: 'auto',
+        // overflowY: 'auto',
         fontFamily: '"Space Grotesk", sans-serif',
         pl: 3, 
         pr: 3,
@@ -107,7 +108,7 @@ function RightSidebar({ mobileOpen, onClose, window }) {
             bgcolor: NEO_WHITE, 
             border: `2px solid ${NEO_BLACK}`,
             boxShadow: `4px 4px 0px ${NEO_BLACK}`,
-            borderRadius: 0,
+            borderRadius: "10px",
         }}
       >
         <TextField
@@ -215,6 +216,7 @@ function RightSidebar({ mobileOpen, onClose, window }) {
                         marginBottom: '16px', 
                         border: `2px solid ${NEO_BLACK}`,
                         backgroundColor: NEO_WHITE,
+                        borderRadius: "10px",
                         transition: 'transform 0.1s ease',
                         '&:hover': {
                             transform: 'translate(-2px, -2px)',
@@ -259,6 +261,7 @@ function RightSidebar({ mobileOpen, onClose, window }) {
                                 fontFamily: '"Space Mono", monospace',
                                 boxShadow: `2px 2px 0px ${NEO_BLACK}`,
                                 cursor: 'pointer',
+                                borderRadius: "7px",
                                 transition: 'all 0.1s ease',
                                 '&:hover': {
                                     backgroundColor: NEO_BLUE_HOVER,
@@ -283,7 +286,7 @@ function RightSidebar({ mobileOpen, onClose, window }) {
   return (
     <Box
       component="nav"
-      sx={{ width: { lg: rightSidebarWidth }, flexShrink: { lg: 0 } }}
+      sx={{ width: { lg: rightSidebarWidth }, flexShrink: { lg: 0 }, overflow: "hidden" }}
     >
       {/* Mobile Right Drawer */}
       <Drawer
@@ -320,7 +323,7 @@ function RightSidebar({ mobileOpen, onClose, window }) {
           height: 'calc(100vh - 64px)',
           borderLeft: `2px solid ${NEO_BLACK}`,
           backgroundColor: '#FDF6E3',
-          overflowY: 'auto'
+          overflowY: 'auto  '
         }}
       >
         {content}

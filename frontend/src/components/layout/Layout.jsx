@@ -4,6 +4,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import Sidebar, { drawerWidth } from './Sidebar';
 import RightSidebar, { rightSidebarWidth } from './RightSidebar';
+import GradNetLogo from '../../assets/icons/gradnet-logo.png';
 
 function Layout({ children, title = "GradNet",disablePadding = false }) {
   const [mobileOpenLeft, setMobileOpenLeft] = useState(false);
@@ -51,7 +52,16 @@ function Layout({ children, title = "GradNet",disablePadding = false }) {
               textAlign: { xs: 'center', md: 'left' } 
             }}
           >
-            {title}
+            <img 
+    src={GradNetLogo} 
+    alt="GradNet Logo"
+    style={{
+      height: '50px',
+      objectFit: 'contain',
+      cursor: 'pointer',
+      paddingTop: "3px"
+    }} 
+  />
           </Typography>
 
           {/* Right Search Button (Mobile/Tablet) */}

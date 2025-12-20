@@ -141,7 +141,8 @@ function CreatePost({ onPostCreated }) {
         maxWidth: 750, 
         backgroundColor: NEO_CREAM,
         border: `2px solid ${NEO_BLACK}`,
-        boxShadow: `4px 4px 0px ${NEO_BLACK}`,
+        // boxShadow: `4px 4px 0px ${NEO_BLACK}`,
+        boxShadow: "none",
         display: 'flex',
         gap: 2,
         fontFamily: '"Space Grotesk", sans-serif'
