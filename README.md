@@ -1,220 +1,273 @@
-GradNet
-Connecting AITM, Across Generations.
+# GradNet
 
-GradNet is a robust, web-based alumni networking platform designed to bridge the gap between current students, faculty, and alumni. Built with a distinct Retro Terminal (Black & White) aesthetic, it facilitates professional networking, mentorship, job sharing, and community discussions in real-time.
+> **Connecting AITM Across Generations**
 
-Features
-Authentication & Onboarding
-USN-based Login: Secure login using University Serial Numbers.
+GradNet is a robust, web-based alumni networking platform designed to bridge the gap between current students, faculty, and alumni. Built with a distinctive **Retro Terminal (Black & White)** aesthetic, it facilitates professional networking, mentorship, job sharing, and community discussions in real-time.
 
-OTP Verification: Email-based One-Time Password authentication using SendGrid.
+---
 
-Pre-verified Student Database: Ensures only authorized alumni/students can register.
+## 📋 Table of Contents
 
-Profile Creation: Custom handle selection and profile setup upon first login.
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Installation & Setup](#-installation--setup)
+- [Running the Application](#-running-the-application)
+- [Design System](#-design-system)
+- [Contributing](#-contributing)
+- [License](#-license)
 
-Social Feed & Interaction
-Multimedia Posts: Users can create posts with text, images, videos, and PDF attachments.
+---
 
-Real-time Updates: New posts appear instantly via Socket.io.
+## ✨ Features
 
-Bookmarks: Save interesting posts, jobs, or forum topics for later.
+### 🔐 Authentication & Onboarding
 
-Job Portal
-Job Board: Alumni and Faculty can post job openings and internships.
+- **USN-based Login**: Secure authentication using University Serial Numbers
+- **OTP Verification**: Email-based One-Time Password authentication powered by SendGrid
+- **Pre-verified Student Database**: Ensures only authorized alumni and students can register
+- **Profile Creation**: Custom handle selection and profile setup upon first login
 
-Detailed Listings: Includes salary range, job type, location, and application links.
+### 📱 Social Feed & Interaction
 
-Search & Filter: (Planned) Find relevant opportunities easily.
+- **Multimedia Posts**: Create posts with text, images, videos, and PDF attachments
+- **Real-time Updates**: New posts appear instantly via Socket.io
+- **Bookmarks**: Save interesting posts, jobs, or forum topics for later reference
 
-Discussion Forums
-Categorized Discussions: Organized forum categories (e.g., Tech, Career, General).
+### 💼 Job Portal
 
-Threaded Topics: Create topics within categories for focused discussions.
+- **Job Board**: Alumni and faculty can post job openings and internships
+- **Detailed Listings**: Includes salary range, job type, location, and application links
+- **Search & Filter**: *(Planned)* Find relevant opportunities easily
 
-Role-Based Access: Only Admins/Faculty can create new Forum Categories.
+### 💬 Discussion Forums
 
-Real-time Messaging
-Private Chat: Instant messaging between users.
+- **Categorized Discussions**: Organized forum categories (e.g., Tech, Career, General)
+- **Threaded Topics**: Create topics within categories for focused discussions
+- **Role-Based Access**: Only Admins and Faculty can create new forum categories
 
-Inbox: View conversation history and start new chats via user search.
+### 💌 Real-time Messaging
 
-Socket.io Integration: Instant message delivery and status updates.
+- **Private Chat**: Instant messaging between users
+- **Inbox**: View conversation history and start new chats via user search
+- **Socket.io Integration**: Instant message delivery and status updates
 
-Alumni Dashboard
-Directory: Searchable database of alumni by Name or USN.
+### 👥 Alumni Dashboard
 
-Rich Profiles: View graduation year, current company, bio, and social links (LinkedIn, GitHub, X).
+- **Directory**: Searchable database of alumni by name or USN
+- **Rich Profiles**: View graduation year, current company, bio, and social links (LinkedIn, GitHub, X)
 
-Tech Stack
-Frontend
-Framework: React (Vite)
+---
 
-UI Library: Material UI (MUI) with custom Retro styling
+## 🛠 Tech Stack
 
-Routing: React Router DOM
+### Frontend
 
-Real-time: Socket.io Client
+- **Framework**: React (Vite)
+- **UI Library**: Material UI (MUI) with custom Retro styling
+- **Routing**: React Router DOM
+- **Real-time**: Socket.io Client
+- **Utilities**: React PDF, React Easy Crop, React Infinite Scroll Component
 
-Utilities: React PDF, React Easy Crop, React Infinite Scroll Component
+### Backend
 
-Backend
-Runtime: Node.js
+- **Runtime**: Node.js
+- **Framework**: Express.js
+- **Database**: PostgreSQL (via pg pool)
+- **Real-time**: Socket.io
+- **Authentication**: Express Session, Custom Middleware
+- **File Handling**: Multer (Image/Document uploads)
+- **Email Service**: Resend
 
-Framework: Express.js
+---
 
-Database: PostgreSQL (via pg pool)
+## 📁 Project Structure
 
-Real-time: Socket.io
-
-Authentication: Express Session, Custom Middleware
-
-File Handling: Multer (Image/Document uploads)
-
-Email Service: SendGrid
-
-Project Structure
-Plaintext
-
+```
 GradNet/
-├── backend/                # Express Server & API
-│   ├── config/             # DB and Email configuration
-│   ├── controllers/        # Request handlers
-│   ├── middleware/         # Auth & Validation middleware
-│   ├── models/             # SQL Query abstractions
-│   ├── routes/             # API endpoints
-│   ├── services/           # Business logic (Auth, Email)
-│   └── index.js            # Entry point
+├── backend/                    # Express Server & API
+│   ├── config/                 # DB and Email configuration
+│   ├── controllers/            # Request handlers
+│   ├── middleware/             # Auth & Validation middleware
+│   ├── models/                 # SQL Query abstractions
+│   ├── routes/                 # API endpoints
+│   ├── services/               # Business logic (Auth, Email)
+│   └── index.js                # Entry point
 │
-├── frontend/               # React Client
+├── frontend/                   # React Client
 │   ├── src/
-│   │   ├── assets/         # Images & Icons
-│   │   ├── components/     # Reusable UI components
-│   │   ├── context/        # Global state (Auth)
-│   │   ├── hooks/          # Custom hooks
-│   │   ├── pages/          # Main Application Pages
-│   │   ├── services/       # API fetch wrappers
-│   │   ├── styles/         # CSS (Retro theme)
-│   │   └── App.jsx         # Main Component
-│   └── vite.config.js      # Vite configuration
+│   │   ├── assets/             # Images & Icons
+│   │   ├── components/         # Reusable UI components
+│   │   ├── context/            # Global state (Auth)
+│   │   ├── hooks/              # Custom hooks
+│   │   ├── pages/              # Main Application Pages
+│   │   ├── services/           # API fetch wrappers
+│   │   ├── styles/             # CSS (Retro theme)
+│   │   └── App.jsx             # Main Component
+│   └── vite.config.js          # Vite configuration
 │
-├── uploads/                # Server-side file storage
+├── uploads/                    # Server-side file storage
 ├── .gitignore
-└── package.json            # Root script for concurrent execution
-Installation & Setup
-Prerequisites
-Node.js (v16+)
+└── package.json                # Root script for concurrent execution
+```
 
-PostgreSQL
+---
 
-SendGrid API Key (for emails)
+## 🚀 Installation & Setup
 
-1. Clone the Repository
-Bash
+### Prerequisites
 
+- Node.js (v16 or higher)
+- PostgreSQL
+- SendGrid API Key (for email services)
+
+### 1. Clone the Repository
+
+```bash
 git clone https://github.com/yourusername/GradNet.git
 cd GradNet
-2. Database Setup
-Create a PostgreSQL database named gradnet (or your preferred name).
+```
 
-Execute the SQL scripts (typically found in schema.sql or schema_v1.sql - not included in file list but referenced in gitignore) to create the necessary tables:
+### 2. Database Setup
 
-users, pre_verified_students, otp_verifications
+Create a PostgreSQL database named `gradnet` (or your preferred name).
 
-events, event_files, bookmarks
+Execute the SQL scripts to create the necessary tables:
 
-job_posts, alumni_master_data
+- `users`
+- `pre_verified_students`
+- `otp_verifications`
+- `events`
+- `event_files`
+- `bookmarks`
+- `job_posts`
+- `alumni_master_data`
+- `forum_categories`
+- `forum_topics`
+- `forum_posts`
+- `conversations`
+- `conversation_participants`
+- `messages`
 
-forum_categories, forum_topics, forum_posts
+### 3. Backend Configuration
 
-conversations, conversation_participants, messages
-
-3. Backend Configuration
 Navigate to the backend folder and install dependencies:
 
-Bash
-
+```bash
 cd backend
 npm install
-Create a .env file in the backend/ directory:
+```
 
-Code snippet
+Create a `.env` file in the `backend/` directory:
 
+```env
+# Server Port
 PORT=3000
-# Database Config
+
+# Database Configuration
 DB_USER=your_postgres_user
 DB_HOST=localhost
 DB_NAME=gradnet_db
 DB_PASSWORD=your_postgres_password
 DB_PORT=5432
 
-# Session
+# Session Secret
 SESSION_SECRET=your_super_secret_key
 
 # Email (SendGrid)
-SENDGRID_API_KEY=your_sendgrid_api_key
-SENDER_EMAIL=your_verified_sender_email
+RESEND_API_KEY=your_resend_api_key
+RESEND_EMAIL=your_verified_sender_email
 
 # Frontend URL (CORS)
 FRONTEND_URL=http://localhost:5173
-4. Frontend Configuration
+```
+
+### 4. Frontend Configuration
+
 Navigate to the frontend folder and install dependencies:
 
-Bash
-
+```bash
 cd ../frontend
 npm install
-Create a .env file in the frontend/ directory:
+```
 
-Code snippet
+Create a `.env` file in the `frontend/` directory:
 
+```env
 VITE_API_BASE_URL=http://localhost:3000
 VITE_SOCKET_URL=http://localhost:3000
-Running the App
-You can run both the backend and frontend concurrently from the root directory:
+```
 
-Bash
+---
 
+## 🏃 Running the Application
+
+### Concurrent Mode (Recommended)
+
+Run both the backend and frontend concurrently from the root directory:
+
+```bash
 # From the root project directory
 npm install
 npm run dev
-Alternatively, run them strictly:
+```
 
-Backend:
+### Separate Mode
 
-Bash
+Alternatively, run them separately:
 
+**Backend:**
+```bash
 cd backend
 npm run dev
-Frontend:
+```
 
-Bash
-
+**Frontend:**
+```bash
 cd frontend
 npm run dev
-Access the application at http://localhost:5173.
+```
 
-Design System
-GradNet utilizes a custom Retro Theme:
+Access the application at **http://localhost:5173**
 
-Font: Courier New, Monospace.
+---
 
-Palette: Strict Black (#000000) & White (#ffffff).
+## 🎨 Design System
 
-Components: Sharp edges (no border-radius), high contrast, pixelated assets.
+GradNet features a distinctive **Retro Terminal** aesthetic:
 
-Contributing
-Fork the repository.
+- **Typography**: Courier New, Monospace
+- **Color Palette**: Strict Black (`#000000`) & White (`#ffffff`)
+- **Visual Style**: 
+  - Sharp edges (no border-radius)
+  - High contrast interface
+  - Pixelated assets
+  - Terminal-inspired components
 
-Create a feature branch (git checkout -b feature/AmazingFeature).
+---
 
-Commit your changes (git commit -m 'Add some AmazingFeature').
+## 🤝 Contributing
 
-Push to the branch (git push origin feature/AmazingFeature).
+Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-Open a Pull Request.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-License
-Distributed under the MIT License. See LICENSE for more information.
+---
 
-HAPPY CODING
+## 📄 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+
+## 📧 Contact
+
+For questions, suggestions, or support, please open an issue on the repository.
+
+---
+
+**HAPPY CODING! 🚀**
