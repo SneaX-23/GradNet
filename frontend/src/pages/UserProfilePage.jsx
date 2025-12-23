@@ -25,6 +25,9 @@ import { API_BASE_URL } from '../config.js';
 import ShowPostsCard from '../components/posts/showPostCard.jsx';
 import ImageModal from '../components/imageOptions/ImageModal.jsx';
 
+import {fetchGitHubStats} from "../services/userService.jsx";
+import GitHubStats from '../components/profile/GitHubStats.jsx';
+
 const getFullUrl = (path) => {
     if (!path) return null;
     if (path.startsWith('http')) return path;
@@ -45,6 +48,21 @@ export default function UserProfilePage() {
     const [posts, setPosts] = useState([]);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
+
+    const [githubStats, setGithubStats] = useState(null);
+    
+        const loadGitHub = async () => {
+            if (profileData?.github_url) {
+                try {
+                    const res = await fetchGitHubStats(profileData.handle);
+                    if (res.success) setGithubStats(res.data);
+                } catch (err) { console.error("GitHub stats error:", err); }
+        }
+        };
+    
+        useEffect(() => {
+            if (profileData) loadGitHub();
+        }, [profileData]);
 
     const loadProfile = async () => {
         try {
@@ -189,6 +207,16 @@ export default function UserProfilePage() {
                         {activeTab === 'about' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />}
                     </button>
 
+                    {profileData?.github_url && (
+                        <button
+                        onClick={() => setActiveTab('github')}
+                        className={`px-5 py-3 text-sm font-bold transition-colors relative ${activeTab === 'github' ? 'text-primary' : 'text-muted hover:text-foreground'}`}
+                        >
+                            GitHub
+                            {activeTab === 'github' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />}
+                        </button>
+                    )}
+
                     {isHighLevel && (
                         <button
                             onClick={() => setActiveTab('posts')}
@@ -249,6 +277,12 @@ export default function UserProfilePage() {
                                 <Calendar size={14} /> <span>Joined {new Date(profileData.created_at).toLocaleDateString()}</span>
                             </div>
                         </div>
+                    )}
+
+                    {activeTab === 'github' && githubStats && (
+                            <div className="bg-card sm:border sm:rounded-2xl p-4 sm:p-6 border-b border-border sm:border-b-0">
+                                <GitHubStats githubData={githubStats} github_url={profileData.handle} />
+                            </div>
                     )}
 
                     {activeTab === 'posts' && isHighLevel && (
