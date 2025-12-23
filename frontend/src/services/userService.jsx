@@ -13,3 +13,15 @@ export const searchUsers = async (query) => {
     }
     return data;
 };
+
+export const fetchGitHubStats = async (handle) => {
+    const response = await fetch(`${API_BASE_URL}/api/users/${handle}/github-stats`, { 
+        credentials: 'include' 
+    });
+    const data = await response.json();
+    
+    if (!response.ok) {
+        throw new Error(data.message || 'Failed to fetch GitHub stats.');
+    }
+    return data;
+};
