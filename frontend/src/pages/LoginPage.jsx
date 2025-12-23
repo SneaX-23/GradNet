@@ -1,106 +1,131 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Box, Divider, Alert } from "@mui/material";
-import GoogleIcon from "@mui/icons-material/Google";
-import LoginForm from "../components/auth/LoginForm";
-import NeoButton from "../components/NeoButton";
 import { useAuth as useLoginHook } from "../hooks/useAuth";
 import { useAuth } from "../context/AuthContext";
 import { API_BASE_URL } from "../config";
-import '../styles/pages/LoginPage.css';
-import logo from '../assets/icons/gradnet-logo.png';
+import logo from "../assets/icons/gradnet-logo.png";
 
 function Login() {
-  const location = useLocation(); 
-  const [googleError, setGoogleError] = useState(''); 
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const { 
-    usn, 
-    setUsn, 
+  const [googleError, setGoogleError] = useState("");
+
+  const {
+    usn,
+    setUsn,
     error: usnError,
-    isLoading, 
-    handleLoginSubmit 
+    isLoading,
+    handleLoginSubmit,
   } = useLoginHook();
 
   const { isLoggedIn, loading: authLoading } = useAuth();
-  const navigate = useNavigate();
 
+  /* Handle Google OAuth errors */
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
-    const errorMsg = queryParams.get('error');
-    
+    const errorMsg = queryParams.get("error");
+
     if (errorMsg) {
       setGoogleError(decodeURIComponent(errorMsg));
       window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, [location]);
 
+  /* Redirect if already logged in */
   useEffect(() => {
     if (!authLoading && isLoggedIn) {
-      navigate('/home');
+      navigate("/home");
     }
   }, [isLoggedIn, authLoading, navigate]);
 
   if (authLoading || isLoggedIn) {
     return (
-      <div className="login-page-container">
-        <p style={{ color: 'white', fontFamily: "'Courier New', Courier, monospace" }}>
-          Loading...
-        </p>
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-neutral-400">Loading...</p>
       </div>
     );
   }
 
+  /* Google OAuth redirect */
+  const handleGoogleLogin = () => {
+    window.location.href = `${API_BASE_URL}/api/google`;
+  };
+
   return (
-    <div className="login-page-container">
-      <div className="login-card">
-        <img src={logo} alt="GradNet Logo" className="login-logo" /> 
-        <h1>GradNet</h1>
-        <p className="subtitle">Connecting AITM, Across Generations</p>
-        
-        {googleError && (
-            <Alert severity="error" sx={{ mb: 2, borderRadius: 0, border: '2px solid #ef4444' }}>
-                {googleError}
-            </Alert>
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="w-full max-w-md rounded-xl bg-card p-6 shadow-xl sm:p-8 border border-border">
+
+        {/* Logo */}
+        <div className="flex justify-center">
+          <img src={logo} alt="GradNet" className="h-14 w-14" />
+        </div>
+
+        {/* Title */}
+        <h1 className="mt-4 text-center text-2xl font-semibold text-foreground">
+          GradNet
+        </h1>
+
+        {/* Subtitle */}
+        <p className="mt-1 text-center text-sm text-muted">
+          Connecting AITM, Across Generations
+        </p>
+
+        {/* Errors */}
+        {(usnError || googleError) && (
+          <p className="mt-4 text-center text-sm text-red-400">
+            {usnError || googleError}
+          </p>
         )}
 
-        <LoginForm 
-          usn={usn}
-          setUsn={setUsn}
-          onSubmit={handleLoginSubmit}
-          isLoading={isLoading}
-          error={usnError}
-        />
-
-        <Box sx={{ my: 3, display: 'flex', alignItems: 'center', width: '100%' }}>
-            <Divider sx={{ flexGrow: 1, bgcolor: '#18181b', borderBottomWidth: 2 }} />
-            <span style={{ 
-                padding: '0 10px', 
-                fontFamily: '"Space Mono", monospace', 
-                fontSize: '0.9rem', 
-                color: '#4a4a4a', 
-                fontWeight: 'bold' 
-            }}>
-                OR
-            </span>
-            <Divider sx={{ flexGrow: 1, bgcolor: '#18181b', borderBottomWidth: 2 }} />
-        </Box>
-
-        <NeoButton
-            fullWidth
-            href={`${API_BASE_URL}/api/google`}
-            startIcon={<GoogleIcon />}
-            sx={{
-                backgroundColor: '#ffffff',
-                color: '#18181b',
-                '&:hover': {
-                    backgroundColor: '#f5f5f5',
-                }
-            }}
+        {/* USN Form */}
+        <form
+          onSubmit={(e) => handleLoginSubmit(e)}
+          className="mt-6 space-y-4"
         >
-            Login with Google
-        </NeoButton>
+          <div>
+            <label className="block text-sm font-medium text-foreground">
+              University Serial Number
+            </label>
+            <input
+              type="text"
+              value={usn}
+              onChange={(e) => setUsn(e.target.value.toUpperCase())}
+              placeholder="Enter your USN"
+              required
+              className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+            />
+          </div>
 
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="btn btn-solid w-full text-blue-400"
+          >
+            {isLoading ? "Sending OTP..." : "Continue"}
+          </button>
+        </form>
+
+        {/* Divider */}
+        <div className="my-5 flex items-center gap-3">
+          <div className="h-px flex-1 bg-neutral-700" />
+          <span className="text-xs text-neutral-400">OR</span>
+          <div className="h-px flex-1 bg-neutral-700" />
+        </div>
+
+        {/* Google Login */}
+        <button
+          onClick={handleGoogleLogin}
+          className="btn btn-primary w-full gap-2 text-blue-500"
+        >
+          <svg className="h-4 w-4" viewBox="0 0 48 48">
+            <path
+              fill="#FFC107"
+              d="M43.6 20.4H42V20H24v8h11.3C33.7 32.1 29.3 35 24 35c-6.1 0-11-4.9-11-11s4.9-11 11-11c2.8 0 5.4 1 7.4 2.6l5.7-5.7C33.4 6.3 28.9 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c10.5 0 19-8.5 19-19 0-1.3-.1-2.3-.4-3.6z"
+            />
+          </svg>
+          Login with Google
+        </button>
       </div>
     </div>
   );

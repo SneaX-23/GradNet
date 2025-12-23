@@ -1,341 +1,295 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
-  Box, Typography, Avatar, CircularProgress, Alert,
-  Tabs, Tab, Link, Modal
-} from '@mui/material';
-import { fetchUserProfileByHandle } from '../services/profileService.jsx';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import XIcon from '@mui/icons-material/X';
-import { showUserPosts } from "../services/showPostsService.jsx";
-import ShowPostsCard from '../components/common/showPostsCard.jsx';
+    Github,
+    Linkedin,
+    Twitter,
+    Globe,
+    Mail,
+    Calendar,
+    FileText,
+    User,
+    Loader2,
+    ShieldCheck,
+    ExternalLink,
+    Info
+} from 'lucide-react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { useParams } from 'react-router-dom';
+
+import MainLayout from '../components/layout/MainLayout.jsx';
+import { fetchUserProfileByHandle } from '../services/profileService.jsx';
+import { showUserPosts } from "../services/showPostsService.jsx";
 import { API_BASE_URL } from '../config.js';
-import { useTheme } from '@mui/material/styles';
-import { theme, colors, borderStyle, shadowHover, shadowStyle } from '../theme';
-import Layout from '../components/layout/Layout.jsx';
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`profile-tabpanel-${index}`}
-      aria-labelledby={`profile-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          {children}
-        </Box>
-      )}
-    </div>
-  );
-}
-
-const AboutContent = ({ profileData }) => {
-  return (
-    <>
-      {profileData.bio && <Typography variant="body1" sx={{ mb: 3 }}>{profileData.bio}</Typography>}
-
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        {profileData.linkedin_url && (
-          <Link href={profileData.linkedin_url} target="_blank" rel="noopener noreferrer" sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', color: theme.palette.text.primary, '&:hover': {textDecoration: 'underline'} }}>
-            <LinkedInIcon /> <Typography variant="body2">LinkedIn</Typography>
-          </Link>
-        )}
-        {profileData.github_url && (
-          <Link href={profileData.github_url} target="_blank" rel="noopener noreferrer" sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', color: theme.palette.text.primary, '&:hover': {textDecoration: 'underline'} }}>
-            <GitHubIcon /> <Typography variant="body2">GitHub</Typography>
-          </Link>
-        )}
-        {profileData.twitter_url && (
-          <Link href={profileData.twitter_url} target="_blank" rel="noopener noreferrer" sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', color: theme.palette.text.primary, '&:hover': {textDecoration: 'underline'} }}>
-            <XIcon /> <Typography variant="body2">X / Twitter</Typography>
-          </Link>
-        )}
-      </Box>
-      {!profileData.bio && !profileData.linkedin_url && !profileData.github_url && !profileData.twitter_url && (
-        <Typography sx={{ color: '#aaaaaa' }}>No additional information to show.</Typography>
-      )}
-    </>
-  );
-};
+// Components
+import ShowPostsCard from '../components/posts/showPostCard.jsx';
+import ImageModal from '../components/imageOptions/ImageModal.jsx';
 
 const getFullUrl = (path) => {
-  if (!path) return null;
-  if (path.startsWith('http')) return path;
-  return `${API_BASE_URL}${path}`;
+    if (!path) return null;
+    if (path.startsWith('http')) return path;
+    return `${API_BASE_URL}${path}`;
 };
 
-function UserProfilePage() {
-  const [profileData, setProfileData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [tabValue, setTabValue] = useState(0);
-  const [imageModalOpen, setImageModalOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState('');
-  const [posts, setPosts] = useState([]);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const { handle } = useParams();
-  const theme = useTheme();
+export default function UserProfilePage() {
+    const { handle } = useParams();
+    const [profileData, setProfileData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+    const [activeTab, setActiveTab] = useState('about');
 
-  const loadProfile = async () => {
-    try {
-      setLoading(true);
-      const data = await fetchUserProfileByHandle(handle);
-      if (data.success) {
-        setProfileData(data.user);
-      } else {
-        setError(data.message);
-      }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+    // Modals state
+    const [imageModal, setImageModal] = useState({ open: false, url: '' });
 
-  useEffect(() => {
-      setPosts([]);
-      setPage(1);
-      setHasMore(true);
-      setError('');
-      loadProfile();
-  }, [handle]);
+    // Posts state
+    const [posts, setPosts] = useState([]);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
 
-  useEffect(() => {
-    if (profileData && (profileData.role === 'admin' || profileData.role === 'faculty')) {
-      const fetchUsersInitialPosts = async () => {
+    const loadProfile = async () => {
         try {
-          const response = await showUserPosts(1, profileData.id); 
-          if (response.success) {
-            setPosts(response.feed);
-            setHasMore(response.hasMore);
-          } else {
-            setError(response.message || 'Failed to fetch posts.');
-          }
+            setLoading(true);
+            const data = await fetchUserProfileByHandle(handle);
+            if (data.success) {
+                setProfileData(data.user);
+            } else {
+                setError(data.message);
+            }
         } catch (err) {
-          setError(err.message);
+            setError(err.message);
+        } finally {
+            setLoading(false);
         }
-      };
-      fetchUsersInitialPosts();
+    };
+
+    useEffect(() => {
+        setPosts([]);
+        setPage(1);
+        setHasMore(true);
+        setError('');
+        loadProfile();
+    }, [handle]);
+
+    // Fetch posts if the viewed user is admin or faculty
+    useEffect(() => {
+        if (profileData && (profileData.role === 'admin' || profileData.role === 'faculty')) {
+            fetchInitialPosts();
+        }
+    }, [profileData]);
+
+    const fetchInitialPosts = async () => {
+        try {
+            const response = await showUserPosts(1, profileData.id);
+            if (response.success) {
+                setPosts(response.feed);
+                setHasMore(response.hasMore);
+            }
+        } catch (err) {
+            console.error("Posts fetch error:", err);
+        }
+    };
+
+    const fetchMorePosts = async () => {
+        const nextPage = page + 1;
+        try {
+            const response = await showUserPosts(nextPage, profileData.id);
+            if (response.success) {
+                setPosts(prev => [...prev, ...response.feed]);
+                setHasMore(response.hasMore);
+                setPage(nextPage);
+            } else {
+                setHasMore(false);
+            }
+        } catch (err) {
+            setHasMore(false);
+        }
+    };
+
+    if (loading) {
+        return (
+            <MainLayout>
+                <div className="flex justify-center py-20">
+                    <Loader2 className="animate-spin text-primary" size={40} />
+                </div>
+            </MainLayout>
+        );
     }
-  }, [profileData]);
 
-  const fetchMoreData = async () => {
-    const nextPage = page + 1;
-    try {
-      const response = await showUserPosts(nextPage, profileData.id);
-      if (response.success) {
-        setPosts(prevPosts => [...prevPosts, ...response.feed]);
-        setHasMore(response.hasMore);
-        setPage(nextPage);
-      } else {
-        setHasMore(false);
-      }
-    } catch (error) {
-      setError(error.message);
-      setHasMore(false);
+    if (error) {
+        return (
+            <MainLayout>
+                <div className="m-4 p-4 bg-red-500/10 border border-red-500/50 rounded-xl flex items-center gap-3 text-red-500">
+                    <Info size={18} />
+                    <span className="text-sm font-medium">{error}</span>
+                </div>
+            </MainLayout>
+        );
     }
-  }
 
-  const handleDeletePost = async (postId) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/home/delete-post/${postId}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
-      if (!response.ok) {
-        throw new Error('Failed to delete the post.');
-      }
-      setPosts(posts.filter(post => post.id !== postId));
-    } catch (error) {
-      setError(error.message);
-    }
-  };
+    const bannerUrl = getFullUrl(profileData?.profile_banner_url);
+    const avatarUrl = getFullUrl(profileData?.profile_picture_url);
+    const isHighLevel = profileData?.role === 'admin' || profileData?.role === 'faculty';
 
-  const handleUpdatePost = (updatedPost) => {
-    setPosts(posts.map(post => 
-      post.id === updatedPost.id ? { ...post, ...updatedPost } : post
-    ));
-  };
+    return (
+        <MainLayout>
+            <div className="w-full max-w-3xl mx-auto">
 
-  const handleTabChange = (event, newValue) => setTabValue(newValue);
+                {/* Profile Header Card */}
+                <div className="bg-card sm:border border-border sm:rounded-b-2xl overflow-hidden relative">
 
-  const handleOpenImage = (imageUrl) => {
-    if (imageUrl) {
-      setSelectedImage(imageUrl);
-      setImageModalOpen(true);
-    }
-  };
-
-  const handleCloseImage = () => setImageModalOpen(false);
-  
-  const bannerUrl = getFullUrl(profileData?.profile_banner_url);
-  const avatarUrl = getFullUrl(profileData?.profile_picture_url);
-
-  return (
-    <Layout title={`GradNet`}>
-      <Modal open={imageModalOpen} onClose={handleCloseImage}>
-        <Box 
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            bgcolor: 'transparent',
-            p: 0,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }} 
-          onClick={handleCloseImage}
-        >
-          <img src={selectedImage} alt="Expanded view" style={{ maxHeight: '90vh', maxWidth: '90vw', objectFit: 'contain', border: '2px solid white' }} />
-        </Box>
-      </Modal>
-  
-      {loading && <Box sx={{p:3}}><CircularProgress sx={{color: '#000'}} /></Box>}
-      {error && <Box sx={{p:3}}><Alert severity="error" sx={{bgcolor: '#333', color: 'red'}}>{error}</Alert></Box>}
-
-      {profileData && (
-        <>
-          <Box
-            sx={{
-              width: '100%',
-              maxWidth: '800px',
-              minWidth: '300px',
-              overflow: 'hidden',
-              border: borderStyle,
-              boxShadow: shadowStyle,
-              bgcolor: theme.palette.secondary.light 
-            }}
-          >
-            <Box sx={{ position: 'relative' }}>
-              <Box
-                onClick={() => handleOpenImage(bannerUrl)}
-                sx={{
-                  height: { xs: '150px', sm: '200px', md: '260px' },
-                  borderBottom: '2px solid #ffffff',
-                  backgroundImage: bannerUrl ? `url(${bannerUrl})` : 'none',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  cursor: bannerUrl ? 'pointer' : 'default',
-                  bgcolor: '#ccc'
-                }}
-              />
-              <Avatar
-                onClick={() => handleOpenImage(avatarUrl)}
-                src={avatarUrl}
-                sx={{
-                  width: { xs: 80, sm: 100, md: 135 },
-                  height: { xs: 80, sm: 100, md: 135 },
-                  position: 'absolute',
-                  top: { xs: '110px', sm: '150px', md: '190px' },
-                  left: '16px',
-                  border: '2px solid #000000',
-                  fontSize: '4rem',
-                  cursor: avatarUrl ? 'pointer' : 'default',
-                  borderRadius: 0, 
-                }}
-              >
-                {profileData.name ? profileData.name.charAt(0).toUpperCase() : 'U'}
-              </Avatar>
-            </Box>
-
-            <Box sx={{ p: '12px 16px', mt: { xs: '30px', sm: '40px', md: '60px' } }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap' }}>
-                  <Typography variant="h5" component="div" fontWeight="bold">
-                      {profileData.name}
-                  </Typography>
-                  {profileData.position && (
-                    <Typography
-                      variant="caption"
-                      sx={{
-                      px: 1,
-                      py: 0.25,
-                      bgcolor: theme.palette.neo.purple || '#C4B5FD', 
-                      border: '2px solid #18181b',      
-                      borderRadius: 0,                  
-                      fontWeight: 'bold',
-                      fontFamily: '"Space Mono", monospace',
-                      color: '#18181b',
-                      boxShadow: '2px 2px 0px 0px #18181b', 
-                      lineHeight: 1.2,
-                      transform: 'translateY(-2px)'     
-                    }}
+                    <div
+                        onClick={() => bannerUrl && setImageModal({ open: true, url: bannerUrl })}
+                        className={`h-32 sm:h-52 bg-muted/20 border-b border-border transition-opacity ${bannerUrl ? 'cursor-pointer hover:opacity-90' : ''}`}
+                        style={{ backgroundImage: bannerUrl ? `url(${bannerUrl})` : 'none', backgroundSize: 'cover', backgroundPosition: 'center' }}
                     >
-                      {profileData.position}
-                    </Typography>
-                  )}
-              </Box>
-              <Typography>
-                @{profileData.handle}
-              </Typography>
-            </Box>
+                        {!bannerUrl && (
+                            <div className="w-full h-full flex items-center justify-center text-muted/30">
+                                <Globe size={48} />
+                            </div>
+                        )}
+                    </div>
 
-            {(profileData.role === 'admin' || profileData.role === 'faculty') ? (
-              <>
-                <Box sx={{ borderBottom: 1, borderColor: '#ffffff' }}>
-                  <Tabs 
-                    value={tabValue} 
-                    onChange={handleTabChange} 
-                    variant="fullWidth" 
-                    textColor="inherit"
-                  >
-                    <Tab label="About" id="profile-tab-0" />
-                    <Tab label="Posts" id="profile-tab-1" />
-                  </Tabs>
-                </Box>
+                    <div className="px-4 pb-6 relative">
+                        <div className="absolute -top-12 sm:-top-16 left-4">
+                            <div
+                                onClick={() => avatarUrl && setImageModal({ open: true, url: avatarUrl })}
+                                className={`w-24 h-24 sm:w-32 sm:h-32 bg-card border-4 border-background rounded-2xl overflow-hidden shadow-xl ${avatarUrl ? 'cursor-pointer' : ''}`}
+                            >
+                                {avatarUrl ? (
+                                    <img src={avatarUrl} className="w-full h-full object-cover" alt={profileData.name} />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center bg-primary/10 text-primary text-4xl font-bold">
+                                        {profileData.name?.[0]}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        <div className="pt-16 sm:pt-20">
+                            <div className="flex items-center gap-2 flex-wrap">
+                                <h1 className="text-xl sm:text-2xl font-semibold text-foreground tracking-tight">
+                                    {profileData.name}
+                                </h1>
+                                {profileData.position && (
+                                    <span className="px-2 py-0.5 bg-primary text-background text-[10px] font-semibold uppercase rounded flex items-center gap-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]">
+                                        <ShieldCheck size={10} /> {profileData.position}
+                                    </span>
+                                )}
+                            </div>
+                            <p className="text-sm sm:text-base text-muted">@{profileData.handle}</p>
+                        </div>
+                    </div>
+                </div>
 
-                <TabPanel value={tabValue} index={0}>
-                  <AboutContent profileData={profileData} />
-                </TabPanel>
-                <TabPanel value={tabValue} index={1}>
-                  <InfiniteScroll
-                    dataLength={posts.length}
-                    next={fetchMoreData}
-                    hasMore={hasMore}
-                    loader={<CircularProgress sx={{ my: 2, color: '#000' }} />}
-                    endMessage={
-                      <p style={{ textAlign: 'center', marginTop: '20px' }}>
-                        <b>You have seen it all!</b>
-                      </p>
-                    }
-                  >
-                    {posts.map((post, index) => {
-                      const postWithAuthor = {
-                        ...post,
-                        author_name: profileData.name,
-                        handle: profileData.handle,
-                        profile_picture_url: profileData.profile_picture_url
-                      };
-                      return (
-                        <ShowPostsCard
-                          key={`${post.id}-${index}`}
-                          post={postWithAuthor}
-                          onDelete={handleDeletePost}
-                          onUpdate={handleUpdatePost}
-                        />
-                      )
-                    })}
-                  </InfiniteScroll>
-                </TabPanel>
-              </>
-            ) : (
-              <Box sx={{ p: 3, borderTop: '1px solid #555' }}>
-                <AboutContent profileData={profileData} />
-              </Box>
-            )}
-          </Box>
-        </>
-      )}
-    </Layout>
-  );
+                <div className="sticky top-0 z-20 bg-background/80 backdrop-blur-md border-b border-border flex px-4 mt-2">
+                    <button
+                        onClick={() => setActiveTab('about')}
+                        className={`px-5 py-3 text-sm font-bold transition-colors relative ${activeTab === 'about' ? 'text-primary' : 'text-muted hover:text-foreground'}`}
+                    >
+                        About
+                        {activeTab === 'about' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />}
+                    </button>
+
+                    {isHighLevel && (
+                        <button
+                            onClick={() => setActiveTab('posts')}
+                            className={`px-5 py-3 text-sm font-bold transition-colors relative ${activeTab === 'posts' ? 'text-primary' : 'text-muted hover:text-foreground'}`}
+                        >
+                            Posts
+                            {activeTab === 'posts' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />}
+                        </button>
+                    )}
+                </div>
+
+                {/* Content Area */}
+                <div className="flex flex-col space-y-0 sm:space-y-6 sm:py-6 animate-in fade-in duration-300">
+
+                    {activeTab === 'about' && (
+                        <div className="bg-card sm:border border-border sm:rounded-2xl p-4 sm:p-6 space-y-8 border-b sm:border-b-0">
+                            {/* Bio */}
+                            <section>
+                                <h2 className="text-xs font-bold uppercase tracking-widest text-muted mb-4 flex items-center gap-2">
+                                    <User size={14} /> About
+                                </h2>
+                                <p className="text-[15px] text-foreground/90 leading-relaxed whitespace-pre-wrap">
+                                    {profileData.bio || "No biography provided yet."}
+                                </p>
+                            </section>
+
+                            {/* Social/External Links Cards */}
+                            <section className="pt-4">
+                                <h2 className="text-xs font-bold uppercase tracking-widest text-muted mb-4">External Profiles</h2>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    {[
+                                        { name: 'LinkedIn', icon: <Linkedin size={18} />, url: profileData.linkedin_url },
+                                        { name: 'GitHub', icon: <Github size={18} />, url: profileData.github_url },
+                                        { name: 'X / Twitter', icon: <Twitter size={18} />, url: profileData.twitter_url }
+                                    ].filter(link => link.url).map((link) => (
+                                        <a
+                                            key={link.name}
+                                            href={link.url}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="flex items-center justify-between p-3 border border-border rounded-xl hover:bg-foreground/5 transition-all group"
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                <span className="text-muted group-hover:text-primary transition-colors">{link.icon}</span>
+                                                <span className="font-semibold text-sm">{link.name}</span>
+                                            </div>
+                                            <ExternalLink size={14} className="text-muted opacity-0 group-hover:opacity-100 transition-opacity" />
+                                        </a>
+                                    ))}
+                                    {(!profileData.linkedin_url && !profileData.github_url && !profileData.twitter_url) && (
+                                        <p className="text-xs text-muted col-span-2 italic">No social links provided.</p>
+                                    )}
+                                </div>
+                            </section>
+
+                            {/* Joined Date */}
+                            <div className="flex items-center gap-3 text-muted text-xs pt-2">
+                                <Calendar size={14} /> <span>Joined {new Date(profileData.created_at).toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === 'posts' && isHighLevel && (
+                        <InfiniteScroll
+                            dataLength={posts.length}
+                            next={fetchMorePosts}
+                            hasMore={hasMore}
+                            loader={<div className="flex justify-center py-10"><Loader2 className="animate-spin text-primary" /></div>}
+                            style={{ overflow: 'visible' }}
+                        >
+                            <div className="flex flex-col space-y-0 sm:space-y-6">
+                                {posts.length > 0 ? (
+                                    posts.map((post, idx) => (
+                                        <div key={`${post.id}-${idx}`} className="border-b border-border/60 sm:border-none">
+                                            <ShowPostsCard
+                                                post={{
+                                                    ...post,
+                                                    author_name: profileData.name,
+                                                    profile_picture_url: profileData.profile_picture_url
+                                                }}
+                                            />
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="text-center py-20 bg-card sm:border border-border sm:rounded-2xl border-b">
+                                        <FileText size={32} className="mx-auto text-muted/30 mb-2" />
+                                        <p className="text-muted text-sm font-medium">No posts to show yet.</p>
+                                    </div>
+                                )}
+                            </div>
+                        </InfiniteScroll>
+                    )}
+                </div>
+            </div>
+
+            {/* Image Modal for Banner/Avatar expansion */}
+            <ImageModal
+                open={imageModal.open}
+                onClose={() => setImageModal({ open: false, url: '' })}
+                imageUrl={imageModal.url}
+            />
+        </MainLayout>
+    );
 }
-  
-export default UserProfilePage;
