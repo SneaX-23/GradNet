@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { X, MessageSquare, FileText, Loader2, Plus, PlusCircle } from 'lucide-react';
-import { createForum } from '/src/services/ForumService.jsx';
+import { X, MessageSquarePlus, FileText, Loader2, Plus, Send } from 'lucide-react';
+import { createTopic } from '../../services/ForumService.jsx';
 
-function CreateForum({ onForumCreated }) {
+function CreateTopicModal({ forumId, onTopicCreated }) {
     const [formData, setFormData] = useState({
-        name: '',
+        title: '',
         description: ''
     });
     const [error, setError] = useState('');
@@ -40,30 +40,26 @@ function CreateForum({ onForumCreated }) {
     };
 
     const handleClose = () => {
-        setFormData({ name: '', description: '' });
+        setFormData({ title: '', description: '' });
         setError('');
         setOpen(false);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!formData.name.trim()) {
-            setError('Forum name is required.');
+        if (!formData.title.trim()) {
+            setError('Topic title is required.');
             return;
         }
 
         setError('');
         setIsSubmitting(true);
         try {
-            await createForum({
-                name: formData.name,
-                description: formData.description,
-                color: '#4a90e2'
-            });
-            if (onForumCreated) onForumCreated();
+            await createTopic(forumId, formData.title, formData.description);
+            if (onTopicCreated) onTopicCreated();
             handleClose();
         } catch (err) {
-            setError(err.message || 'Failed to create forum category.');
+            setError(err.message || 'Failed to start new topic.');
         } finally {
             setIsSubmitting(false);
         }
@@ -74,14 +70,14 @@ function CreateForum({ onForumCreated }) {
             {/* FAB */}
             <button
                 onClick={() => setOpen(true)}
-                className="fixed bottom-6 right-6 md:right-10 sm:right-86 z-1000 flex items-center justify-center gap-2 bg-primary text-background px-4 py-4 sm:py-3 sm:px-6 rounded-full sm:rounded-2xl font-bold shadow-xl hover:opacity-90 active:scale-95 transition-all"
+                className="fixed bottom-6 right-6 md:right-10 sm:right-[344px] z-[1000] flex items-center justify-center gap-2 bg-primary text-background px-4 py-4 sm:py-3 sm:px-6 rounded-full sm:rounded-2xl font-bold shadow-xl hover:opacity-90 active:scale-95 transition-all"
             >
                 <Plus size={24} />
-                <span className="hidden sm:inline">New Category</span>
+                <span className="hidden sm:inline">Start Topic</span>
             </button>
 
             {shouldRender && (
-                <div className={`fixed inset-0 z-1100 flex items-center justify-center p-4 transition-opacity duration-300 ${isAnimate ? 'opacity-100' : 'opacity-0'}`}>
+                <div className={`fixed inset-0 z-[1100] flex items-center justify-center p-4 transition-opacity duration-300 ${isAnimate ? 'opacity-100' : 'opacity-0'}`}>
                     {/* Backdrop */}
                     <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={handleClose} />
 
@@ -93,9 +89,9 @@ function CreateForum({ onForumCreated }) {
                         <div className="flex items-center justify-between p-5 border-b border-border">
                             <div className="flex items-center gap-3">
                                 <div className="p-2 bg-primary/10 text-primary rounded-xl">
-                                    <PlusCircle size={20} />
+                                    <MessageSquarePlus size={20} />
                                 </div>
-                                <h2 className="text-xl font-bold text-foreground tracking-tight">New Forum Category</h2>
+                                <h2 className="text-xl font-bold text-foreground tracking-tight">Start a New Topic</h2>
                             </div>
                             <button
                                 onClick={handleClose}
@@ -106,31 +102,31 @@ function CreateForum({ onForumCreated }) {
                         </div>
 
                         {/* Form Body */}
-                        <form id="create-forum-form" onSubmit={handleSubmit} className="p-6 space-y-6">
+                        <form id="create-topic-form" onSubmit={handleSubmit} className="p-6 space-y-6">
                             <div className="space-y-1.5">
                                 <label className="text-xs font-bold uppercase tracking-widest text-muted flex items-center gap-2">
-                                    <MessageSquare size={14} /> Forum Name
+                                    <FileText size={14} /> Topic Title
                                 </label>
                                 <input
-                                    name="name"
-                                    value={formData.name}
+                                    name="title"
+                                    value={formData.title}
                                     onChange={handleChange}
                                     required
-                                    placeholder="e.g. Alumni Success Stories"
+                                    placeholder="What would you like to discuss?"
                                     className="w-full px-4 py-2.5 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
                                 />
                             </div>
 
                             <div className="space-y-1.5">
                                 <label className="text-xs font-bold uppercase tracking-widest text-muted flex items-center gap-2">
-                                    <FileText size={14} /> Description
+                                    <FileText size={14} /> Description (Optional)
                                 </label>
                                 <textarea
                                     name="description"
                                     value={formData.description}
                                     onChange={handleChange}
-                                    rows={3}
-                                    placeholder="Briefly describe what should be discussed here..."
+                                    rows={4}
+                                    placeholder="Provide some context for this topic..."
                                     className="w-full px-4 py-2.5 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm leading-relaxed resize-none"
                                 />
                             </div>
@@ -153,18 +149,21 @@ function CreateForum({ onForumCreated }) {
                                 Cancel
                             </button>
                             <button
-                                form="create-forum-form"
+                                form="create-topic-form"
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="flex items-center justify-center gap-2 px-8 py-2 text-sm font-bold bg-primary text-background rounded-xl hover:opacity-90 active:scale-95 transition-all disabled:opacity-70 min-w-35"
+                                className="flex items-center justify-center gap-2 px-8 py-2 text-sm font-bold bg-primary text-background rounded-xl hover:opacity-90 active:scale-95 transition-all disabled:opacity-70 min-w-[140px]"
                             >
                                 {isSubmitting ? (
                                     <>
                                         <Loader2 size={16} className="animate-spin" />
-                                        <span>Creating...</span>
+                                        <span>Posting...</span>
                                     </>
                                 ) : (
-                                    <span>Create Forum</span>
+                                    <>
+                                        <Send size={16} />
+                                        <span>Create Topic</span>
+                                    </>
                                 )}
                             </button>
                         </div>
@@ -175,4 +174,4 @@ function CreateForum({ onForumCreated }) {
     );
 }
 
-export default CreateForum;
+export default CreateTopicModal;

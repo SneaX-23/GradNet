@@ -1,138 +1,82 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Box, Typography, TextField, List, ListItem, ListItemButton, ListItemAvatar, Avatar, ListItemText, CircularProgress, IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import { API_BASE_URL } from '../../config';
-import { useTheme } from '@mui/material/styles';
-import { theme, colors, borderStyle, shadowHover, shadowStyle } from '../../theme';
+import { X, Search, Loader2, UserPlus } from 'lucide-react';
+import { API_BASE_URL } from '../../config.js';
 
-const getFullUrl = (path) => {
-  if (!path) return null;
-  if (path.startsWith('http')) return path;
-  return `${API_BASE_URL}${path}`;
-};
+const getFullUrl = (path) => path?.startsWith('http') ? path : `${API_BASE_URL}${path}`;
 
 function NewMessageModal({ open, onClose, onSelectUser }) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const theme = useTheme()
-  useEffect(() => {
-    if (!open) {
-        setSearchQuery('');
-        setResults([]);
-        return;
-    }
+    const [searchQuery, setSearchQuery] = useState('');
+    const [results, setResults] = useState([]);
+    const [loading, setLoading] = useState(false);
 
-    if (searchQuery.trim() === '') {
-      setResults([]);
-      return;
-    }
+    useEffect(() => {
+        if (!open) { setSearchQuery(''); setResults([]); return; }
+        if (searchQuery.trim() === '') { setResults([]); return; }
 
-    const fetchUsers = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/users/search?q=${searchQuery}`, { credentials: 'include' });
-        const data = await response.json();
-        if (data.success) {
-          setResults(data.users);
-        }
-      } catch (error) {
-        console.error("Failed to search users:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+        const fetchUsers = async () => {
+            setLoading(true);
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/users/search?q=${searchQuery}`, { credentials: 'include' });
+                const data = await response.json();
+                if (data.success) setResults(data.users);
+            } catch (error) { console.error(error); } finally { setLoading(false); }
+        };
 
-    const debounceTimer = setTimeout(() => {
-        fetchUsers();
-    }, 300); 
+        const timer = setTimeout(fetchUsers, 300);
+        return () => clearTimeout(timer);
+    }, [searchQuery, open]);
 
-    return () => clearTimeout(debounceTimer);
-  }, [searchQuery, open]);
+    if (!open) return null;
 
-  const handleSelect = (user) => {
-    onSelectUser(user);
-    onClose();
-  };
+    return (
+        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+            <div className="relative w-full max-w-md bg-card border border-border rounded-2xl shadow-2xl flex flex-col h-[70vh] overflow-hidden animate-in zoom-in-95 duration-200">
+                <div className="flex items-center justify-between p-4 border-b border-border bg-card/50">
+                    <h2 className="text-lg font-bold text-foreground">New Message</h2>
+                    <button onClick={onClose} className="p-2 hover:bg-foreground/5 rounded-full text-muted transition-colors"><X size={20} /></button>
+                </div>
 
-  return (
-    <Modal open={open} onClose={onClose}>
-      <Box sx={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: '100%',
-        maxWidth: 500,
-        height: '70vh',
-        display: 'flex',
-        flexDirection: 'column',
-        bgcolor: colors.white,
-        border: borderStyle,
-        boxShadow: shadowStyle
-      }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', p: 2, borderBottom: '1px solid #555' }}>
-            <IconButton onClick={onClose} sx={{ color: '#000000' }}><CloseIcon /></IconButton>
-            <Typography variant="h6" sx={{ ml: 2 }}>New message</Typography>
-        </Box>
-        <Box sx={{ p: 2 }}>
-            <TextField
-                fullWidth
-                autoFocus
-                variant="outlined"
-                placeholder="Search for people"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-            />
-        </Box>
-        <Box sx={{ flexGrow: 1, overflowY: 'auto' ,}}>
-            {loading && <Box sx={{display: 'flex', justifyContent: 'center', p:2}}><CircularProgress size={24} sx={{ color: '#ffffff' }} /></Box>}
-            <List>
-                {results.map((user, index) => (
-                    <ListItem key={user.id} disablePadding 
-                    sx={{
-                            border: borderStyle,
-                            borderLeft: '0px',
-                            borderRight: '0px',
-                            backgroundColor: theme.palette.secondary.light,
-                            marginBottom: 0,
-                            
-                            marginTop: index === 0 ? 0 : '-2px',
-                            position: 'relative', 
-                            transition: 'all 0.1s ease',
-                            '&:hover': {
-                                backgroundColor: theme.palette.background.paper,
-                                boxShadow: `3px 3px 0px ${shadowHover}`,
-                                transform: 'translate(-2px, -2px)'
-                            },
-                            '&:active': {
-                                boxShadow: 'none',
-                                transform: 'translate(1px, 1px)'
-                            }
-                        
-                    }}>
-                        <ListItemButton 
-                          onClick={() => handleSelect(user)}
+                <div className="p-4 border-b border-border bg-background">
+                    <div className="relative group">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted group-focus-within:text-primary transition-colors" size={18} />
+                        <input
+                            autoFocus
+                            className="w-full bg-card border border-border rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm"
+                            placeholder="Search for people..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                    </div>
+                </div>
+
+                <div className="flex-1 overflow-y-auto p-2 space-y-1">
+                    {loading && <div className="flex justify-center p-8"><Loader2 className="animate-spin text-primary" /></div>}
+                    {results.map((user) => (
+                        <button
+                            key={user.id}
+                            onClick={() => { onSelectUser(user); onClose(); }}
+                            className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-foreground/5 transition-colors text-left group"
                         >
-                            <ListItemAvatar>
-                                <Avatar src={getFullUrl(user.profile_picture_url)} sx={{ border: '1px solid #000000' }} />
-                            </ListItemAvatar>
-                            <ListItemText 
-                              primary={user.name} 
-                              secondary={`@${user.handle}`} 
-                              primaryTypographyProps={{ color: '#000000' }}
-                              secondaryTypographyProps={{ color: '#000000' }}
-                              sx={{
-                              }}
-                            />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-        </Box>
-      </Box>
-    </Modal>
-  );
+                            <div className="w-10 h-10 rounded-full border border-border overflow-hidden shrink-0">
+                                {user.profile_picture_url ?
+                                    <img src={getFullUrl(user.profile_picture_url)} className="w-full h-full object-cover" alt="" />
+                                    : (<span className="text-lg flex items-center justify-center w-full h-full font-bold text-primary">{user.name?.[0]}</span>)
+                                }
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <p className="font-bold text-foreground text-sm group-hover:text-primary transition-colors">{user.name}</p>
+                                <p className="text-xs text-muted">@{user.handle}</p>
+                            </div>
+                            <UserPlus size={16} className="text-muted group-hover:text-primary" />
+                        </button>
+                    ))}
+                    {!loading && searchQuery && results.length === 0 && (
+                        <p className="text-center text-muted text-sm py-10">No users found.</p>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
 }
 
 export default NewMessageModal;

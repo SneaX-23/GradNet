@@ -14,14 +14,17 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.2",
     "@mui/material": "^7.3.2",
+    "@tailwindcss/vite": "^4.1.18",
     "emoji-picker-react": "^4.16.1",
+    "lucide-react": "^0.562.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-easy-crop": "^5.5.3",
     "react-infinite-scroll-component": "^6.1.0",
     "react-pdf": "^10.1.0",
     "react-router-dom": "^6.23.1",
-    "socket.io-client": "^4.8.1"
+    "socket.io-client": "^4.8.1",
+    "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

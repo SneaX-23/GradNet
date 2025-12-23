@@ -1,74 +1,56 @@
 import React, { useState } from 'react';
-import { Box, Typography, IconButton } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit'; 
+import { Edit3, MessageSquare } from 'lucide-react';
 import ConversationList from '/src/components/messages/ConversationList.jsx';
 import ChatWindow from '/src/components/messages/ChatWindow.jsx';
 import NewMessageModal from '/src/components/messages/NewMessageModal.jsx';
-import { borderStyle } from '../theme';
-import Layout from '../components/layout/Layout.jsx';
+import MainLayout from '../components/layout/MainLayout.jsx';
 
 function MessagesPage() {
-  const [selectedConversation, setSelectedConversation] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false); 
+    const [selectedConversation, setSelectedConversation] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleSelectUser = (user) => {
-    const newConversation = {
-      id: `new-${user.id}`, 
-      other_participant: user,
+    const handleSelectUser = (user) => {
+        setSelectedConversation({ id: `new-${user.id}`, other_participant: user });
     };
-    setSelectedConversation(newConversation);
-  };
 
-  return (
-    <Layout title="Messages" disablePadding>
-      <NewMessageModal 
-        open={isModalOpen} 
-        onClose={() => setIsModalOpen(false)}
-        onSelectUser={handleSelectUser}
-      />
-      
-      <Box sx={{ display: 'flex', width: '100%', height: 'calc(100vh - 64px)' }}>
-        
-        {/* Conversation List Container (Left Side) */}
-        <Box sx={{ 
-          width: { xs: '100%', md: 320 }, 
-          
-          display: { xs: selectedConversation ? 'none' : 'flex', md: 'flex' }, 
-          flexDirection: 'column',
-          borderRight: { md: borderStyle } 
-        }}>
-            <Box sx={{
-              p: 2, 
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              alignItems: 'center',
-              borderBottom: borderStyle,
-            }}>
-                <Typography variant="h6" fontWeight="bold">
-                  Chats
-                </Typography>
-                <IconButton onClick={() => setIsModalOpen(true)} sx={{ border: 'none' }}>
-                    <EditIcon />
-                </IconButton>
-            </Box>
-            <ConversationList onSelectConversation={setSelectedConversation} showBorder={false} />
-        </Box>
+    return (
+        <MainLayout>
+            <div className="flex h-[calc(100vh-64px)] w-full max-w-6xl mx-auto sm:px-4 sm:py-4 overflow-hidden">
+                <NewMessageModal
+                    open={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    onSelectUser={handleSelectUser}
+                />
 
-        {/* Chat Window Container (Right Side) */}
-        <Box sx={{ 
-          flexGrow: 1,
-          
-          display: { xs: selectedConversation ? 'flex' : 'none', md: 'flex' },
-          flexDirection: 'column'
-        }}>
-            <ChatWindow 
-                conversation={selectedConversation} 
-                onBack={() => setSelectedConversation(null)} 
-            />
-        </Box>
-      </Box>
-    </Layout>
-  );
+                <div className="flex w-full bg-card sm:border border-border sm:rounded-2xl overflow-hidden shadow-sm">
+                    <div className={`w-full md:w-80 flex flex-col border-r border-border ${selectedConversation ? 'hidden md:flex' : 'flex'
+                        }`}>
+                        <div className="p-4 border-b border-border flex items-center justify-between bg-card/50">
+                            <h1 className="text-xl font-extrabold text-foreground tracking-tight">Messages</h1>
+                            <button
+                                onClick={() => setIsModalOpen(true)}
+                                className="p-2 hover:bg-primary/10 text-primary rounded-xl transition-colors"
+                            >
+                                <Edit3 size={20} />
+                            </button>
+                        </div>
+                        <ConversationList
+                            onSelectConversation={setSelectedConversation}
+                            selectedId={selectedConversation?.id}
+                        />
+                    </div>
+
+                    <div className={`flex-1 flex flex-col min-w-0 ${selectedConversation ? 'flex' : 'hidden md:flex'
+                        }`}>
+                        <ChatWindow
+                            conversation={selectedConversation}
+                            onBack={() => setSelectedConversation(null)}
+                        />
+                    </div>
+                </div>
+            </div>
+        </MainLayout>
+    );
 }
 
 export default MessagesPage;

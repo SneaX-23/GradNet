@@ -8,7 +8,8 @@ export const useAuth = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLoginSubmit = async () => {
+  const handleLoginSubmit = async (e) => {
+    if (e) e.preventDefault();
     setIsLoading(true);
     setError('');
     try {

@@ -1,21 +1,33 @@
-import './styles/App.css';
+import './app.css';
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
+//Pages
 import Login from './pages/LoginPage';
-import VerifyOtp from './pages/VerifyOtpPage';
-import { AuthProvider } from './context/AuthContext';
-import HomePage from './pages/HomePage';
+import VerifyOtp from './pages/VerifyOtp';
 import CreateProfilePage from './pages/CreaeteProfilePage';
-import ProfilePage from './pages/ProfilePage';
+
+import HomePage from './pages/Home';
+
+import AlumniListPage from './pages/AlumniList';
+
 import JobsPage from './pages/JobsPage';
-import UserProfilePage from './pages/UserProfilePage';
-import MessagesPage from './pages/MessagesPage';
-import ForumPage from './pages/ForumPage';
-import TopicPage from './pages/TopicPage';
-import PostPage from './pages/PostPage';
-import DashboardPage from './pages/DashboardPage';
+
 import BookmarksPage from './pages/BookmarksPage';
+
+import ProfilePage from './pages/ProfilePage';
+import UserProfilePage from './pages/UserProfilePage';
+
+import ForumPostPage from './pages/ForumPostPage';
+import ForumPage from './pages/ForumPage';
+import ForumTopicPage from './pages/ForumTopicPage';
+
+import MessagesPage from './pages/MessagesPage';
+import SearchPage from './pages/SearchPage';
+
+//Context
+import { AuthProvider } from './context/AuthContext';
+
 
 function App() {
   return (
@@ -37,21 +49,23 @@ function App() {
           <Route path="/submit-auth-info" element={<VerifyOtp />} />
           <Route path="/create-profile" element={<CreateProfilePage />} />
 
-          {/* Main App Routes */}
+
           <Route path="/home" element={<HomePage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/profile/:handle" element={<UserProfilePage />} />
+          <Route path="/alumni-list" element={<AlumniListPage />} />
           <Route path="/jobs" element={<JobsPage />} />
-          <Route path="/messages" element={<MessagesPage />} />
           <Route path="/bookmarks" element={<BookmarksPage />} />
 
-          {/* Forum Routes */}
-          <Route path="/forums" element={<ForumPage />} />
-          <Route path="/forums/:forumId" element={<TopicPage />} />
-          <Route path="/topic/:topicId" element={<PostPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/profile/:handle" element={<UserProfilePage />} />
 
-          {/* Admin / Faculty Routes */}
-          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/forums" element={<ForumPage />} />
+          <Route path="/forums/:forumId" element={<ForumTopicPage />} />
+          <Route path="/topic/:topicId" element={<ForumPostPage />} />
+
+          <Route path="/messages" element={<MessagesPage />} />
+
+          <Route path="/search" element={<SearchPage />} />
+
         </Routes>
       </BrowserRouter>
     </AuthProvider>

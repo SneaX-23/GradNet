@@ -6,7 +6,7 @@ GradNet is a robust, web-based alumni networking platform designed to bridge the
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Features](#-features)
 - [Tech Stack](#-tech-stack)
@@ -19,52 +19,52 @@ GradNet is a robust, web-based alumni networking platform designed to bridge the
 
 ---
 
-## ✨ Features
+## Features
 
-### 🔐 Authentication & Onboarding
+### Authentication & Onboarding
 
 - **USN-based Login**: Secure authentication using University Serial Numbers
 - **OTP Verification**: Email-based One-Time Password authentication powered by SendGrid
 - **Pre-verified Student Database**: Ensures only authorized alumni and students can register
 - **Profile Creation**: Custom handle selection and profile setup upon first login
 
-### 📱 Social Feed & Interaction
+### Social Feed & Interaction
 
 - **Multimedia Posts**: Create posts with text, images, videos, and PDF attachments
 - **Real-time Updates**: New posts appear instantly via Socket.io
 - **Bookmarks**: Save interesting posts, jobs, or forum topics for later reference
 
-### 💼 Job Portal
+### Job Portal
 
 - **Job Board**: Alumni and faculty can post job openings and internships
 - **Detailed Listings**: Includes salary range, job type, location, and application links
 - **Search & Filter**: *(Planned)* Find relevant opportunities easily
 
-### 💬 Discussion Forums
+### Discussion Forums
 
 - **Categorized Discussions**: Organized forum categories (e.g., Tech, Career, General)
 - **Threaded Topics**: Create topics within categories for focused discussions
 - **Role-Based Access**: Only Admins and Faculty can create new forum categories
 
-### 💌 Real-time Messaging
+### Real-time Messaging
 
 - **Private Chat**: Instant messaging between users
 - **Inbox**: View conversation history and start new chats via user search
 - **Socket.io Integration**: Instant message delivery and status updates
 
-### 👥 Alumni Dashboard
+### Alumni Dashboard
 
 - **Directory**: Searchable database of alumni by name or USN
 - **Rich Profiles**: View graduation year, current company, bio, and social links (LinkedIn, GitHub, X)
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 ### Frontend
 
 - **Framework**: React (Vite)
-- **UI Library**: Material UI (MUI) with custom Retro styling
+- **UI Library**: Lucide icons, tailwindcss
 - **Routing**: React Router DOM
 - **Real-time**: Socket.io Client
 - **Utilities**: React PDF, React Easy Crop, React Infinite Scroll Component
@@ -81,7 +81,7 @@ GradNet is a robust, web-based alumni networking platform designed to bridge the
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 GradNet/
@@ -102,7 +102,7 @@ GradNet/
 │   │   ├── hooks/              # Custom hooks
 │   │   ├── pages/              # Main Application Pages
 │   │   ├── services/           # API fetch wrappers
-│   │   ├── styles/             # CSS (Retro theme)
+│   │   ├── styles/             # CSS 
 │   │   └── App.jsx             # Main Component
 │   └── vite.config.js          # Vite configuration
 │
@@ -113,13 +113,13 @@ GradNet/
 
 ---
 
-## 🚀 Installation & Setup
+## Installation & Setup
 
 ### Prerequisites
 
 - Node.js (v16 or higher)
 - PostgreSQL
-- SendGrid API Key (for email services)
+- Resend API Key (for email services)
 
 ### 1. Clone the Repository
 
@@ -200,7 +200,7 @@ VITE_SOCKET_URL=http://localhost:3000
 
 ---
 
-## 🏃 Running the Application
+## Running the Application
 
 ### Concurrent Mode (Recommended)
 
@@ -232,21 +232,86 @@ Access the application at **http://localhost:5173**
 
 ---
 
-## 🎨 Design System
+## Design System
 
-GradNet features a distinctive **Retro Terminal** aesthetic:
-
-- **Typography**: Courier New, Monospace
-- **Color Palette**: Strict Black (`#000000`) & White (`#ffffff`)
-- **Visual Style**: 
-  - Sharp edges (no border-radius)
-  - High contrast interface
-  - Pixelated assets
-  - Terminal-inspired components
+GradNet features a **professional Modern Enterprise aesthetic**, focused on clarity, accessibility, and subtle visual depth.
 
 ---
 
-## 🤝 Contributing
+## Typography
+
+- **Primary Font:** Google Sans Flex (Sans-Serif)  
+  Chosen for its clean, modern, and highly readable appearance.
+
+- **Font Weights & Usage:**
+  - **Bold:** Page titles, section headers
+  - **Medium / Semibold:** Navigation, buttons, labels
+  - **Regular:** Body content and long-form text
+
+This weight hierarchy establishes clear visual structure and scannability.
+
+---
+
+## Color Palette
+
+- **Adaptive Theme System:**  
+  Implemented using CSS HSL variables:
+  - `--background`
+  - `--foreground`
+  - `--card`
+  - `--border`
+  - `--primary`
+
+- **Theme Modes:**
+  - Native **Light** and **Dark** mode support
+  - User preference persisted via `localStorage`
+
+- **Primary Accent Color:**
+  - Used for primary actions, active states, highlights, and identity badges
+  - Reinforces brand identity while maintaining visual restraint
+
+---
+
+## Visual Style
+
+- **Adaptive Layouts:**
+  - Mobile-first, edge-to-edge layouts
+  - Transitions to contained, card-based layouts on larger screens
+
+- **Soft Professionalism:**
+  - Consistent large border radii (`rounded-2xl`)
+  - Applied to cards, modals, and profile identity elements
+
+- **Glassmorphism:**
+  - `backdrop-blur-md` effects on sticky headers and navigation
+  - Adds depth without visual noise
+
+- **Subtle Elevation:**
+  - Thin, low-opacity borders (`border-border/50`)
+  - Soft shadows instead of heavy outlines
+
+---
+
+## Motion & Interactions
+
+- **Micro-interactions:**
+  - Smooth scale, translate, and fade animations
+  - Applied to modals, menus, buttons, and hover states
+
+- **Transitions:**
+  - Consistent easing and duration for a polished, responsive feel
+
+---
+
+## Iconography
+
+- **Icon Set:** Lucide React
+  - Clean, sharp, vector-based icons
+  - Consistent stroke width and visual language across the applicatio
+
+---
+
+## Contributing
 
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
@@ -258,13 +323,13 @@ Contributions are what make the open-source community such an amazing place to l
 
 ---
 
-## 📄 License
+## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
 
-## 📧 Contact
+## Contact
 
 For questions, suggestions, or support, please open an issue on the repository.
 

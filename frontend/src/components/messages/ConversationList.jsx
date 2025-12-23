@@ -1,128 +1,77 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import {
-  Box,
-  Typography,
-  List,
-  ListItem,
-  ListItemAvatar,
-  Avatar,
-  ListItemText,
-  CircularProgress,
-  Divider,
-  ListItemButton 
-} from '@mui/material';
+import { Loader2, MessageSquare } from 'lucide-react';
 import { socket } from '../../socket.js';
 import { API_BASE_URL } from '../../config.js';
-import { useTheme } from '@mui/material/styles';
-import { theme, colors, borderStyle, shadowHover, shadowStyle } from '../../theme';
 
-const getFullUrl = (path) => {
-  if (!path) return null;
-  if (path.startsWith('http')) return path;
-  return `${API_BASE_URL}${path}`;
-};
+const getFullUrl = (path) => path?.startsWith('http') ? path : `${API_BASE_URL}${path}`;
 
-export default function ConversationList({ onSelectConversation, showBorder = true}) {
-  const [conversations, setConversations] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const theme = useTheme();
+export default function ConversationList({ onSelectConversation, selectedId }) {
+    const [conversations, setConversations] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-  const fetchConversations = useCallback(async () => {
-    try {
-      if (conversations.length === 0) {
-        setLoading(true);
-      }
-      const response = await fetch(`${API_BASE_URL}/api/messages/conversations`, { credentials: 'include' });
-      const data = await response.json();
-      if (data.success) {
-        setConversations(data.conversations);
-      } else {
-        throw new Error(data.message);
-      }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+    const fetchConversations = useCallback(async () => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/messages/conversations`, { credentials: 'include' });
+            const data = await response.json();
+            if (data.success) setConversations(data.conversations);
+        } catch (err) { console.error(err); } finally { setLoading(false); }
+    }, []);
+
+    useEffect(() => {
+        fetchConversations();
+        socket.on('conversation_updated', fetchConversations);
+        return () => socket.off('conversation_updated', fetchConversations);
+    }, [fetchConversations]);
+
+    if (loading && conversations.length === 0) {
+        return <div className="flex justify-center p-10"><Loader2 className="animate-spin text-primary" /></div>;
     }
-  }, [conversations.length]); 
 
-  useEffect(() => {
-    fetchConversations();
-  }, [fetchConversations]); 
+    return (
+        <div className="flex-1 overflow-y-auto">
+            {conversations.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
+                    <MessageSquare className="text-muted/20 mb-4" size={48} />
+                    <p className="text-muted text-sm">No conversations yet.</p>
+                </div>
+            ) : (
+                <div className="flex flex-col">
+                    {conversations.map((conv) => (
+                        <button
+                            key={conv.id}
+                            onClick={() => onSelectConversation(conv)}
+                            className={`flex items-center gap-3 p-4 text-left transition-all border-b border-border/50 group ${selectedId === conv.id ? 'bg-primary/5' : 'hover:bg-foreground/5'
+                                }`}
+                        >
+                            <div className="relative shrink-0">
+                                <div className="w-12 h-12 rounded-full border border-border overflow-hidden">
+                                    {conv.other_participant?.profile_picture_url ? (
+                                        <img src={getFullUrl(conv.other_participant.profile_picture_url)} className="w-full h-full object-cover" alt="" />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center bg-primary/10 text-primary font-bold">
+                                            {conv.other_participant?.name?.[0]}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <div className="flex justify-between items-baseline mb-0.5">
+                                    <span className="font-bold text-foreground truncate group-hover:text-primary transition-colors text-sm">
+                                        {conv.other_participant?.name || 'Unknown'}
+                                    </span>
+                                    <span className="text-[10px] text-muted whitespace-nowrap ml-2">
+                                        {new Date(conv.last_message?.created_at || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                    </span>
+                                </div>
+                                <p className="text-xs text-muted truncate leading-relaxed">
 
-  useEffect(() => {
-    function onConversationUpdated() {
-      fetchConversations();
-    }
-    socket.on('conversation_updated', onConversationUpdated);
-    return () => {
-      socket.off('conversation_updated', onConversationUpdated);
-    };
-  }, [fetchConversations]);
-
-  return (
-    <Box sx={{ flexGrow: 1, overflowY: 'auto', borderRight: borderStyle }}>
-      {loading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-          <CircularProgress size={24} sx={{ color: '#ffffff' }} />
-        </Box>
-      ) : conversations.length === 0 ? (
-        <Typography variant="body2" sx={{ textAlign: 'center', mt: 3, color: '#aaaaaa' }}>
-          No conversations yet.
-        </Typography>
-      ) : (
-        <List disablePadding >
-          {conversations.map((conv, index) => (
-            <React.Fragment key={conv.id}>
-              <ListItem disablePadding 
-                sx={{
-                  border: borderStyle,
-                  borderLeft: '0px',
-                  borderRight: '0px',
-                  backgroundColor: theme.palette.secondary.light,
-                  marginBottom: 0,
-                                              
-                  marginTop: index === 0 ? 0 : '-2px',
-                  position: 'relative', 
-                  
-                  transition: 'all 0.1s ease',
-                  '&:hover': {
-                      backgroundColor: theme.palette.background.paper,
-                      boxShadow: `3px 3px 0px ${shadowHover}`,
-                      transform: 'translate(-2px, -2px)'
-                  },
-                  '&:active': {
-                      boxShadow: 'none',
-                      transform: 'translate(1px, 1px)'
-                  }
-                }}
-              >
-                <ListItemButton 
-                  onClick={() => onSelectConversation(conv)}
-                >
-                  <ListItemAvatar>
-                    <Avatar 
-                      src={getFullUrl(conv.other_participant?.profile_picture_url)} 
-                      alt={conv.other_participant?.name}
-                      sx={{ border: borderStyle }}
-                    >
-                      {conv.other_participant?.name?.[0] || '?'}
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={conv.other_participant?.name || 'Unknown'}
-                    secondary={conv.last_message?.content || ''} 
-                    primaryTypographyProps={{ noWrap: true, fontWeight: 'bold' }}
-                    secondaryTypographyProps={{ noWrap: true, variant: 'body2', color: 'inherit', opacity: 0.7 }}
-                  />
-                </ListItemButton>
-              </ListItem>
-              <Divider component="li" sx={{ borderColor: '#555555' }} />
-            </React.Fragment>
-          ))}
-        </List>
-      )}
-    </Box>
-  );
+                                    {conv.last_message?.content || ''}
+                                </p>
+                            </div>
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
 }
