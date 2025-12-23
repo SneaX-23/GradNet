@@ -29,7 +29,7 @@ function NewMessageModal({ open, onClose, onSelectUser }) {
     if (!open) return null;
 
     return (
-        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-150 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
             <div className="relative w-full max-w-md bg-card border border-border rounded-2xl shadow-2xl flex flex-col h-[70vh] overflow-hidden animate-in zoom-in-95 duration-200">
                 <div className="flex items-center justify-between p-4 border-b border-border bg-card/50">
                     <h2 className="text-lg font-bold text-foreground">New Message</h2>

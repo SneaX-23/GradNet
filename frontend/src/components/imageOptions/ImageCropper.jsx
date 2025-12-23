@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import Cropper from 'react-easy-crop';
 import { X, Check } from 'lucide-react';
-import getCroppedImg from './cropImage';
+import getCroppedImg from './cropImage.jsx';
 
 function ImageCropper({ image, aspect, onCropComplete, onClose }) {
     const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -23,7 +23,7 @@ function ImageCropper({ image, aspect, onCropComplete, onClose }) {
     };
 
     return (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div className="fixed inset-0 z-200 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
             <div className="relative w-full max-w-xl bg-card border border-border rounded-2xl shadow-2xl overflow-hidden flex flex-col">
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 border-b border-border">
