@@ -93,7 +93,7 @@ function EditJobModal({ open, onClose, job, onSave }) {
     if (!shouldRender) return null;
 
     return (
-        <div className={`fixed inset-0 z-[150] flex items-center justify-center p-4 transition-opacity duration-300 ${isAnimate ? 'opacity-100' : 'opacity-0'}`}>
+        <div className={`fixed inset-0 z-150 flex items-center justify-center p-4 transition-opacity duration-300 ${isAnimate ? 'opacity-100' : 'opacity-0'}`}>
             {/* Backdrop */}
             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
 
@@ -212,7 +212,7 @@ function EditJobModal({ open, onClose, job, onSave }) {
                                 <Calendar size={14} /> Application Deadline
                             </label>
                             <input type="date" name="application_deadline" value={formData.application_deadline} onChange={handleChange}
-                                className="w-full px-3 py-2 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm [color-scheme:dark]"
+                                className="w-full px-3 py-2 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm scheme:dark"
                             />
                         </div>
 
@@ -242,7 +242,7 @@ function EditJobModal({ open, onClose, job, onSave }) {
                         Cancel
                     </button>
                     <button onClick={handleSubmit} disabled={isSubmitting}
-                        className="flex items-center justify-center gap-2 px-6 py-2 text-sm font-bold bg-primary text-background rounded-xl hover:opacity-90 transition-all disabled:opacity-70 min-w-[140px]"
+                        className="flex items-center justify-center gap-2 px-6 py-2 text-sm font-bold bg-primary text-background rounded-xl hover:opacity-90 transition-all disabled:opacity-70 min-w-35"
                     >
                         {isSubmitting ? (
                             <>

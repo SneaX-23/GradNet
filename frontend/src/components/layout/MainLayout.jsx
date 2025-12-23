@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { SquareChevronRight, SquareChevronLeft } from "lucide-react"
 import logo from "../../assets/icons/gradnet-logo.png"
-import LeftSidebar from "./leftSidebar.jsx"
-import RightSidebar from "./rightSidebar.jsx"
+import LeftSidebar from "./LeftSidebar.jsx"
+import RightSidebar from "./RightSidebar.jsx"
 const MainLayout = ({ children }) => {
     const [leftOpen, setLeftOpen] = useState(false);
     const [rightOpen, setRightOpen] = useState(false);

@@ -70,14 +70,14 @@ function CreateTopicModal({ forumId, onTopicCreated }) {
             {/* FAB */}
             <button
                 onClick={() => setOpen(true)}
-                className="fixed bottom-6 right-6 md:right-10 sm:right-[344px] z-[1000] flex items-center justify-center gap-2 bg-primary text-background px-4 py-4 sm:py-3 sm:px-6 rounded-full sm:rounded-2xl font-bold shadow-xl hover:opacity-90 active:scale-95 transition-all"
+                className="fixed bottom-6 right-6 md:right-10 sm:right86 z-1000 flex items-center justify-center gap-2 bg-primary text-background px-4 py-4 sm:py-3 sm:px-6 rounded-full sm:rounded-2xl font-bold shadow-xl hover:opacity-90 active:scale-95 transition-all"
             >
                 <Plus size={24} />
                 <span className="hidden sm:inline">Start Topic</span>
             </button>
 
             {shouldRender && (
-                <div className={`fixed inset-0 z-[1100] flex items-center justify-center p-4 transition-opacity duration-300 ${isAnimate ? 'opacity-100' : 'opacity-0'}`}>
+                <div className={`fixed inset-0 z-1100 flex items-center justify-center p-4 transition-opacity duration-300 ${isAnimate ? 'opacity-100' : 'opacity-0'}`}>
                     {/* Backdrop */}
                     <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={handleClose} />
 
@@ -152,7 +152,7 @@ function CreateTopicModal({ forumId, onTopicCreated }) {
                                 form="create-topic-form"
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="flex items-center justify-center gap-2 px-8 py-2 text-sm font-bold bg-primary text-background rounded-xl hover:opacity-90 active:scale-95 transition-all disabled:opacity-70 min-w-[140px]"
+                                className="flex items-center justify-center gap-2 px-8 py-2 text-sm font-bold bg-primary text-background rounded-xl hover:opacity-90 active:scale-95 transition-all disabled:opacity-70 min-w-35"
                             >
                                 {isSubmitting ? (
                                     <>

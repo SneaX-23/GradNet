@@ -69,7 +69,7 @@ function EditForumModal({ open, onClose, forum, onForumUpdated }) {
     if (!shouldRender) return null;
 
     return (
-        <div className={`fixed inset-0 z-[150] flex items-center justify-center p-4 transition-opacity duration-300 ${isAnimate ? 'opacity-100' : 'opacity-0'}`}>
+        <div className={`fixed inset-0 z-150 flex items-center justify-center p-4 transition-opacity duration-300 ${isAnimate ? 'opacity-100' : 'opacity-0'}`}>
             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
 
             <div className={`relative w-full max-w-lg bg-card border border-border rounded-2xl shadow-2xl flex flex-col transition-all duration-300 ease-out transform ${isAnimate ? 'translate-y-0 scale-100' : 'translate-y-10 scale-95'
@@ -140,7 +140,7 @@ function EditForumModal({ open, onClose, forum, onForumUpdated }) {
                         form="edit-forum-form"
                         type="submit"
                         disabled={isSubmitting}
-                        className="flex items-center justify-center gap-2 px-8 py-2 text-sm font-bold bg-primary text-background rounded-xl hover:opacity-90 active:scale-95 transition-all disabled:opacity-70 min-w-[140px]"
+                        className="flex items-center justify-center gap-2 px-8 py-2 text-sm font-bold bg-primary text-background rounded-xl hover:opacity-90 active:scale-95 transition-all disabled:opacity-70 min-w-35"
                     >
                         {isSubmitting ? (
                             <>
