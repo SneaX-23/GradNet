@@ -54,7 +54,8 @@ export const UpdateMentor = async (userId, mentorData) => {
             UPDATE mentor_ship 
             SET ${fields.join(', ')}, 
                 updated_at = CURRENT_TIMESTAMP,
-                is_active = false
+                is_active = false,
+                approval_status = 'pending'
             WHERE mentor_id = $${userIdIndex}
             RETURNING *;
         `;
@@ -175,7 +176,7 @@ export const GetStudentApplications = async (studentId) => {
 
 // Get active mentorships
 export const GetAllActiveMentorships = async (filters = {}) => {
-    const { category, search } = filters;
+    const { category, search, limit = 10, offset = 0 } = filters;
     let queryIndex = 1;
     const values = [];
     
@@ -200,7 +201,8 @@ export const GetAllActiveMentorships = async (filters = {}) => {
         values.push(`%${search}%`);
     }
 
-    query += ` ORDER BY m.created_at DESC`;
+    query += ` ORDER BY m.created_at DESC LIMIT $${queryIndex++} OFFSET $${queryIndex++}`;
+    values.push(limit, offset);
 
     try {
         const result = await db.query(query, values);
@@ -232,5 +234,25 @@ export const ApproveMentorProfile = async (mentorshipId, adminId, status) => {
     } catch (error) {
         console.error("Database Error in ApproveMentorProfile:", error);
         throw new Error("Failed to update mentor approval status.");
+    }
+};
+
+export const GetPendingMentorships = async () => {
+    try {
+        const query = `
+            SELECT 
+                m.*, 
+                u.name AS mentor_name, 
+                u.profile_picture_url AS mentor_avatar
+            FROM mentor_ship m
+            JOIN users u ON m.mentor_id = u.id
+            WHERE m.approval_status = 'pending'
+            ORDER BY m.created_at ASC;
+        `;
+        const result = await db.query(query);
+        return result.rows;
+    } catch (error) {
+        console.error("Database Error in GetPendingMentorships:", error);
+        throw new Error("Could not fetch pending mentorships.");
     }
 };

@@ -5,7 +5,8 @@ import logo from "../../assets/icons/gradnet-logo.png"
 import {
     House, Database, NotepadTextDashed, MessageSquareText,
     MessageCircleCode, BookmarkCheck, User, Search, Settings,
-    Sun, Moon
+    Sun, Moon, GraduationCap, UserCheck, LayoutDashboard,
+    Settings2
 } from "lucide-react"
 
 function LeftSidebar({ closeMobile }) {
@@ -49,6 +50,8 @@ function LeftSidebar({ closeMobile }) {
         { label: 'Forums', path: '/forums', icon: MessageSquareText },
         { label: 'Search', path: '/search', icon: Search },
         { label: 'Profile', path: '/profile', icon: User },
+        // { label: 'Mentorship', path: '/mentorships', icon: GraduationCap},
+        // { label: 'My Mentors', path: '/my-mentorships', icon: UserCheck},
     ];
 
     return (
@@ -74,20 +77,30 @@ function LeftSidebar({ closeMobile }) {
 
                     {user && (user?.role === "admin" || user?.role === "faculty") && (
                         <>
-                            <li>
+                            {/* <li>
+                                <Link to="/mentorship-dashboard" className={linkClasses('/mentorship-dashboard')} onClick={closeMobile}>
+                                    <LayoutDashboard size={iconSize} />
+                                    <span className="text-xl">Mentor dashboard</span>
+                                </Link>
+                            </li> */}
+                             <li>
                                 <Link to="/alumni-list" className={linkClasses('/alumni-list')} onClick={closeMobile}>
                                     <Database size={iconSize} />
                                     <span className="text-xl">Alumni List</span>
                                 </Link>
                             </li>
-                            {/* <li>
-                                <Link to="/dashboard" className={linkClasses('/dashboard')} onClick={closeMobile}>
-                                    <Settings size={iconSize} />
-                                    <span className="text-xl">Admin</span>
-                                </Link>
-                            </li> */}
                         </>
                     )}
+                    {/* {user && (user?.role === "admin") && (
+                        <>
+                        <li>
+                            <Link to="/admin" className={linkClasses('/admin')} onClick={closeMobile}>
+                                <Settings2 size={iconSize} />
+                                <span className="text-xl">Admin</span>
+                            </Link>
+                        </li>
+                        </>
+                    )} */}
                 </ul>
             </div>
 

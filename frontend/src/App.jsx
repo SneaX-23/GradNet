@@ -25,6 +25,11 @@ import ForumTopicPage from './pages/ForumTopicPage';
 import MessagesPage from './pages/MessagesPage';
 import SearchPage from './pages/SearchPage';
 
+import MentorshipPage from './pages/MentorshipPage';
+import MyMentorsPage from './pages/MyMentorsPage';
+import MentorDashboard from './pages/MentorDashboard';
+
+import AdminDashboard from './pages/AdminDashboard';
 //Context
 import { AuthProvider } from './context/AuthContext';
 
@@ -65,6 +70,12 @@ function App() {
           <Route path="/messages" element={<MessagesPage />} />
 
           <Route path="/search" element={<SearchPage />} />
+
+          {/* <Route path="/mentorships" element={<MentorshipPage />} />
+          <Route path="/my-mentorships" element={<MyMentorsPage />} />
+          <Route path="/mentorship-dashboard" element={<MentorDashboard />} />
+
+          <Route path="/admin" element={<AdminDashboard />} />   */}
 
         </Routes>
       </BrowserRouter>

@@ -11,6 +11,7 @@ import { getBookmarks } from "/src/services/bookmarksService.jsx";
 import ShowPostsCard from '/src/components/posts/showPostCard.jsx';
 import JobCard from '/src/components/jobs/JobCard.jsx';
 import ForumCard from '/src/components/forum/ForumCard.jsx';
+// import MentorshipCard from '../components/mentorship/MentorshipCard.jsx';
 
 function BookmarksPage() {
     const { user } = useAuth();
@@ -91,6 +92,15 @@ function BookmarksPage() {
             case 'forum':
                 component = <ForumCard forum={data} {...commonProps} />;
                 break;
+            // case 'mentorship':
+            //     component = (
+            //         <MentorshipCard 
+            //             mentorship={data}
+            //             onUpdate={fetchInitialBookmarks} 
+            //             {...commonProps} 
+            //         />
+            //     );
+            //     break;
             default:
                 component = (
                     <div className="p-4 bg-card border border-border sm:rounded-2xl">
