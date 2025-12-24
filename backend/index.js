@@ -20,6 +20,7 @@ import userRoutes from "./routes/userRoutes.js";
 import forumRoutes from "./routes/forumRoutes.js";
 import alumniRoutes from "./routes/alumniRoutes.js";
 import bookmarkRoutes from "./routes/bookmarksRoutes.js"
+import mentorRoutes from "./routes/mentorRoutes.js"
 
 dotenv.config();
 
@@ -41,7 +42,7 @@ const corsOptions = {
         return callback(null, true);
     },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"] 
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"] 
 };
 
 const httpServer = app.listen(port, () => {
@@ -96,7 +97,7 @@ io.on('connection', (socket) => {
     const userId = socket.request.session.userId;
 
     if (userId) {
-        console.log(`Authenticated user ${userId} connected.`);
+        // console.log(`Authenticated user ${userId} connected.`);
         socket.join(userId.toString());
     }
     socket.on('private_message', async ({ content, to }) => { 
@@ -142,6 +143,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/forum", forumRoutes);
 app.use("/api/alumni", alumniRoutes);
 app.use("/api/bookmarks", bookmarkRoutes);
+app.use("/api/mentor", mentorRoutes);
 
 app.use((err, req, res, next) => {
     console.error('Unhandled error:', err);
