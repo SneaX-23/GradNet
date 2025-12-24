@@ -8,7 +8,7 @@ import {
     getMentorDashboard,
     getStudentDashboard,
     moderateMentorship
-} from "../controllers/mentorshipController.js";
+} from "../controllers/mentorControllers.js";
 
 const router = express.Router();
 
