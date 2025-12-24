@@ -8,6 +8,7 @@ import {
     GetStudentApplications,
     GetAllActiveMentorships,
     ApproveMentorProfile,
+    GetPendingMentorships
 } from "../models/Mentor.js";
 
 export const createMentor = async (req, res) => {
@@ -198,14 +199,21 @@ export const getStudentDashboard = async (req, res) => {
 
 export const browseMentorships = async (req, res) => {
     try {
-        const { category, search } = req.query;
+        const { category, search, page = 1, limit = 10 } = req.query;
+        const offset = (parseInt(page) - 1) * parseInt(limit);
         
-        const listings = await GetAllActiveMentorships({ category, search });
+        const listings = await GetAllActiveMentorships({ 
+            category, 
+            search, 
+            limit: parseInt(limit), 
+            offset 
+        });
 
         return res.status(200).json({
             success: true,
             count: listings.length,
-            data: listings
+            data: listings,
+            page: parseInt(page)
         });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
@@ -243,6 +251,22 @@ export const moderateMentorship = async (req, res) => {
             data: result
         });
 
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+export const getPendingMentorships = async (req, res) => {
+    const adminId = req.session.userId;
+
+    try {
+        const user = await User.findByUserId(adminId);
+        if (!user || (user.role !== 'faculty' && user.role !== 'admin')) {
+            return res.status(403).json({ success: false, message: "Unauthorized." });
+        }
+
+        const pending = await GetPendingMentorships();
+        return res.status(200).json({ success: true, data: pending });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }

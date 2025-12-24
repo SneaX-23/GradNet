@@ -1,9 +1,11 @@
 import { API_BASE_URL } from '../config.js';
 
-export const browseMentorships = async (category = '', search = '') => {
+export const browseMentorships = async (category = '', search = '', page = 1) => {
     const query = new URLSearchParams();
     if (category) query.append('category', category);
     if (search) query.append('search', search);
+    query.append('page', page);
+    query.append('limit', 10);
     
     const response = await fetch(`${API_BASE_URL}/api/mentor/browse?${query.toString()}`, { 
         credentials: 'include' 
@@ -80,6 +82,16 @@ export const handleMenteeApplication = async (enrollmentId, status, mentorNotes 
 };
 
 //
+export const getPendingMentorships = async () => {
+    const response = await fetch(`${API_BASE_URL}/api/mentor/admin/pending`, { 
+        credentials: 'include' 
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Failed to fetch pending mentorships');
+    return data;
+};
+
+
 export const moderateMentorship = async (mentorshipId, status) => {
     const response = await fetch(`${API_BASE_URL}/api/mentor/moderate/${mentorshipId}`, {
         method: 'PATCH',
