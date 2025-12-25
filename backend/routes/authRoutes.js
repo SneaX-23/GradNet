@@ -43,13 +43,10 @@ router.get('/auth/google/callback',
             };
             
             req.session.save((err) => {
-                if (err) {
-                    console.error("Session save error:", err);
-                    return next(err);
-                }
+                if (err) console.error("Session save error:", err);
                 res.redirect(`${frontendUrl}/home`);
+            });
         });
-                });
     })(req, res, next);
   }
 );
