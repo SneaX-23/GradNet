@@ -67,7 +67,8 @@ function CreateProfilePage() {
                     usn: prefilledData.usn,
                     name: prefilledData.name,
                     email: prefilledData.email,
-                    handle: handle
+                    handle: handle,
+                    role: prefilledData.role,
                 }),
                 credentials: 'include',
             });

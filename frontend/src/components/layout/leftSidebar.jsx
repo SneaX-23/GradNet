@@ -76,7 +76,7 @@ function LeftSidebar({ closeMobile }) {
 
                     {user && (user?.role === "current_student") && (
                         <li>
-                                <Link to="//my-mentorships" className={linkClasses('/mentorship-dashboard')} onClick={closeMobile}>
+                                <Link to="/my-mentorships" className={linkClasses('/my-mentorships')} onClick={closeMobile}>
                                     <LayoutDashboard size={iconSize} />
                                     <span className="text-xl">My Mentors</span>
                                 </Link>
