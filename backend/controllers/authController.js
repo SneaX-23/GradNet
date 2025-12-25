@@ -167,11 +167,18 @@ static async verifyOtp(req, res) {
         if (err) {
             return res.status(500).json({ success: false, message: 'Could not log out, please try again.' });
         }
-        res.clearCookie('connect.sid'); 
+        res.clearCookie('gradnet.sid'); 
         res.json({ success: true, message: 'You have been logged out.' });
     });
     }
     static async checkSession(req, res) {
-        res.json({ success: true, user: req.session.user });
+        if (!req.isAuthenticated || !req.isAuthenticated()) {
+            return res.status(401).json({ success: false });
+        }
+
+        return res.json({
+            success: true,
+            user: req.user,
+        });
     }
 }
