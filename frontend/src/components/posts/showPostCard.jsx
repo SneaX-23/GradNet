@@ -138,7 +138,7 @@ export default function ShowPostsCard({ post, onDelete, onUpdate, onBookmarkTogg
 
 
     return (
-        <div className="w-full bg-card sm:border border-border sm:rounded-2xl transition-all sm:shadow-sm sm:hover:shadow-md overflow-hidden">
+        <div className="w-full bg-card sm:border border-border sm:rounded-2xl transition-all sm:shadow-sm sm:hover:shadow-md ">
             {/* Header */}
             <div className="flex items-start justify-between p-4">
                 <div className="flex items-center gap-3">

@@ -48,7 +48,7 @@ export default function ForumCard({ forum, onDelete, onBookmarkToggle }) {
     };
 
     return (
-        <div className="w-full bg-card sm:border border-border sm:rounded-2xl transition-all sm:shadow-sm sm:hover:shadow-md overflow-hidden relative group">
+        <div className="w-full bg-card sm:border border-border sm:rounded-2xl transition-all sm:shadow-sm sm:hover:shadow-md  relative group">
             <Link to={`/forums/${forum.id}`} className="block p-2 sm:p-4">
                 <div className="flex justify-between items-start">
                     <div className="flex-1 min-w-0 pr-4">

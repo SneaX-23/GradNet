@@ -24,7 +24,7 @@ router.get("/my-applications", getStudentDashboard);
 
 // --- Mentor Routes ---
 router.post("/profile", createMentor);
-router.patch("/profile", updateMentorProfile);
+router.patch("/profile/:mentorship_id", updateMentorProfile);
 router.get("/dashboard", getMentorDashboard);
 
 router.patch("/application/:enrollment_id", handleApplication);

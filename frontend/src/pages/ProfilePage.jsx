@@ -117,6 +117,25 @@ export default function ProfilePage() {
     };
 
     const isHighLevel = profileData?.role === 'admin' || profileData?.role === 'faculty';
+    const handleDeletePost = async (postId) => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/home/delete-post/${postId}`, {
+                        method: 'DELETE',
+                        credentials: 'include',
+            });
+        
+            if (!response.ok) throw new Error('Failed to delete the post.');
+                setPosts(posts.filter(post => post.id !== postId));
+        } catch (error) {
+            setError(error.message);
+        }
+    };
+        
+    const handleUpdatePost = (updatedPost) => {
+        setPosts(posts.map(post =>
+            post.id === updatedPost.id ? { ...post, ...updatedPost } : post
+        ));
+    };
 
     if (loading) {
         return (
@@ -289,7 +308,9 @@ export default function ProfilePage() {
                                 {posts.map((post, idx) => (
                                     <div key={`${post.id}-${idx}`} className="border-b border-border/60 sm:border-none">
                                         <ShowPostsCard
-                                            post={{ ...post, author_name: profileData.name, profile_picture_url: profileData.profile_picture_url }}
+                                            post={{ ...post, author_name: profileData.name, profile_picture_url: profileData.profile_picture_url, handle: profileData.handle }}
+                                            onDelete={handleDeletePost}
+                                            onUpdate={handleUpdatePost}
                                         />
                                     </div>
                                 ))}

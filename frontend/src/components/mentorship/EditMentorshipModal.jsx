@@ -30,7 +30,7 @@ export default function EditMentorshipModal({ open, onClose, mentorship, onSave 
         e.preventDefault();
         setLoading(true);
         try {
-            await updateMentorProfile(formData);
+            await updateMentorProfile(mentorship.id, formData);
             onSave();
             onClose();
         } catch (err) {
