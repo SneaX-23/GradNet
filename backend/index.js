@@ -37,16 +37,18 @@ const PORT = process.env.PORT || 3000;
 
 app.set("trust proxy", 1);
 
-const allowedOrigins = (process.env.FRONTEND_URL ||
-  "http://localhost:5173")
+const allowedOrigins = (process.env.FRONTEND_URL || "http://localhost:5173")
   .split(",")
-  .map(origin => origin.trim().replace(/\/$/, ""));
+  .map(url => url.trim().replace(/\/$/, ""));
 
 const corsOptions = {
   origin(origin, callback) {
     if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.includes(origin)) {
+
+    const isExplicitlyAllowed = allowedOrigins.includes(origin);
+    const isVercelPreview = /\.vercel\.app$/.test(origin); 
+
+    if (isExplicitlyAllowed || isVercelPreview) {
       callback(null, true);
     } else {
       console.error(`CORS rejected origin: ${origin}`);
