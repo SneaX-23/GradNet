@@ -8,7 +8,7 @@ dotenv.config();
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "/api/auth/google/callback" 
+    callbackURL: process.env.CALLBACK_URL 
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
@@ -22,7 +22,7 @@ passport.use(new GoogleStrategy({
 
       const preVerifiedStudent = await User.findPreVerifiedStudentByemail(email); 
       if (!preVerifiedStudent) {
-        return done(null, false, { message: 'Email not authorized for GradNet.' });
+        return done(null, false, { message: 'Email not authorized for GradNet. Please complete signup with USN first.' });
       }
 
       return done(null, false, { message: 'Please complete signup with USN first.' });

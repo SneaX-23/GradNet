@@ -8,6 +8,8 @@ import { Server } from "socket.io";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 
+import db from "./config/database.js";
+
 import "./config/passport.js";
 
 import authRoutes from "./routes/authRoutes.js";
@@ -23,6 +25,9 @@ import mentorRoutes from "./routes/mentorRoutes.js";
 
 import { requireAuth } from "./middleware/authMiddleware.js";
 import { Message } from "./models/Message.js";
+
+import connectPgSimple from 'connect-pg-simple';
+const PgSession = connectPgSimple(session);
 
 dotenv.config();
 
@@ -58,6 +63,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const isProduction = process.env.NODE_ENV === "production";
 
 const sessionMiddleware = session({
+  store: new PgSession({
+    pool: db,
+    tableName: 'user_sessions',
+    createTableIfMissing: true
+  }),
   name: "gradnet.sid",
   secret: process.env.SESSION_SECRET,
   resave: false,
@@ -67,7 +77,7 @@ const sessionMiddleware = session({
     httpOnly: true,
     secure: isProduction,
     sameSite: isProduction ? "none" : "lax",
-    maxAge: 1000 * 60 * 60 * 24 * 7 
+    maxAge: 1000 * 60 * 60 * 24 * 7
   }
 });
 
