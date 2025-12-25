@@ -178,7 +178,7 @@ static async verifyOtp(req, res) {
 
         return res.json({
             success: true,
-            user: req.user,
+            user: req.session.user,
         });
     }
 }
