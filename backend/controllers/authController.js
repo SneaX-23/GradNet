@@ -18,11 +18,16 @@ export class AuthController{
 
             req.session.email = result.email;
             req.session.otpSent = true;
-
-            res.json({
-                status: result.status,
-                email: result.email,
-                message: "OTP has been sent to your email."
+            req.session.save((err) => {
+            if (err) {
+                console.error("Session save error:", err);
+                return res.status(500).json({success: false, message: "Session save failed"});
+            }
+                res.json({
+                    status: result.status,
+                    email: result.email,
+                    message: "OTP has been sent to your email."
+                });
             });
 
         } catch (error) {
@@ -53,6 +58,9 @@ export class AuthController{
 
 static async verifyOtp(req, res) {
     try {
+        console.log("Session data:", req.session); 
+        console.log("Session ID:", req.sessionID);
+
         const { otp } = req.body;
         const email = req.session.email;
 
