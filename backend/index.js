@@ -45,14 +45,16 @@ const corsOptions = {
   origin(origin, callback) {
     if (!origin) return callback(null, true);
 
-    const isExplicitlyAllowed = allowedOrigins.includes(origin);
-    const isVercelPreview = /\.vercel\.app$/.test(origin); 
+    const cleanOrigin = origin.trim().replace(/\/$/, ""); 
+
+    const isExplicitlyAllowed = allowedOrigins.includes(cleanOrigin);
+    const isVercelPreview = cleanOrigin.endsWith('.vercel.app'); 
 
     if (isExplicitlyAllowed || isVercelPreview) {
       callback(null, true);
     } else {
-      console.error(`CORS rejected origin: ${origin}`);
-      callback(new Error("Not allowed by CORS"), false);
+      console.error(`CORS rejected origin: ${cleanOrigin}`);
+      callback(null, false); 
     }
   },
   credentials: true,

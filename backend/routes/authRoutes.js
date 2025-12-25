@@ -47,9 +47,9 @@ router.get('/auth/google/callback',
                     console.error("Session save error:", err);
                     return next(err);
                 }
-                    res.redirect(`${frontendUrl}/home`);
+                res.redirect(`${frontendUrl}/home`);
+        });
                 });
-            });
     })(req, res, next);
   }
 );
