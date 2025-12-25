@@ -34,7 +34,7 @@ router.get('/auth/google/callback',
             
             req.session.userId = user.id; 
             req.session.user = {
-            id: user.id,
+                id: user.id,
                 name: user.name,
                 email: user.email,
                 role: user.role,
@@ -43,10 +43,13 @@ router.get('/auth/google/callback',
             };
             
             req.session.save((err) => {
-                if (err) console.error("Session save error:", err);
-                res.redirect(`${frontendUrl}/home`);
+                if (err) {
+                    console.error("Session save error:", err);
+                    return next(err);
+                }
+                    res.redirect(`${frontendUrl}/home`);
+                });
             });
-        });
     })(req, res, next);
   }
 );
