@@ -50,8 +50,7 @@ function LeftSidebar({ closeMobile }) {
         { label: 'Forums', path: '/forums', icon: MessageSquareText },
         { label: 'Search', path: '/search', icon: Search },
         { label: 'Profile', path: '/profile', icon: User },
-        // { label: 'Mentorship', path: '/mentorships', icon: GraduationCap},
-        // { label: 'My Mentors', path: '/my-mentorships', icon: UserCheck},
+        { label: 'Mentorship', path: '/mentorships', icon: GraduationCap},
     ];
 
     return (
@@ -75,14 +74,23 @@ function LeftSidebar({ closeMobile }) {
                         </li>
                     ))}
 
+                    {user && (user?.role === "current_student") && (
+                        <li>
+                                <Link to="//my-mentorships" className={linkClasses('/mentorship-dashboard')} onClick={closeMobile}>
+                                    <LayoutDashboard size={iconSize} />
+                                    <span className="text-xl">My Mentors</span>
+                                </Link>
+                            </li>
+                    )}
+                    
                     {user && (user?.role === "admin" || user?.role === "faculty") && (
                         <>
-                            {/* <li>
+                            <li>
                                 <Link to="/mentorship-dashboard" className={linkClasses('/mentorship-dashboard')} onClick={closeMobile}>
                                     <LayoutDashboard size={iconSize} />
                                     <span className="text-xl">Mentor dashboard</span>
                                 </Link>
-                            </li> */}
+                            </li>
                              <li>
                                 <Link to="/alumni-list" className={linkClasses('/alumni-list')} onClick={closeMobile}>
                                     <Database size={iconSize} />
@@ -91,7 +99,7 @@ function LeftSidebar({ closeMobile }) {
                             </li>
                         </>
                     )}
-                    {/* {user && (user?.role === "admin") && (
+                    {user && (user?.role === "admin") && (
                         <>
                         <li>
                             <Link to="/admin" className={linkClasses('/admin')} onClick={closeMobile}>
@@ -100,7 +108,7 @@ function LeftSidebar({ closeMobile }) {
                             </Link>
                         </li>
                         </>
-                    )} */}
+                    )}
                 </ul>
             </div>
 

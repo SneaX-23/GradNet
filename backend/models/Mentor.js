@@ -29,7 +29,7 @@ export const CreateMentor = async (userId, mentorData) => {
 }
 
 // Update Mentor
-export const UpdateMentor = async (userId, mentorData) => {
+export const UpdateMentor = async (mentorshipId, userId, mentorData) => {
     const { category, guidance_on, description, external_link, max_mentees } = mentorData;
 
     const fields = [];
@@ -42,21 +42,19 @@ export const UpdateMentor = async (userId, mentorData) => {
     if (external_link !== undefined) { fields.push(`external_link = $${queryIndex++}`); values.push(external_link); }
     if (max_mentees !== undefined) { fields.push(`max_mentees = $${queryIndex++}`); values.push(max_mentees); }
 
-    if (fields.length === 0) {
-        throw new Error("No fields provided for update.");
-    }
+    if (fields.length === 0) throw new Error("No fields provided for update.");
 
+    values.push(mentorshipId);
     values.push(userId);
-    const userIdIndex = queryIndex;
 
     try {
         const query = `
             UPDATE mentor_ship 
             SET ${fields.join(', ')}, 
-                updated_at = CURRENT_TIMESTAMP,
+                updated_at = CURRENT_TIMESTAMP, -- Only update this timestamp
                 is_active = false,
                 approval_status = 'pending'
-            WHERE mentor_id = $${userIdIndex}
+            WHERE id = $${queryIndex} AND mentor_id = $${queryIndex + 1}
             RETURNING *;
         `;
 

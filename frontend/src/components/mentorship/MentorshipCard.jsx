@@ -133,9 +133,9 @@ export default function MentorshipCard({ mentorship, onApply, onDelete, onUpdate
                     </div>
                 </div>
 
-                <p className={`mt-4 text-sm text-foreground/80 leading-relaxed ${!expanded && 'line-clamp-2'}`}>
+                {/* <p className={`mt-4 text-sm text-foreground/80 leading-relaxed ${!expanded && 'line-clamp-2'}`}>
                     {mentorship.description}
-                </p>
+                </p> */}
 
                 <div className={`grid transition-all duration-300 ease-in-out ${expanded ? 'grid-rows-[1fr] opacity-100 mt-5' : 'grid-rows-[0fr] opacity-0'}`}>
                     <div className="overflow-hidden space-y-4">

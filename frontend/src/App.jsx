@@ -71,11 +71,11 @@ function App() {
 
           <Route path="/search" element={<SearchPage />} />
 
-          {/* <Route path="/mentorships" element={<MentorshipPage />} />
+          <Route path="/mentorships" element={<MentorshipPage />} />
           <Route path="/my-mentorships" element={<MyMentorsPage />} />
           <Route path="/mentorship-dashboard" element={<MentorDashboard />} />
 
-          <Route path="/admin" element={<AdminDashboard />} />   */}
+          <Route path="/admin" element={<AdminDashboard />} />  
 
         </Routes>
       </BrowserRouter>

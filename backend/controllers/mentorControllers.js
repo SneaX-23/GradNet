@@ -50,26 +50,20 @@ export const createMentor = async (req, res) => {
 
 export const updateMentorProfile = async (req, res) => {
     const userId = req.session.userId;
+    const { mentorship_id } = req.params;
 
-    if (!userId) {
-        return res.status(401).json({ success: false, message: "Not authenticated" });
-    }
+    if (!userId) return res.status(401).json({ success: false, message: "Not authenticated" });
 
     try {
-        const mentorData = req.body;
-
-        const updatedProfile = await UpdateMentor(userId, mentorData);
+        const updatedProfile = await UpdateMentor(mentorship_id, userId, req.body);
 
         if (!updatedProfile) {
-            return res.status(404).json({ 
-                success: false, 
-                message: "Mentor profile not found or you don't have permission to edit it." 
-            });
+            return res.status(404).json({ success: false, message: "Profile not found or unauthorized." });
         }
 
         return res.status(200).json({
             success: true,
-            message: "Profile updated successfully. It will be hidden until re-approved by faculty.",
+            message: "Profile updated and pending re-approval.",
             data: updatedProfile
         });
 

@@ -3,7 +3,7 @@ import db from "../config/database.js"
 export class User{
     static async findByUSN(usn) {
         try {
-            const result = await db.query("SELECT * FROM users WHERE usn = $1", [usn]);
+            const result = await db.query("SELECT * FROM users WHERE usn ILIKE $1", [usn]);
             return result.rows[0] || null;
         } catch (error) {
             throw new Error(`Error finding user by USN: ${error.message}`);
@@ -11,7 +11,7 @@ export class User{
     }
     static async findPreVerifiedStudent(usn){
         try {
-            const result = await db.query("SELECT * FROM pre_verified_students WHERE usn = $1", [usn]);
+            const result = await db.query("SELECT * FROM pre_verified_students WHERE usn ILIKE $1", [usn]);
             return result.rows[0] || null;
         } catch (error) {
         throw new Error(`Error finding student: ${error.message}`);

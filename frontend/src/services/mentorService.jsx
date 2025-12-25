@@ -48,8 +48,8 @@ export const createMentorProfile = async (mentorData) => {
     return data;
 };
 
-export const updateMentorProfile = async (mentorData) => {
-    const response = await fetch(`${API_BASE_URL}/api/mentor/profile`, {
+export const updateMentorProfile = async (mentorship_id, mentorData) => {
+    const response = await fetch(`${API_BASE_URL}/api/mentor/profile/${mentorship_id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(mentorData),
