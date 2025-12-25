@@ -37,18 +37,21 @@ const PORT = process.env.PORT || 3000;
 
 app.set("trust proxy", 1);
 
-const allowedOrigins = (
-  process.env.FRONTEND_URL ||
-  "http://localhost:5173"
-).split(",");
+const allowedOrigins = (process.env.FRONTEND_URL ||
+  "http://localhost:5173")
+  .split(",")
+  .map(origin => origin.trim().replace(/\/$/, ""));
 
 const corsOptions = {
   origin(origin, callback) {
     if (!origin) return callback(null, true);
-    if (!allowedOrigins.includes(origin)) {
-      return callback(new Error("Not allowed by CORS"), false);
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.error(`CORS rejected origin: ${origin}`);
+      callback(new Error("Not allowed by CORS"), false);
     }
-    callback(null, true);
   },
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
