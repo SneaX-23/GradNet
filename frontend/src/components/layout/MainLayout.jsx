@@ -3,6 +3,8 @@ import { SquareChevronRight, SquareChevronLeft } from "lucide-react"
 import logo from "../../assets/icons/gradnet-logo.png"
 import LeftSidebar from "./leftSidebar.jsx"
 import RightSidebar from "./RightSidebar.jsx"
+import { Link } from 'react-router-dom';
+
 const MainLayout = ({ children }) => {
     const [leftOpen, setLeftOpen] = useState(false);
     const [rightOpen, setRightOpen] = useState(false);
@@ -13,7 +15,9 @@ const MainLayout = ({ children }) => {
             {/* Mobile Header*/}
             <header className="lg:hidden flex justify-between items-center p-1 border-b border-border sticky top-0 bg-background/80 backdrop-blur-md z-40">
                 <button onClick={() => setLeftOpen(true)} className="p-2"><SquareChevronRight /></button>
-                <img src={logo} alt="Logo" className="w-8 h-8" />
+                <Link to="/home" onClick={() => window.scrollTo(0, 0)}>
+                    <img src={logo} alt="GradNet" className="w-8 h-8" />
+                </Link>
                 <button onClick={() => setRightOpen(true)} className="p-2"><SquareChevronLeft /></button>
             </header>
 
