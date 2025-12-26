@@ -118,7 +118,7 @@ function CreatePost({ onPostCreated }) {
 
     return (
         <div className="w-full max-w-3xl mx-auto mb-0 sm:mb-6">
-            <div className="bg-card sm:border border-border sm:rounded-2xl shadow-sm p-3 flex gap-4 transition-all">
+            <div className="bg-card border-b border-border sm:border sm:rounded-2xl shadow-sm p-3 flex gap-4 transition-all">
                 {/* Desktop Avatar */}
                 <div className="shrink-0 hidden sm:block">
                     <div className="w-12 h-12 rounded-full bg-primary/10 border border-border flex items-center justify-center overflow-hidden font-bold">
