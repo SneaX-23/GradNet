@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Pencil, Save, AlertTriangle } from 'lucide-react';
+import { X, Pencil, Save, AlertTriangle, LinkIcon } from 'lucide-react';
 import { updateMentorProfile } from '../../services/mentorService';
 
 export default function EditMentorshipModal({ open, onClose, mentorship, onSave }) {
@@ -62,14 +62,14 @@ export default function EditMentorshipModal({ open, onClose, mentorship, onSave 
                             <select 
                                 value={formData.category}
                                 onChange={(e) => setFormData({...formData, category: e.target.value})}
-                                className="w-full p-2.5 bg-foreground/5 border border-border rounded-xl text-sm outline-none"
+                                className="w-full p-2.5 bg-foreground/5 border border-border rounded-xl text-sm outline-none text-foreground"
                             >
-                                <option value="General">General</option>
-                                <option value="Placement">Placement</option>
-                                <option value="Higher Studies">Higher Studies</option>
-                                <option value="Web Dev">Web Dev</option>
-                                <option value="Data Science">Data Science</option>
-                                <option value="Core Engineering">Core Engineering</option>
+                                <option className="bg-card text-foreground" value="General">General</option>
+                                <option className="bg-card text-foreground" value="Placement">Placement</option>
+                                <option className="bg-card text-foreground" value="Higher Studies">Higher Studies</option>
+                                <option className="bg-card text-foreground" value="Web Dev">Web Dev</option>
+                                <option className="bg-card text-foreground" value="Data Science">Data Science</option>
+                                <option className="bg-card text-foreground" value="Core Engineering">Core Engineering</option>
                             </select>
                         </div>
                         <div className="space-y-1.5">
@@ -82,7 +82,19 @@ export default function EditMentorshipModal({ open, onClose, mentorship, onSave 
                             />
                         </div>
                     </div>
-
+                    <div className="space-y-1.5">
+                        <label className="text-xs font-bold text-muted uppercase">Resource Link (Optional)</label>
+                        <div className="relative">
+                            <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" size={14} />
+                            <input 
+                                type="url"
+                                placeholder="Add a link to course materials or portfolio"
+                                value={formData.external_link}
+                                onChange={(e) => setFormData({...formData, external_link: e.target.value})}
+                                className="w-full pl-10 pr-3 py-2.5 bg-foreground/5 border border-border rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary/10 transition-all"
+                            />
+                        </div>
+                    </div>
                     <div className="space-y-1.5">
                         <label className="text-xs font-bold text-muted uppercase">Topic</label>
                         <input 

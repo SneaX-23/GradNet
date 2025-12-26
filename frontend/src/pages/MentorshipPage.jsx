@@ -129,7 +129,7 @@ export default function MentorshipPage() {
             {canCreateProgram && (
                 <button 
                     onClick={() => setIsCreateModalOpen(true)}
-                    className="fixed bottom-6 right-6 z-999 flex items-center gap-2 px-5 py-3.5 bg-primary text-background rounded-2xl font-bold shadow-2xl hover:scale-105 active:scale-95 transition-all md:bottom-10 md:right-10"
+                    className="fixed bottom-6 right-6 z-10 md:z-999 flex items-center gap-2 px-5 py-3.5 bg-primary text-background rounded-2xl font-bold shadow-2xl hover:scale-105 active:scale-95 transition-all md:bottom-10 md:right-10"
                 >
                     <Plus size={20} strokeWidth={3} />
                     <span>Create Program</span>
