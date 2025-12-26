@@ -1,8 +1,7 @@
 import { io } from 'socket.io-client';
 
-const URL = import.meta.env.VITE_SOCKET_URL;
-
-export const socket = io(URL, {
+export const socket = io({
+    path: "/api/socket.io",
     autoConnect: false,
-    withCredentials: true 
+    withCredentials: true,
 });
