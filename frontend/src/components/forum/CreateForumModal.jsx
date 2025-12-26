@@ -74,7 +74,7 @@ function CreateForum({ onForumCreated }) {
             {/* FAB */}
             <button
                 onClick={() => setOpen(true)}
-                className="fixed bottom-6 right-6 md:right-10 sm:right-86 z-1000 flex items-center justify-center gap-2 bg-primary text-background px-4 py-4 sm:py-3 sm:px-6 rounded-full sm:rounded-2xl font-bold shadow-xl hover:opacity-90 active:scale-95 transition-all"
+                className="fixed bottom-6 right-6 md:right-10 sm:right-86 z-10 md:z-1000 flex items-center justify-center gap-2 bg-primary text-background px-4 py-4 sm:py-3 sm:px-6 rounded-full sm:rounded-2xl font-bold shadow-xl hover:opacity-90 active:scale-95 transition-all"
             >
                 <Plus size={24} />
                 <span className="hidden sm:inline">New Category</span>

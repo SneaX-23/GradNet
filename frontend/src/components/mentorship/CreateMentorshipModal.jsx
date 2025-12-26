@@ -74,7 +74,7 @@ export default function CreateMentorshipModal({ open, onClose, onSuccess }) {
                                         onChange={(e) => setFormData({...formData, category: e.target.value})}
                                         className="w-full p-3 bg-foreground/5 border border-border rounded-xl text-sm outline-none font-bold focus:ring-2 focus:ring-primary/10 transition-all"
                                     >
-                                        {categories.map(cat => <option key={cat}>{cat}</option>)}
+                                        {categories.map(cat => <option key={cat} className='bg-card text-foreground'>{cat}</option>)}
                                     </select>
                                 </div>
                                 <div className="space-y-1.5">
@@ -109,6 +109,19 @@ export default function CreateMentorshipModal({ open, onClose, onSuccess }) {
                                     onChange={(e) => setFormData({...formData, description: e.target.value})}
                                     className="w-full p-3 bg-foreground/5 border border-border rounded-xl text-sm outline-none resize-none h-28 focus:ring-2 focus:ring-primary/10 transition-all"
                                 />
+                            </div>
+                            <div className="space-y-1.5">
+                                <label className="text-[10px] font-black text-muted uppercase tracking-widest">Resource Link (Optional)</label>
+                                <div className="relative">
+                                    <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" size={14} />
+                                    <input 
+                                        type="url"
+                                        placeholder="Add a link to course materials or portfolio"
+                                        value={formData.external_link}
+                                        onChange={(e) => setFormData({...formData, external_link: e.target.value})}
+                                        className="w-full pl-10 pr-3 py-3 bg-foreground/5 border border-border rounded-xl text-sm outline-none font-bold focus:ring-2 focus:ring-primary/10 transition-all"
+                                    />
+                                </div>
                             </div>
 
                             <div className="p-3 bg-primary/5 rounded-xl border border-primary/10">
