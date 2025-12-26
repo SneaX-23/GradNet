@@ -88,7 +88,7 @@ function CreateProfilePage() {
     );
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-4 py-12">
+        <div className="min-h-svh flex items-center justify-center px-4 py-12">
             <div className="w-full max-w-md rounded-xl bg-card p-6 shadow-xl border border-border sm:p-8">
 
                 {/* Header */}
