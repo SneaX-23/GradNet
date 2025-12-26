@@ -51,6 +51,7 @@ function LeftSidebar({ closeMobile }) {
         { label: 'Search', path: '/search', icon: Search },
         { label: 'Profile', path: '/profile', icon: User },
         { label: 'Mentorship', path: '/mentorships', icon: GraduationCap},
+        { label: 'My Mentors', path: '/my-mentorships', icon: LayoutDashboard}
     ];
 
     return (
@@ -73,7 +74,7 @@ function LeftSidebar({ closeMobile }) {
                             </Link>
                         </li>
                     ))}
-
+{/* 
                     {user && (user?.role === "current_student") && (
                         <li>
                                 <Link to="/my-mentorships" className={linkClasses('/my-mentorships')} onClick={closeMobile}>
@@ -81,7 +82,7 @@ function LeftSidebar({ closeMobile }) {
                                     <span className="text-xl">My Mentors</span>
                                 </Link>
                             </li>
-                    )}
+                    )} */}
                     
                     {user && (user?.role === "admin" || user?.role === "faculty") && (
                         <>
