@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/socket.io/(.*)",
-      "destination": "https://gradnet-zv4h.onrender.com/socket.io/$1"
+      "destination": "https://gradnet-zv4h.onrender.com/api/socket.io/$1"
     },
     {
       "source": "/api/(.*)",
