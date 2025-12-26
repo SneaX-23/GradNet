@@ -76,13 +76,17 @@ const Home = () => {
             post.id === updatedPost.id ? { ...post, ...updatedPost } : post
         ));
     };
+    const handlePostCreated = (newPost) => {
+        setPosts(prev => [newPost, ...prev]);
+        setPage(1);
+    };
 
     if (!user) return null;
 
     return (
         <MainLayout>
             <div className="w-full max-w-3xl mx-auto">
-                {user && (user.role === 'admin' || user.role === 'faculty') && <CreatePost />}
+                {user && (user.role === 'admin' || user.role === 'faculty') && <CreatePost onPostCreated={handlePostCreated}/>}
                 {error && (
                     <div className="bg-red-500/10 border border-red-500 text-red-500 px-4 py-3 rounded-lg m-4">
                         {error}

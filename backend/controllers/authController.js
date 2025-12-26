@@ -36,7 +36,7 @@ export class AuthController{
         if (error instanceof UserNotFoundError) {
             return res.status(404).json({ success: false, message: "This USN is not registered." });
         }
-        return res.status(500).json({ success: false, message: "An unexpected error occurred. Please try again." });
+        return res.status(500).json({ success: false, message: "This USN is not registered." });
         }
         
     }
