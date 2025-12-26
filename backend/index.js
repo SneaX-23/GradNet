@@ -96,7 +96,7 @@ const httpServer = app.listen(PORT, () => {
 
 
 const io = new Server(httpServer, {
-  cors: corsOptions,
+  path: "/api/socket.io",
 });
 
 app.set("io", io);
