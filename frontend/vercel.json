@@ -1,6 +1,16 @@
 {
   "rewrites": [
-    {"source": "/api/(.*)", "destination": "https://gradnet-zv4h.onrender.com/api/$1"},
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/api/socket.io/(.*)",
+      "destination": "https://gradnet-zv4h.onrender.com/socket.io/$1"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "https://gradnet-zv4h.onrender.com/api/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
