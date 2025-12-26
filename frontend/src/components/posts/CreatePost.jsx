@@ -117,8 +117,8 @@ function CreatePost({ onPostCreated }) {
     };
 
     return (
-        <div className="w-full max-w-3xl mx-auto mb-6">
-            <div className="bg-card sm:border border-border sm:rounded-2xl shadow-sm p-4 flex gap-4 transition-all">
+        <div className="w-full max-w-3xl mx-auto mb-0 sm:mb-6">
+            <div className="bg-card sm:border border-border sm:rounded-2xl shadow-sm p-3 flex gap-4 transition-all">
                 {/* Desktop Avatar */}
                 <div className="shrink-0 hidden sm:block">
                     <div className="w-12 h-12 rounded-full bg-primary/10 border border-border flex items-center justify-center overflow-hidden font-bold">
@@ -137,7 +137,7 @@ function CreatePost({ onPostCreated }) {
                             onChange={(e) => setPostContent({ ...postContent, title: e.target.value })}
                         />
                         <textarea
-                            className="w-full bg-transparent text-foreground placeholder:text-muted focus:outline-none resize-none min-h-20 leading-relaxed"
+                            className="w-full bg-transparent text-foreground placeholder:text-muted focus:outline-none resize-none min-h-10 md:min-h-20 leading-relaxed"
                             placeholder="What's happening on the campus?"
                             name="description"
                             value={postContent.description}
@@ -220,10 +220,10 @@ function CreatePost({ onPostCreated }) {
                             />
                             <button
                                 onClick={handlePost}
-                                disabled={isSubmitting || (!postContent.title.trim() && !postContent.description.trim() && selectedFiles.length === 0)}
-                                className="flex items-center gap-2 px-8 py-2.5 bg-primary text-background font-bold rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md active:scale-95"
+                                disabled={isSubmitting || (!postContent.title.trim() && !postContent.description.trim() )}
+                                className="flex items-center gap-2 px-4 py-2 bg-primary text-background font-bold rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md active:scale-95"
                             >
-                                <Send size={18} />
+                                <Send size={16} />
                                 {isSubmitting ? 'Posting...' : 'Post'}
                             </button>
                         </div>
