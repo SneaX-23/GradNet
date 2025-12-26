@@ -58,8 +58,8 @@ export class AuthController{
 
 static async verifyOtp(req, res) {
     try {
-        console.log("Session data:", req.session); 
-        console.log("Session ID:", req.sessionID);
+        // console.log("Session data:", req.session); 
+        // console.log("Session ID:", req.sessionID);
 
         const { otp } = req.body;
         const email = req.session.email;
