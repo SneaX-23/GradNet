@@ -6,11 +6,14 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
   plugins: [
-    react(), 
+    react(),
     tailwindcss(),
     VitePWA({
       registerType: "autoUpdate",
       includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
+      workbox: {
+        navigateFallbackDenylist: [/^\/api/],
+      },
       manifest: {
         name: "GradNet",
         short_name: "GradNet",
@@ -34,7 +37,7 @@ export default defineConfig({
             src: "/web-app-manifest-512x512.png",
             sizes: "512x512",
             type: "image/png",
-            purpose: "any maskable", 
+            purpose: "any maskable",
           },
         ],
       },
