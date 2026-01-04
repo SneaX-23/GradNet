@@ -1,4 +1,57 @@
 import db from "../config/database.js";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { s3 } from "../config/s3Service.js";
+
+
+async function attachSignedUrls(files) {
+    if (!files || files.length === 0) return [];
+
+    return Promise.all(
+        files.map(async (file) => {
+            const signedUrl = await getSignedUrl(
+                s3,
+                new GetObjectCommand({
+                    Bucket: process.env.AWS_S3_BUCKET,
+                    Key: file.file_url
+                }),
+                { expiresIn: 60 }
+            );
+            return {
+                ...file,
+                url: signedUrl,
+                file_url: signedUrl
+            };
+        })
+    );
+}
+
+async function attachSignedUrlsToFeed(rows) {
+    for (const row of rows) {
+        if (!row.files || row.files[0] === null) {
+            row.files = [];
+            continue;
+        }
+
+        row.files = await Promise.all(
+            row.files.map(async (file) => {
+                const signedUrl = await getSignedUrl(
+                    s3,
+                    new GetObjectCommand({
+                        Bucket: process.env.AWS_S3_BUCKET,
+                        Key: file.file_url
+                    }),
+                    { expiresIn: 60 }
+                );
+                return {
+                    ...file,
+                    url: signedUrl,
+                    file_url: signedUrl
+                };
+            })
+        );
+    }
+}
 
 export class Home {
     static async GetFeed(page = 1, userId) {
@@ -40,16 +93,20 @@ export class Home {
             `;
             const result = await db.query(query, [limit, offset, userId]);
             result.rows.forEach(row => {
-                if (row.files && row.files.length === 1 && row.files[0] === null) {
+                if (!row.files || row.files[0] === null) {
                     row.files = [];
                 }
             });
+
+
+            await attachSignedUrlsToFeed(result.rows);
+
             return result;
         } catch (error) {
             throw new Error(`Error getting feed from DB: ${error.message}`);
         }
     }
-    
+
     static async findById(id, userId) {
         try {
             const query = `
@@ -82,12 +139,17 @@ export class Home {
                 WHERE e.is_active = true AND e.id = $1;
             `;
             const result = await db.query(query, [id, userId]);
-            result.rows.forEach(row => {
-                if (row.files && row.files.length === 1 && row.files[0] === null) {
-                    row.files = [];
-                }
-            });
-            return result.rows[0];
+            const post = result.rows[0];
+
+            if (!post) return null;
+
+            if (!post.files || post.files[0] === null) {
+                post.files = [];
+            }
+
+            post.files = await attachSignedUrls(post.files);
+
+            return post;
         } catch (error) {
             throw new Error(`Error finding post by ID: ${error.message}`);
         }
@@ -139,15 +201,15 @@ export class Home {
                         INSERT INTO event_files (event_id, file_url, file_mime_type)
                         VALUES ($1, $2, $3);
                     `;
-                    await client.query(fileQuery, [eventId, file.url, file.mimeType]);
+                    await client.query(fileQuery, [eventId, file.key, file.mimeType]);
                 }
             }
 
-            await client.query('COMMIT'); 
+            await client.query('COMMIT');
             return newEvent;
 
         } catch (error) {
-            await client.query('ROLLBACK'); 
+            await client.query('ROLLBACK');
             throw new Error(`Error creating post with files: ${error.message}`);
         } finally {
             client.release();
