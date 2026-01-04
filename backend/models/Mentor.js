@@ -294,4 +294,33 @@ export const GetPendingMentorships = async () => {
         console.error("Database Error in GetPendingMentorships:", error);
         throw new Error("Could not fetch pending mentorships.");
     }
-};
+}
+// Delete mentorship by id
+export const DeleteById = async (id) => {
+    try {
+        const query = `UPDATE mentor_ship SET is_active = false WHERE id = $1 RETURNING id`;
+        const result = await db.query(query, [id]);
+        return result.rows[0];
+    } catch (error) {
+        throw new Error(`Error deleting job by ID: ${error.message}`);
+    }
+}
+
+export const GetMentorshipById = async (id) => {
+    try {
+        let query = `
+        SELECT 
+            m.*, 
+            u.name AS mentor_name, 
+            u.profile_picture_url AS mentor_avatar
+        FROM mentor_ship m
+        JOIN users u ON m.mentor_id = u.id
+        WHERE m.is_active = true 
+          AND m.approval_status = 'approved'
+    `;
+    const result = await db.query(query, [id]);
+    return result.rows[0];
+    } catch (error) {
+        throw new Error(`Error getting mentorship by id: ${error.message}`);
+    }
+} 

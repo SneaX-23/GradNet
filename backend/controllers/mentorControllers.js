@@ -8,7 +8,9 @@ import {
     GetStudentApplications,
     GetAllActiveMentorships,
     ApproveMentorProfile,
-    GetPendingMentorships
+    GetPendingMentorships,
+    GetMentorshipById,
+    DeleteById
 } from "../models/Mentor.js";
 
 export const createMentor = async (req, res) => {
@@ -265,3 +267,34 @@ export const getPendingMentorships = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
+export const deleteMentorship = async (req, res) => {
+    const {id} = req.params;
+    const {userId, user} = req.session;
+
+    try{
+        if (!user) {
+            return res.status(401).json({ success: false, message: 'Authentication required.' });
+        }
+
+        const mentorShip = await GetMentorshipById(id);
+
+        if(!mentorShip) {
+            return res.status(401).json({ success: false, message: 'Mentorship desnt exists or is already deleted' });
+        }
+        
+        const isOwner = userId === mentorShip.mentor_id;
+
+        if(!isOwner && user.role !== "admin" && user.role !== "faculty"){
+            return res.status(401).json({ success: false, message: 'You are not authorized to delete this mentorship program.' });
+        }
+
+        await DeleteById(id);
+
+        res.json({ success: true, message: 'Mentorship Program deleted successfully.' });
+
+    }catch (error) {
+        console.error("Error deleting mentorship program:", error);
+        res.status(500).json({ success: false, message: "Server error while deleting mentorship program." });
+    }
+}
