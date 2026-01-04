@@ -308,19 +308,21 @@ export const DeleteById = async (id) => {
 
 export const GetMentorshipById = async (id) => {
     try {
-        let query = `
-        SELECT 
-            m.*, 
-            u.name AS mentor_name, 
-            u.profile_picture_url AS mentor_avatar
-        FROM mentor_ship m
-        JOIN users u ON m.mentor_id = u.id
-        WHERE m.is_active = true 
-          AND m.approval_status = 'approved'
-    `;
-    const result = await db.query(query, [id]);
-    return result.rows[0];
+        const query = `
+            SELECT 
+                m.*, 
+                u.name AS mentor_name, 
+                u.profile_picture_url AS mentor_avatar
+            FROM mentor_ship m
+            JOIN users u ON m.mentor_id = u.id
+            WHERE m.id = $1
+              AND m.is_active = true 
+              AND m.approval_status = 'approved'
+        `;
+
+        const result = await db.query(query, [id]);
+        return result.rows[0];
     } catch (error) {
         throw new Error(`Error getting mentorship by id: ${error.message}`);
     }
-} 
+};
