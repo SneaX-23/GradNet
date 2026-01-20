@@ -85,13 +85,13 @@ function Login() {
         >
           <div>
             <label className="block text-sm font-medium text-foreground">
-              University Serial Number
+              University Seat Number or ID
             </label>
             <input
               type="text"
               value={usn}
               onChange={(e) => setUsn(e.target.value.toUpperCase())}
-              placeholder="Enter your USN"
+              placeholder="Enter your USN or ID"
               required
               className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
             />
