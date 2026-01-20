@@ -53,7 +53,7 @@ function Login() {
   };
 
   return (
-    <div className="min-h-svh flex items-center justify-center px-4">
+    <div className="min-h-svh flex flex-col items-center justify-center px-4">
       <div className="w-full max-w-md rounded-xl bg-card p-6 shadow-xl sm:p-8 border border-border">
 
         {/* Logo */}
@@ -127,6 +127,14 @@ function Login() {
           Login with Google
         </button>
       </div>
+      <div className="absolute bottom-8 w-full text-center">
+        <p className="text-sm text-neutral-500 font-medium">
+          By CSE Department, AITM
+        </p>
+        <p className="text-sm text-neutral-500 font-medium">
+         <a href="https:portfolio.sneax.quest"> Sudeep </a>| Satya | Sanjay | Sridar
+        </p>
+        </div>
     </div>
   );
 }
