@@ -132,7 +132,7 @@ function Login() {
           By CSE Department, AITM
         </p>
         <p className="text-sm text-neutral-500 font-medium">
-         <a href="https:portfolio.sneax.quest"> Sudeep </a>| Satya | Sanjay | Sridar
+         <a href="https://portfolio.sneax.quest"> Sudeep </a>| <a>Satya</a> | <a href="https://sanjaychavan05.github.io/sanjay-portfolio/">Sanjay</a> | <a>Sridar</a>
         </p>
         </div>
     </div>
