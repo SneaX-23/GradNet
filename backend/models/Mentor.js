@@ -196,6 +196,7 @@ export const GetStudentApplications = async (studentId) => {
                 e.mentor_notes,
                 m.guidance_on,
                 m.category,
+                u.id AS mentor_id,
                 u.name AS mentor_name,
                 u.profile_picture_url AS mentor_avatar
             FROM mentorship_enrollments e
